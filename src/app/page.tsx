@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FaSpotify, FaApple, FaGoogle, FaYoutube, FaExternalLinkAlt } from "react-icons/fa";
+import { FaSpotify, FaApple, FaGoogle, FaYoutube } from "react-icons/fa";
 import RecentEpisodes from "@/components/episodes/RecentEpisodes";
 import { platforms } from "@/platforms";
 
@@ -40,13 +40,13 @@ export default function Home() {
             >
               Conócenos
             </Link>
-            <a
-              href="/youtube-direct"
+            <Link
+              href="/youtube"
               className="inline-flex h-11 items-center justify-center rounded-md bg-red-600 px-8 text-sm font-medium text-white hover:bg-red-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-md hover:shadow-lg"
             >
               <FaYoutube className="mr-2 h-5 w-5" />
-              Ver Canal YouTube
-            </a>
+              Ver Videos
+            </Link>
           </div>
           
           <div className="mt-10">

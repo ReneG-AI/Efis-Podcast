@@ -31,26 +31,40 @@ export default function YouTubeEpisodes() {
     const fetchYouTubeData = async () => {
       try {
         setLoading(true);
+        console.log("Iniciando carga de datos de YouTube...");
         
         // Obtener información del canal
         const channelData = await getChannelInfo();
         if (channelData) {
+          console.log("Información del canal cargada correctamente");
           setChannelInfo(channelData);
+        } else {
+          console.error("No se pudo obtener información del canal");
         }
         
         // Obtener videos regulares (podcasts)
         const videosData = await getChannelRegularVideos(12);
-        setVideos(videosData);
+        if (videosData && videosData.length > 0) {
+          console.log(`Se encontraron ${videosData.length} videos regulares`);
+          setVideos(videosData);
+        } else {
+          console.warn("No se encontraron videos regulares");
+        }
         
         // Obtener reels
         const reelsData = await getChannelReels(12);
-        setReels(reelsData);
+        if (reelsData && reelsData.length > 0) {
+          console.log(`Se encontraron ${reelsData.length} reels`);
+          setReels(reelsData);
+        } else {
+          console.warn("No se encontraron reels");
+        }
         
         setLoading(false);
       } catch (err) {
-        setError("Error al cargar los videos de YouTube");
+        console.error("Error al cargar datos de YouTube:", err);
+        setError("Error al cargar los videos de YouTube. Por favor, verifica la consola para más detalles.");
         setLoading(false);
-        console.error("Error fetching YouTube data:", err);
       }
     };
     
@@ -80,7 +94,7 @@ export default function YouTubeEpisodes() {
     return (
       <div className="w-full py-20 text-center">
         <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></div>
-        <p className="mt-4 text-lg text-muted-foreground">Cargando episodios...</p>
+        <p className="mt-4 text-lg text-muted-foreground">Cargando videos de YouTube...</p>
       </div>
     );
   }
@@ -89,18 +103,39 @@ export default function YouTubeEpisodes() {
     return (
       <div className="w-full py-10 text-center">
         <p className="text-lg text-red-500">{error}</p>
-        <p className="mt-2 text-muted-foreground">Por favor, intenta más tarde o visita nuestro canal de <a href="https://www.youtube.com/@EFISPODCAST" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">YouTube</a> directamente.</p>
+        <div className="mt-4 space-y-2 text-left bg-muted p-4 rounded-md max-w-xl mx-auto">
+          <p className="font-medium">Posibles soluciones:</p>
+          <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
+            <li>Verifica que la API key de YouTube sea válida y tenga los permisos correctos</li>
+            <li>Asegúrate de que el ID del canal sea correcto</li>
+            <li>Verifica que no hayas excedido la cuota diaria de YouTube API</li>
+            <li>Comprueba la consola del navegador para más detalles técnicos</li>
+          </ul>
+          <p className="mt-4 text-sm">
+            Mientras tanto, puedes visitar nuestro canal de <a href="https://www.youtube.com/@EFISPODCAST" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">YouTube</a> directamente.
+          </p>
+        </div>
       </div>
     );
   }
 
-  // Si no hay API key configurada, mostrar datos de ejemplo
-  if ((!videos || videos.length === 0) && (!reels || reels.length === 0) && !loading && !error) {
+  if ((!videos || videos.length === 0) && (!reels || reels.length === 0)) {
     return (
       <div className="w-full py-10 text-center">
-        <p className="text-lg text-amber-500">No se pudieron cargar los datos del canal de YouTube</p>
+        <p className="text-lg text-amber-500">No se encontraron videos en el canal</p>
         <p className="mt-2 text-muted-foreground">
-          Verifica la consola del navegador para más detalles.
+          No pudimos encontrar videos para mostrar. Intenta revisar las credenciales de YouTube o espera un momento.
+        </p>
+        <p className="mt-4">
+          <a 
+            href="https://www.youtube.com/@EFISPODCAST" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+          >
+            <FaYoutube className="mr-2 h-4 w-4" />
+            Ir al canal de YouTube
+          </a>
         </p>
       </div>
     );

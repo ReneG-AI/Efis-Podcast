@@ -2,6 +2,12 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  output: 'export',
+  basePath: '/Efis-Podcast',
+  images: {
+    unoptimized: true,
+  },
+  trailingSlash: true,
 };
 
 module.exports = nextConfig; 

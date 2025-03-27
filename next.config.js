@@ -2,12 +2,14 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  output: 'export',
-  basePath: '/Efis-Podcast',
+  // Comentamos la salida estática para que funcione la API
+  // output: 'export',
+  // basePath: '/Efis-Podcast',
   images: {
     unoptimized: true,
+    domains: ['i.ytimg.com', 'yt3.ggpht.com', 'yt3.googleusercontent.com'],
   },
-  trailingSlash: true,
+  // trailingSlash: true,
 };
 
 module.exports = nextConfig; 

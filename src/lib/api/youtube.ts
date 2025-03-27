@@ -95,29 +95,54 @@ const formatDuration = (duration: string): string => {
 // Función para obtener videos del canal
 export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]> {
   if (!YOUTUBE_API_KEY || !YOUTUBE_CHANNEL_ID) {
-    console.error('YouTube API key or Channel ID missing');
+    console.error('YouTube API key or Channel ID missing', { apiKey: !!YOUTUBE_API_KEY, channelId: !!YOUTUBE_CHANNEL_ID });
     return [];
   }
 
   try {
+    console.log('Fetching YouTube videos for channel', { channelId: YOUTUBE_CHANNEL_ID, maxResults });
+    
     // Primero, obtenemos los IDs de los videos del canal
-    const playlistResponse = await fetch(
-      `${YOUTUBE_API_BASE_URL}/search?key=${YOUTUBE_API_KEY}&channelId=${YOUTUBE_CHANNEL_ID}&part=snippet,id&order=date&maxResults=${maxResults}&type=video`,
-      { cache: 'no-store' }
-    );
+    const searchUrl = `${YOUTUBE_API_BASE_URL}/search?key=${YOUTUBE_API_KEY}&channelId=${YOUTUBE_CHANNEL_ID}&part=snippet,id&order=date&maxResults=${maxResults}&type=video`;
+    console.log('Fetching video IDs with URL (partial):', searchUrl.substring(0, searchUrl.indexOf('key=') + 10) + '...');
+    
+    const playlistResponse = await fetch(searchUrl, { 
+      cache: 'no-store',
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
     
     if (!playlistResponse.ok) {
-      throw new Error(`Failed to fetch videos: ${playlistResponse.statusText}`);
+      const errorText = await playlistResponse.text();
+      console.error('YouTube API error (search):', { 
+        status: playlistResponse.status, 
+        statusText: playlistResponse.statusText,
+        response: errorText
+      });
+      throw new Error(`Failed to fetch videos: ${playlistResponse.statusText} (${playlistResponse.status})`);
     }
     
     const playlistData = await playlistResponse.json();
+    console.log('Search results:', { itemCount: playlistData.items?.length || 0 });
+    
+    if (!playlistData.items || playlistData.items.length === 0) {
+      console.warn('No videos found for channel');
+      return [];
+    }
+    
     const videoIds = playlistData.items.map((item: any) => item.id.videoId).join(',');
     
     // Luego, obtenemos información detallada de cada video
-    const videoResponse = await fetch(
-      `${YOUTUBE_API_BASE_URL}/videos?key=${YOUTUBE_API_KEY}&id=${videoIds}&part=snippet,contentDetails,statistics`,
-      { cache: 'no-store' }
-    );
+    const videosUrl = `${YOUTUBE_API_BASE_URL}/videos?key=${YOUTUBE_API_KEY}&id=${videoIds}&part=snippet,contentDetails,statistics`;
+    console.log('Fetching video details with URL (partial):', videosUrl.substring(0, videosUrl.indexOf('key=') + 10) + '...');
+    
+    const videoResponse = await fetch(videosUrl, { 
+      cache: 'no-store',
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
     
     if (!videoResponse.ok) {
       throw new Error(`Failed to fetch video details: ${videoResponse.statusText}`);
@@ -153,18 +178,31 @@ export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]>
 // Función para obtener información del canal
 export async function getChannelInfo(): Promise<YouTubeChannel | null> {
   if (!YOUTUBE_API_KEY || !YOUTUBE_CHANNEL_ID) {
-    console.error('YouTube API key or Channel ID missing');
+    console.error('YouTube API key or Channel ID missing', { apiKey: !!YOUTUBE_API_KEY, channelId: !!YOUTUBE_CHANNEL_ID });
     return null;
   }
 
   try {
-    const response = await fetch(
-      `${YOUTUBE_API_BASE_URL}/channels?key=${YOUTUBE_API_KEY}&id=${YOUTUBE_CHANNEL_ID}&part=snippet,statistics`,
-      { cache: 'no-store' }
-    );
+    console.log('Fetching channel info', { channelId: YOUTUBE_CHANNEL_ID });
+    
+    const channelUrl = `${YOUTUBE_API_BASE_URL}/channels?key=${YOUTUBE_API_KEY}&id=${YOUTUBE_CHANNEL_ID}&part=snippet,statistics`;
+    console.log('Fetching channel with URL (partial):', channelUrl.substring(0, channelUrl.indexOf('key=') + 10) + '...');
+    
+    const response = await fetch(channelUrl, { 
+      cache: 'no-store',
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
     
     if (!response.ok) {
-      throw new Error(`Failed to fetch channel: ${response.statusText}`);
+      const errorText = await response.text();
+      console.error('YouTube API error (channel):', { 
+        status: response.status, 
+        statusText: response.statusText,
+        response: errorText
+      });
+      throw new Error(`Failed to fetch channel: ${response.statusText} (${response.status})`);
     }
     
     const data = await response.json();
@@ -213,10 +251,17 @@ export async function getVideoById(videoId: string): Promise<YouTubeVideo | null
   }
 
   try {
-    const response = await fetch(
-      `${YOUTUBE_API_BASE_URL}/videos?key=${YOUTUBE_API_KEY}&id=${videoId}&part=snippet,contentDetails,statistics`,
-      { cache: 'no-store' }
-    );
+    console.log('Fetching video by ID', { videoId });
+    
+    const videoUrl = `${YOUTUBE_API_BASE_URL}/videos?key=${YOUTUBE_API_KEY}&id=${videoId}&part=snippet,contentDetails,statistics`;
+    console.log('Fetching video with URL (partial):', videoUrl.substring(0, videoUrl.indexOf('key=') + 10) + '...');
+    
+    const response = await fetch(videoUrl, { 
+      cache: 'no-store',
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
     
     if (!response.ok) {
       throw new Error(`Failed to fetch video: ${response.statusText}`);

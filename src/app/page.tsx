@@ -1,14 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FaSpotify, FaApple, FaGoogle, FaYoutube } from "react-icons/fa";
+import { FaSpotify, FaApple, FaGoogle, FaYoutube, FaExternalLinkAlt } from "react-icons/fa";
 import RecentEpisodes from "@/components/episodes/RecentEpisodes";
-
-const platforms = [
-  { name: "Spotify", icon: FaSpotify, href: "#" },
-  { name: "Apple Podcasts", icon: FaApple, href: "#" },
-  { name: "Google Podcasts", icon: FaGoogle, href: "#" },
-  { name: "YouTube", icon: FaYoutube, href: "/youtube" },
-];
+import { platforms } from "@/platforms";
 
 export default function Home() {
   return (
@@ -46,19 +40,12 @@ export default function Home() {
             >
               Conócenos
             </Link>
-            <Link
-              href="/youtube"
-              className="inline-flex h-11 items-center justify-center rounded-md border border-input bg-background/80 backdrop-blur-sm px-8 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-sm hover:shadow-md"
-            >
-              <FaYoutube className="mr-2 h-4 w-4 text-red-600" />
-              Ver en YouTube
-            </Link>
             <a
-              href="/youtube-alt"
-              className="mt-2 md:mt-0 md:ml-4 inline-flex items-center rounded-md bg-neutral-800 px-6 py-3 text-sm font-medium text-white hover:bg-neutral-700 transition-all"
+              href="/youtube-direct"
+              className="inline-flex h-11 items-center justify-center rounded-md bg-red-600 px-8 text-sm font-medium text-white hover:bg-red-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-md hover:shadow-lg"
             >
               <FaYoutube className="mr-2 h-5 w-5" />
-              YouTube (Alternativo)
+              Ver Canal YouTube
             </a>
           </div>
           

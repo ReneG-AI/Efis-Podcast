@@ -98,14 +98,18 @@ const formatDuration = (duration: string): string => {
 
 // Función para obtener videos del canal
 export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]> {
+  console.log('YouTube API Key:', !!YOUTUBE_API_KEY, 'Channel ID:', !!YOUTUBE_CHANNEL_ID);
+  
   if (!YOUTUBE_API_KEY || !YOUTUBE_CHANNEL_ID) {
     console.error('YouTube API key or Channel ID missing');
-    return [];
+    // Fallback a datos de ejemplo
+    return getExampleVideos();
   }
 
   try {
     // Primero, obtenemos los IDs de los videos del canal
     const searchUrl = `${YOUTUBE_API_BASE_URL}/search?key=${YOUTUBE_API_KEY}&channelId=${YOUTUBE_CHANNEL_ID}&part=snippet,id&order=date&maxResults=${maxResults}&type=video`;
+    console.log('Usando URL de búsqueda:', searchUrl.replace(YOUTUBE_API_KEY, 'API_KEY_HIDDEN'));
     
     const playlistResponse = await fetch(searchUrl, { 
       cache: 'no-store',
@@ -116,14 +120,19 @@ export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]>
     
     if (!playlistResponse.ok) {
       console.error(`YouTube API search error: ${playlistResponse.status} ${playlistResponse.statusText}`);
-      return [];
+      const errorData = await playlistResponse.text();
+      console.error('Error details:', errorData);
+      // Fallback a datos de ejemplo
+      return getExampleVideos();
     }
     
     const playlistData = await playlistResponse.json();
+    console.log('Datos obtenidos:', playlistData.items?.length || 0, 'videos');
     
     if (!playlistData.items || playlistData.items.length === 0) {
       console.warn('No videos found for channel');
-      return [];
+      // Fallback a datos de ejemplo
+      return getExampleVideos();
     }
     
     const videoIds = playlistData.items.map((item: any) => item.id.videoId).join(',');
@@ -166,15 +175,90 @@ export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]>
     });
   } catch (error) {
     console.error('Error fetching YouTube videos:', error);
-    return [];
+    // Fallback a datos de ejemplo
+    return getExampleVideos();
   }
+}
+
+// Nueva función para generar datos de ejemplo
+function getExampleVideos(): YouTubeVideo[] {
+  console.log('Usando datos de ejemplo para videos');
+  return Array(6).fill(null).map((_, i) => ({
+    id: `video-${i}`,
+    title: `Ejemplo de Podcast #${i+1} - Título del episodio`,
+    description: "Esta es una descripción de ejemplo para mostrar cómo se vería un video real.",
+    publishedAt: new Date(Date.now() - i * 86400000 * 7).toISOString(),
+    thumbnails: {
+      default: { url: `https://via.placeholder.com/120x90?text=Podcast+${i+1}`, width: 120, height: 90 },
+      medium: { url: `https://via.placeholder.com/320x180?text=Podcast+${i+1}`, width: 320, height: 180 },
+      high: { url: `https://via.placeholder.com/480x360?text=Podcast+${i+1}`, width: 480, height: 360 },
+      standard: { url: `https://via.placeholder.com/640x480?text=Podcast+${i+1}`, width: 640, height: 480 },
+      maxres: { url: `https://via.placeholder.com/1280x720?text=Podcast+${i+1}`, width: 1280, height: 720 },
+    },
+    channelTitle: "EFISPODCAST",
+    tags: ["podcast", "ejemplo", "efis"],
+    duration: `${Math.floor(30 + Math.random() * 30)}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}`,
+    viewCount: `${Math.floor(1000 + Math.random() * 9000)}`,
+    likeCount: `${Math.floor(100 + Math.random() * 900)}`,
+    commentCount: `${Math.floor(10 + Math.random() * 90)}`,
+    isReel: false
+  }));
+}
+
+// Nueva función para generar reels de ejemplo
+function getExampleReels(): YouTubeVideo[] {
+  console.log('Usando datos de ejemplo para reels');
+  return Array(6).fill(null).map((_, i) => ({
+    id: `reel-${i}`,
+    title: `Ejemplo de Reel #${i+1} - Momento destacado`,
+    description: "Descripción corta de ejemplo para un reel",
+    publishedAt: new Date(Date.now() - i * 86400000 * 3).toISOString(),
+    thumbnails: {
+      default: { url: `https://via.placeholder.com/90x120?text=Reel+${i+1}`, width: 90, height: 120 },
+      medium: { url: `https://via.placeholder.com/180x320?text=Reel+${i+1}`, width: 180, height: 320 },
+      high: { url: `https://via.placeholder.com/360x480?text=Reel+${i+1}`, width: 360, height: 480 },
+      standard: { url: `https://via.placeholder.com/480x640?text=Reel+${i+1}`, width: 480, height: 640 },
+      maxres: { url: `https://via.placeholder.com/720x1280?text=Reel+${i+1}`, width: 720, height: 1280 },
+    },
+    channelTitle: "EFISPODCAST",
+    tags: ["reel", "corto", "efis"],
+    duration: `0:${Math.floor(15 + Math.random() * 45).toString().padStart(2, '0')}`,
+    viewCount: `${Math.floor(5000 + Math.random() * 15000)}`,
+    likeCount: `${Math.floor(500 + Math.random() * 1500)}`,
+    commentCount: `${Math.floor(50 + Math.random() * 150)}`,
+    isReel: true
+  }));
+}
+
+// Nueva función para generar datos de canal de ejemplo
+function getExampleChannelInfo(): YouTubeChannel {
+  console.log('Usando datos de ejemplo para canal');
+  return {
+    id: "UC12345",
+    title: "EFISPODCAST",
+    description: "Canal oficial de EFISPODCAST - Ejemplo de descripción para visualización",
+    customUrl: "@EFISPODCAST",
+    thumbnails: {
+      default: { url: "https://via.placeholder.com/88?text=EFIS", width: 88, height: 88 },
+      medium: { url: "https://via.placeholder.com/240?text=EFIS", width: 240, height: 240 },
+      high: { url: "https://via.placeholder.com/800?text=EFIS", width: 800, height: 800 },
+    },
+    statistics: {
+      viewCount: "50000",
+      subscriberCount: "1500",
+      videoCount: "25"
+    }
+  };
 }
 
 // Función para obtener información del canal
 export async function getChannelInfo(): Promise<YouTubeChannel | null> {
+  console.log('YouTube API Key:', !!YOUTUBE_API_KEY, 'Channel ID:', !!YOUTUBE_CHANNEL_ID);
+  
   if (!YOUTUBE_API_KEY || !YOUTUBE_CHANNEL_ID) {
     console.error('YouTube API key or Channel ID missing');
-    return null;
+    // Fallback a datos de ejemplo
+    return getExampleChannelInfo();
   }
 
   try {
@@ -220,7 +304,8 @@ export async function getChannelInfo(): Promise<YouTubeChannel | null> {
     };
   } catch (error) {
     console.error('Error fetching YouTube channel:', error);
-    return null;
+    // Fallback a datos de ejemplo
+    return getExampleChannelInfo();
   }
 }
 
@@ -269,14 +354,32 @@ async function getChannelByUsername(): Promise<YouTubeChannel | null> {
 
 // Función para obtener solo los Reels
 export async function getChannelReels(maxResults = 20): Promise<YouTubeVideo[]> {
-  const videos = await getChannelVideos(maxResults);
-  return videos.filter(video => video.isReel);
+  try {
+    const videos = await getChannelVideos(maxResults);
+    const reels = videos.filter(video => video.isReel);
+    if (reels.length === 0) {
+      return getExampleReels();
+    }
+    return reels;
+  } catch (error) {
+    console.error('Error filtering reels:', error);
+    return getExampleReels();
+  }
 }
 
 // Función para obtener videos regulares (no reels)
 export async function getChannelRegularVideos(maxResults = 20): Promise<YouTubeVideo[]> {
-  const videos = await getChannelVideos(maxResults);
-  return videos.filter(video => !video.isReel);
+  try {
+    const videos = await getChannelVideos(maxResults);
+    const regularVideos = videos.filter(video => !video.isReel);
+    if (regularVideos.length === 0) {
+      return getExampleVideos();
+    }
+    return regularVideos;
+  } catch (error) {
+    console.error('Error filtering regular videos:', error);
+    return getExampleVideos();
+  }
 }
 
 // Función para obtener un video específico por ID

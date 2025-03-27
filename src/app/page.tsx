@@ -53,6 +53,13 @@ export default function Home() {
               <FaYoutube className="mr-2 h-4 w-4 text-red-600" />
               Ver en YouTube
             </Link>
+            <a
+              href="/youtube-alt"
+              className="mt-2 md:mt-0 md:ml-4 inline-flex items-center rounded-md bg-neutral-800 px-6 py-3 text-sm font-medium text-white hover:bg-neutral-700 transition-all"
+            >
+              <FaYoutube className="mr-2 h-5 w-5" />
+              YouTube (Alternativo)
+            </a>
           </div>
           
           <div className="mt-10">

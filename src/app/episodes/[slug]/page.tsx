@@ -2,10 +2,9 @@ import Link from "next/link";
 import { FaArrowLeft, FaCalendar, FaClock, FaPlay } from "react-icons/fa";
 import YouTubeEmbed from "@/components/episodes/YouTubeEmbed";
 
-export default function EpisodeDetailPage({ params }: { params: { slug: string } }) {
-  // En un proyecto real, aquí se obtendría la información del episodio desde una API o CMS
-  // usando el slug como identificador
-  const episode = {
+// Datos simulados de episodios para generación estática
+const episodes = [
+  {
     title: "Cómo desarrollar hábitos para el éxito personal",
     description: "En este episodio, hablamos con la psicóloga María González sobre cómo implementar hábitos efectivos para el crecimiento personal. Descubre las estrategias probadas científicamente para crear rutinas que te ayuden a alcanzar tus metas y mejorar tu bienestar general.",
     longDescription: "Los hábitos son los pilares fundamentales de nuestro éxito personal y profesional. En esta conversación, la psicóloga María González, especialista en psicología positiva y desarrollo personal, nos comparte investigaciones recientes y estrategias prácticas para implementar hábitos positivos en nuestra vida diaria.\n\nExploraremos cómo funciona realmente la formación de hábitos en nuestro cerebro, por qué fallamos al intentar crear nuevas rutinas, y qué técnicas específicas podemos aplicar para superar la resistencia al cambio. María también nos explica el método de los 'micro-hábitos' y cómo podemos utilizarlos para generar transformaciones significativas a largo plazo.",
@@ -15,9 +14,45 @@ export default function EpisodeDetailPage({ params }: { params: { slug: string }
     slug: "habitos-exito-personal",
     categories: ["Desarrollo Personal", "Psicología", "Productividad"],
     tags: ["hábitos", "desarrollo personal", "psicología positiva", "rutinas"],
-    // Agregamos el ID de YouTube para el video
-    youtubeId: "dQw4w9WgXcQ" // Este es un ID de ejemplo, debe reemplazarse con el ID real
-  };
+    youtubeId: "dQw4w9WgXcQ"
+  },
+  {
+    title: "Emprendimiento en tiempos de crisis",
+    description: "Aprende cómo algunos emprendedores han convertido los desafíos en oportunidades.",
+    longDescription: "En este episodio exploramos historias inspiradoras de emprendedores que han logrado adaptar sus negocios durante tiempos difíciles.",
+    date: "15 Mar 2025",
+    duration: "38 min",
+    image: "/images/episode-2.jpg",
+    slug: "emprendimiento-crisis",
+    categories: ["Negocios", "Emprendimiento"],
+    tags: ["emprendimiento", "negocios", "crisis", "oportunidades"],
+    youtubeId: "jNQXAC9IVRw"
+  },
+  {
+    title: "Mindfulness para principiantes",
+    description: "Guía completa para incorporar la atención plena en tu vida diaria.",
+    longDescription: "Un episodio dedicado a enseñarte técnicas prácticas de mindfulness que puedes implementar inmediatamente.",
+    date: "8 Mar 2025",
+    duration: "42 min",
+    image: "/images/episode-3.jpg",
+    slug: "mindfulness-principiantes",
+    categories: ["Bienestar", "Meditación"],
+    tags: ["mindfulness", "meditación", "bienestar", "salud mental"],
+    youtubeId: "ZXsQAXx_ao0"
+  }
+];
+
+// Esta función es requerida para rutas dinámicas cuando se usa output: 'export'
+export function generateStaticParams() {
+  return episodes.map((episode) => ({
+    slug: episode.slug,
+  }));
+}
+
+export default function EpisodeDetailPage({ params }: { params: { slug: string } }) {
+  // En un proyecto real, buscaríamos el episodio por slug en una API o CMS
+  // Aquí lo simulamos buscando en nuestros datos estáticos
+  const episode = episodes.find(ep => ep.slug === params.slug) || episodes[0];
 
   return (
     <div className="container py-12">

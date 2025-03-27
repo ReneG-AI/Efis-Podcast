@@ -44,20 +44,24 @@ export const YOUTUBE_API_BASE_URL = 'https://www.googleapis.com/youtube/v3';
 
 // Función para identificar si un video es un Reel basado en sus proporciones o hashtags
 const isYouTubeReel = (video: any): boolean => {
-  const isVerticalVideo = 
-    video.snippet?.thumbnails?.standard?.height > video.snippet?.thumbnails?.standard?.width;
-  const hasReelHashtag = 
-    video.snippet?.tags?.some((tag: string) => 
-      tag.toLowerCase().includes('reel') || 
-      tag.toLowerCase().includes('short')
-    );
-  const hasShortDescription = 
-    video.snippet?.description?.length < 100;
+  // Primero verificamos si es un Short basado en la URL
+  const isShort = 
+    video.snippet?.description?.includes('/shorts/') ||
+    (video.snippet?.tags && 
+      video.snippet.tags.some((tag: string) => 
+        tag.toLowerCase().includes('#shorts') || 
+        tag.toLowerCase().includes('#short')));
+  
+  // Verificamos si es vertical basado en las miniaturas
+  const standard = video.snippet?.thumbnails?.standard;
+  const isVertical = standard && standard.height > standard.width;
+  
+  // Verificamos si es video corto (menos de 60 segundos) 
   const isShortDuration = 
     video.contentDetails?.duration && 
     parseDuration(video.contentDetails.duration) < 60;
     
-  return isVerticalVideo || hasReelHashtag || (hasShortDescription && isShortDuration);
+  return isShort || isVertical || isShortDuration;
 };
 
 // Función para analizar la duración en formato ISO 8601
@@ -95,16 +99,13 @@ const formatDuration = (duration: string): string => {
 // Función para obtener videos del canal
 export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]> {
   if (!YOUTUBE_API_KEY || !YOUTUBE_CHANNEL_ID) {
-    console.error('YouTube API key or Channel ID missing', { apiKey: !!YOUTUBE_API_KEY, channelId: !!YOUTUBE_CHANNEL_ID });
+    console.error('YouTube API key or Channel ID missing');
     return [];
   }
 
   try {
-    console.log('Fetching YouTube videos for channel', { channelId: YOUTUBE_CHANNEL_ID, maxResults });
-    
     // Primero, obtenemos los IDs de los videos del canal
     const searchUrl = `${YOUTUBE_API_BASE_URL}/search?key=${YOUTUBE_API_KEY}&channelId=${YOUTUBE_CHANNEL_ID}&part=snippet,id&order=date&maxResults=${maxResults}&type=video`;
-    console.log('Fetching video IDs with URL (partial):', searchUrl.substring(0, searchUrl.indexOf('key=') + 10) + '...');
     
     const playlistResponse = await fetch(searchUrl, { 
       cache: 'no-store',
@@ -114,17 +115,11 @@ export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]>
     });
     
     if (!playlistResponse.ok) {
-      const errorText = await playlistResponse.text();
-      console.error('YouTube API error (search):', { 
-        status: playlistResponse.status, 
-        statusText: playlistResponse.statusText,
-        response: errorText
-      });
-      throw new Error(`Failed to fetch videos: ${playlistResponse.statusText} (${playlistResponse.status})`);
+      console.error(`YouTube API search error: ${playlistResponse.status} ${playlistResponse.statusText}`);
+      return [];
     }
     
     const playlistData = await playlistResponse.json();
-    console.log('Search results:', { itemCount: playlistData.items?.length || 0 });
     
     if (!playlistData.items || playlistData.items.length === 0) {
       console.warn('No videos found for channel');
@@ -135,7 +130,6 @@ export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]>
     
     // Luego, obtenemos información detallada de cada video
     const videosUrl = `${YOUTUBE_API_BASE_URL}/videos?key=${YOUTUBE_API_KEY}&id=${videoIds}&part=snippet,contentDetails,statistics`;
-    console.log('Fetching video details with URL (partial):', videosUrl.substring(0, videosUrl.indexOf('key=') + 10) + '...');
     
     const videoResponse = await fetch(videosUrl, { 
       cache: 'no-store',
@@ -145,7 +139,8 @@ export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]>
     });
     
     if (!videoResponse.ok) {
-      throw new Error(`Failed to fetch video details: ${videoResponse.statusText}`);
+      console.error(`YouTube API videos error: ${videoResponse.status} ${videoResponse.statusText}`);
+      return [];
     }
     
     const videoData = await videoResponse.json();
@@ -178,15 +173,17 @@ export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]>
 // Función para obtener información del canal
 export async function getChannelInfo(): Promise<YouTubeChannel | null> {
   if (!YOUTUBE_API_KEY || !YOUTUBE_CHANNEL_ID) {
-    console.error('YouTube API key or Channel ID missing', { apiKey: !!YOUTUBE_API_KEY, channelId: !!YOUTUBE_CHANNEL_ID });
+    console.error('YouTube API key or Channel ID missing');
     return null;
   }
 
   try {
-    console.log('Fetching channel info', { channelId: YOUTUBE_CHANNEL_ID });
-    
-    const channelUrl = `${YOUTUBE_API_BASE_URL}/channels?key=${YOUTUBE_API_KEY}&id=${YOUTUBE_CHANNEL_ID}&part=snippet,statistics`;
-    console.log('Fetching channel with URL (partial):', channelUrl.substring(0, channelUrl.indexOf('key=') + 10) + '...');
+    // Usamos directamente el ID del canal, asegurándonos de que comience con UC
+    const channelId = YOUTUBE_CHANNEL_ID.startsWith('UC') 
+      ? YOUTUBE_CHANNEL_ID 
+      : `UC${YOUTUBE_CHANNEL_ID.replace(/^UC/, '')}`;
+      
+    const channelUrl = `${YOUTUBE_API_BASE_URL}/channels?key=${YOUTUBE_API_KEY}&id=${channelId}&part=snippet,statistics`;
     
     const response = await fetch(channelUrl, { 
       cache: 'no-store',
@@ -196,13 +193,52 @@ export async function getChannelInfo(): Promise<YouTubeChannel | null> {
     });
     
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('YouTube API error (channel):', { 
-        status: response.status, 
-        statusText: response.statusText,
-        response: errorText
-      });
-      throw new Error(`Failed to fetch channel: ${response.statusText} (${response.status})`);
+      console.error(`YouTube API channel error: ${response.status} ${response.statusText}`);
+      return null;
+    }
+    
+    const data = await response.json();
+    
+    if (!data.items || data.items.length === 0) {
+      // Si no encontramos el canal por ID, intentamos por nombre de usuario
+      return await getChannelByUsername();
+    }
+    
+    const channel = data.items[0];
+    
+    return {
+      id: channel.id,
+      title: channel.snippet.title,
+      description: channel.snippet.description,
+      customUrl: channel.snippet.customUrl,
+      thumbnails: channel.snippet.thumbnails,
+      statistics: {
+        viewCount: channel.statistics.viewCount,
+        subscriberCount: channel.statistics.subscriberCount,
+        videoCount: channel.statistics.videoCount
+      }
+    };
+  } catch (error) {
+    console.error('Error fetching YouTube channel:', error);
+    return null;
+  }
+}
+
+// Función auxiliar para buscar canal por nombre de usuario
+async function getChannelByUsername(): Promise<YouTubeChannel | null> {
+  try {
+    // Intentamos buscar por nombre de usuario (EFISPODCAST)
+    const usernameUrl = `${YOUTUBE_API_BASE_URL}/channels?key=${YOUTUBE_API_KEY}&forUsername=EFISPODCAST&part=snippet,statistics`;
+    
+    const response = await fetch(usernameUrl, { 
+      cache: 'no-store',
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+    
+    if (!response.ok) {
+      return null;
     }
     
     const data = await response.json();
@@ -226,7 +262,7 @@ export async function getChannelInfo(): Promise<YouTubeChannel | null> {
       }
     };
   } catch (error) {
-    console.error('Error fetching YouTube channel:', error);
+    console.error('Error fetching YouTube channel by username:', error);
     return null;
   }
 }

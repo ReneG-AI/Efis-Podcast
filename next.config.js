@@ -6,8 +6,24 @@ const nextConfig = {
   // output: 'export',
   // basePath: '/Efis-Podcast',
   images: {
-    unoptimized: true,
-    domains: ['i.ytimg.com', 'yt3.ggpht.com', 'yt3.googleusercontent.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.ytimg.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.ggpht.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+      },
+    ],
   },
   // trailingSlash: true,
 };

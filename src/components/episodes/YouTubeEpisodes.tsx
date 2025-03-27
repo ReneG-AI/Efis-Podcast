@@ -178,6 +178,7 @@ export default function YouTubeEpisodes() {
               alt={channelInfo.title}
               fill
               sizes="96px"
+              unoptimized
               className="object-cover" 
             />
           </div>
@@ -262,6 +263,7 @@ export default function YouTubeEpisodes() {
                       alt={video.title} 
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      unoptimized
                       className="object-cover transition-transform group-hover:scale-105" 
                     />
                     <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-1 rounded text-xs text-white">
@@ -321,6 +323,7 @@ export default function YouTubeEpisodes() {
                       alt={reel.title}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      unoptimized
                       className="object-cover transition-transform group-hover:scale-105" 
                     />
                     <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-1 rounded text-xs text-white">

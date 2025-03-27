@@ -102,7 +102,8 @@ export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]>
   try {
     // Primero, obtenemos los IDs de los videos del canal
     const playlistResponse = await fetch(
-      `${YOUTUBE_API_BASE_URL}/search?key=${YOUTUBE_API_KEY}&channelId=${YOUTUBE_CHANNEL_ID}&part=snippet,id&order=date&maxResults=${maxResults}&type=video`
+      `${YOUTUBE_API_BASE_URL}/search?key=${YOUTUBE_API_KEY}&channelId=${YOUTUBE_CHANNEL_ID}&part=snippet,id&order=date&maxResults=${maxResults}&type=video`,
+      { cache: 'no-store' }
     );
     
     if (!playlistResponse.ok) {
@@ -114,7 +115,8 @@ export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]>
     
     // Luego, obtenemos información detallada de cada video
     const videoResponse = await fetch(
-      `${YOUTUBE_API_BASE_URL}/videos?key=${YOUTUBE_API_KEY}&id=${videoIds}&part=snippet,contentDetails,statistics`
+      `${YOUTUBE_API_BASE_URL}/videos?key=${YOUTUBE_API_KEY}&id=${videoIds}&part=snippet,contentDetails,statistics`,
+      { cache: 'no-store' }
     );
     
     if (!videoResponse.ok) {
@@ -157,7 +159,8 @@ export async function getChannelInfo(): Promise<YouTubeChannel | null> {
 
   try {
     const response = await fetch(
-      `${YOUTUBE_API_BASE_URL}/channels?key=${YOUTUBE_API_KEY}&id=${YOUTUBE_CHANNEL_ID}&part=snippet,statistics`
+      `${YOUTUBE_API_BASE_URL}/channels?key=${YOUTUBE_API_KEY}&id=${YOUTUBE_CHANNEL_ID}&part=snippet,statistics`,
+      { cache: 'no-store' }
     );
     
     if (!response.ok) {
@@ -211,7 +214,8 @@ export async function getVideoById(videoId: string): Promise<YouTubeVideo | null
 
   try {
     const response = await fetch(
-      `${YOUTUBE_API_BASE_URL}/videos?key=${YOUTUBE_API_KEY}&id=${videoId}&part=snippet,contentDetails,statistics`
+      `${YOUTUBE_API_BASE_URL}/videos?key=${YOUTUBE_API_KEY}&id=${videoId}&part=snippet,contentDetails,statistics`,
+      { cache: 'no-store' }
     );
     
     if (!response.ok) {

@@ -100,12 +100,8 @@ export default function YouTubeEpisodes() {
       <div className="w-full py-10 text-center">
         <p className="text-lg text-amber-500">No se han configurado las credenciales de la API de YouTube</p>
         <p className="mt-2 text-muted-foreground">
-          Para configurar la API de YouTube, añade tus credenciales en el archivo <code>.env.local</code>:
+          Para configurar la API de YouTube, añade tus credenciales en el archivo <code>.env.local</code>
         </p>
-        <pre className="mt-4 bg-muted p-4 rounded-md text-left text-sm overflow-auto">
-          NEXT_PUBLIC_YOUTUBE_API_KEY=tu_api_key<br/>
-          NEXT_PUBLIC_YOUTUBE_CHANNEL_ID=id_del_canal
-        </pre>
         <p className="mt-4 text-muted-foreground">
           Mientras tanto, se muestran datos de ejemplo para visualizar la interfaz.
         </p>

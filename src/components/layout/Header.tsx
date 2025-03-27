@@ -1,16 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import { Menu, X } from "lucide-react";
-import { FaYoutube } from "react-icons/fa";
+import { FaYoutube, FaHeadphones } from "react-icons/fa";
 
 const navLinks = [
   { href: "/", label: "Inicio" },
   { href: "/episodes", label: "Episodios" },
-  { href: "/youtube", label: "YouTube" },
+  { href: "/youtube", label: "YouTube", icon: <FaYoutube className="h-4 w-4 text-red-600" /> },
   { href: "/about", label: "Sobre Nosotros" },
   { href: "/contact", label: "Contacto" },
 ];
@@ -18,13 +18,30 @@ const navLinks = [
 export default function Header() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
+      scrolled 
+        ? "border-border/40 bg-background/95 backdrop-blur shadow-sm" 
+        : "border-transparent bg-background/50 backdrop-blur-sm"
+    }`}>
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
-          <Link href="/" className="flex items-center space-x-2">
-            <span className="text-xl font-bold text-primary">Efis Podcast</span>
+          <Link href="/" className="flex items-center space-x-2 group">
+            <div className="relative w-8 h-8 flex items-center justify-center rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300">
+              <FaHeadphones className="h-4 w-4 text-primary" />
+            </div>
+            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">Efis Podcast</span>
           </Link>
         </div>
         
@@ -34,15 +51,21 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm font-medium transition-colors hover:text-primary ${
+              className={`relative text-sm font-medium transition-colors hover:text-primary group ${
                 pathname === link.href ? "text-primary" : "text-muted-foreground"
-              } ${link.href === "/youtube" ? "flex items-center gap-1" : ""}`}
+              } flex items-center gap-1`}
             >
-              {link.href === "/youtube" && <FaYoutube className="h-4 w-4" />}
+              {link.icon && link.icon}
               {link.label}
+              {pathname === link.href && (
+                <span className="absolute -bottom-[21px] left-0 w-full h-[2px] bg-primary"></span>
+              )}
+              <span className="absolute -bottom-[21px] left-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
             </Link>
           ))}
-          <ModeToggle />
+          <div className="pl-2 border-l border-border/40">
+            <ModeToggle />
+          </div>
         </nav>
         
         {/* Mobile Menu Toggle */}
@@ -61,22 +84,26 @@ export default function Header() {
       
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="md:hidden">
-          <div className="container py-4 flex flex-col space-y-4">
+        <div className="md:hidden absolute w-full bg-background/95 backdrop-blur border-b border-border/40 shadow-md">
+          <div className="container py-6 flex flex-col space-y-5">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors hover:text-primary ${
+                className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
                   pathname === link.href ? "text-primary" : "text-muted-foreground"
-                } ${link.href === "/youtube" ? "flex items-center gap-1" : ""}`}
+                }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                {link.href === "/youtube" && <FaYoutube className="h-4 w-4" />}
-                {link.label}
+                {link.icon && link.icon}
+                <span>{link.label}</span>
+                {pathname === link.href && (
+                  <span className="ml-auto h-1.5 w-1.5 rounded-full bg-primary"></span>
+                )}
               </Link>
             ))}
-            <div className="pt-2">
+            <div className="pt-2 border-t border-border/20 flex justify-between items-center">
+              <span className="text-xs text-muted-foreground">© Efis Podcast {new Date().getFullYear()}</span>
               <ModeToggle />
             </div>
           </div>

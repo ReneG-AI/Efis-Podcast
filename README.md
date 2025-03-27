@@ -1,59 +1,81 @@
-# EFIS PODCAST
+# Efis Podcast
 
-Sitio web para Efis Podcast, una plataforma de podcast centrada en crecimiento personal y profesional.
+Aplicación web para el Podcast de Efis sobre desarrollo personal y profesional.
 
-## ⚠️ Problemas con PowerShell en Windows
+## Características
 
-Si tienes problemas para ejecutar los comandos de Node.js en PowerShell debido a restricciones de seguridad, puedes usar las siguientes alternativas:
+- Listado de episodios con reproductor integrado
+- Canal de YouTube con videos y reels
+- Diseño responsive y moderno
+- Modo oscuro/claro
+- Optimizado para SEO
 
-### Opción 1: Usar el archivo batch
-Simplemente haz doble clic en el archivo `start.bat` incluido en el proyecto para iniciar el servidor.
+## Instalación
 
-### Opción 2: Cambiar la política de ejecución de PowerShell
-Puedes cambiar temporalmente la política de ejecución de PowerShell ejecutando el siguiente comando como administrador:
-
+1. Clona el repositorio:
+```bash
+git clone https://github.com/yourusername/Efis-Podcast.git
+cd Efis-Podcast
 ```
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+2. Instala dependencias:
+```bash
+npm install
 ```
 
-### Opción 3: Usar el HTML estático
-Si no puedes ejecutar Node.js, puedes abrir directamente el archivo `static-youtube.html` en tu navegador para ver los videos del canal.
+3. Configura las variables de entorno:
+   - Crea un archivo `.env.local` basado en `.env.example`
+   - O utiliza el script `start.bat` que creará uno básico automáticamente
 
-## 🚀 Instrucciones de uso
+## Configuración de YouTube API
 
-1. Clona este repositorio
-2. Configura las variables de entorno en un archivo `.env.local` (usa `.env.example` como referencia)
-3. Instala las dependencias: `npm install`
-4. Ejecuta el servidor de desarrollo: `npm run dev` o utiliza `start.bat`
-5. Abre http://localhost:3000 en tu navegador
+Para que funcione la integración con YouTube:
 
-## 📋 Estructura del proyecto
+1. Asegúrate de que las siguientes variables están configuradas en `.env.local`:
+```
+NEXT_PUBLIC_YOUTUBE_API_KEY=tu_clave_api
+NEXT_PUBLIC_YOUTUBE_CHANNEL_ID=id_de_tu_canal
+```
 
-- `/src/app`: Rutas y páginas de la aplicación (Next.js App Router)
-- `/src/components`: Componentes reutilizables 
-- `/src/styles`: Estilos globales y configuración de Tailwind
-- `/src/app/youtube-direct/page.tsx`: Página que muestra un iframe con los videos del canal sin API key
-- `static-youtube.html`: Versión HTML estática que funciona directamente sin Node.js
-- `src/platforms.ts`: Configuración de plataformas y canales
+2. Si necesitas generar una nueva clave de API:
+   - Ve a [Google Cloud Console](https://console.cloud.google.com/)
+   - Crea un proyecto nuevo
+   - Habilita YouTube Data API v3
+   - Genera una clave de API en "Credenciales"
 
-## 📚 Tecnologías
+## Ejecutar en desarrollo
 
-- [Next.js](https://nextjs.org/): Framework de React para desarrollo web
-- [TypeScript](https://www.typescriptlang.org/): Superset tipado de JavaScript
-- [Tailwind CSS](https://tailwindcss.com/): Framework CSS para diseño rápido y responsive
-- [Framer Motion](https://www.framer.com/motion/): Biblioteca para animaciones fluidas
-- [YouTube Data API](https://developers.google.com/youtube/v3): API para integración con YouTube
+Utiliza el script de inicio para ejecutar el proyecto con verificación de configuración:
 
-## 🛡️ Seguridad
+```bash
+# Windows
+start.bat
 
-- Nunca expongas tus claves de API en código público
-- No incluyas `NEXT_PUBLIC_` en variables de entorno que contengan secretos
-- Usa `.env.local` para variables de entorno locales (este archivo está en `.gitignore`)
+# Alternativa manual
+npm run dev
+```
 
-## Contribución
+Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 
-Las contribuciones son bienvenidas. Por favor, abre un issue o pull request para sugerencias o mejoras.
+## Estructura del proyecto
 
-## Licencia
+- `src/app/` - Páginas de la aplicación (Next.js App Router)
+- `src/components/` - Componentes reutilizables
+- `src/lib/` - Utilidades, APIs y configuraciones
+- `public/` - Archivos estáticos (imágenes, fuentes, etc.)
 
-Este proyecto está bajo la licencia ISC.
+## Despliegue
+
+La aplicación está optimizada para ser desplegada en Vercel:
+
+```bash
+npm run build
+```
+
+## Colaboración
+
+1. Haz fork del repositorio
+2. Crea una rama para tu feature (`git checkout -b feature/amazing-feature`)
+3. Haz commit de tus cambios (`git commit -m 'Add some amazing feature'`)
+4. Push a la rama (`git push origin feature/amazing-feature`)
+5. Abre un Pull Request

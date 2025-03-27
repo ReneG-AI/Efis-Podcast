@@ -1,130 +1,56 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FaYoutube, FaPlay } from "react-icons/fa";
+import { FaYoutube, FaPlay, FaRegClock, FaEye } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
+import { 
+  getChannelRegularVideos, 
+  getChannelReels, 
+  getChannelInfo, 
+  type YouTubeVideo,
+  type YouTubeChannel 
+} from "@/lib/api/youtube";
 
-// Tipo para los datos de YouTube
-interface YouTubeVideo {
-  id: string;
-  title: string;
-  description: string;
-  thumbnail: string;
-  publishedAt: string;
-  duration: string;
-  viewCount: string;
-  isReel: boolean;
+interface YouTubeStats {
+  subscribers: string;
+  videos: string;
+  views: string;
 }
 
 export default function YouTubeEpisodes() {
   const [videos, setVideos] = useState<YouTubeVideo[]>([]);
   const [reels, setReels] = useState<YouTubeVideo[]>([]);
+  const [channelInfo, setChannelInfo] = useState<YouTubeChannel | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState<"podcasts" | "reels">("podcasts");
 
-  // En una implementación real, estos datos serían obtenidos desde la API de YouTube
+  // Cargar datos desde la API de YouTube
   useEffect(() => {
-    // Simulación de carga de datos
     const fetchYouTubeData = async () => {
       try {
         setLoading(true);
         
-        // Episodios de ejemplo basados en EFISPODCAST (en producción, esto se reemplazaría con datos reales)
-        const exampleVideos: YouTubeVideo[] = [
-          {
-            id: "video1",
-            title: "E1: Mindfulness y meditación para el día a día - EFIS PODCAST",
-            description: "Conversamos con expertos en mindfulness sobre cómo incorporar la meditación en nuestra rutina diaria para mejorar nuestra salud mental y bienestar.",
-            thumbnail: "/images/episode-1.jpg",
-            publishedAt: "2023-10-15",
-            duration: "45:22",
-            viewCount: "1.2K",
-            isReel: false
-          },
-          {
-            id: "video2",
-            title: "E2: Finanzas personales para independientes - EFIS PODCAST",
-            description: "Analizamos estrategias de finanzas personales con asesores financieros especializados en freelancers y trabajadores autónomos.",
-            thumbnail: "/images/episode-2.jpg",
-            publishedAt: "2023-10-29",
-            duration: "52:14",
-            viewCount: "987",
-            isReel: false
-          },
-          {
-            id: "video3",
-            title: "E3: El poder de los hábitos matutinos - EFIS PODCAST",
-            description: "Descubre cómo una rutina matutina efectiva puede transformar tu productividad y bienestar general.",
-            thumbnail: "/images/episode-3.jpg",
-            publishedAt: "2023-11-12",
-            duration: "38:45",
-            viewCount: "1.5K",
-            isReel: false
-          },
-          {
-            id: "video4",
-            title: "E4: Inteligencia emocional en el trabajo - EFIS PODCAST",
-            description: "Exploramos cómo desarrollar y aplicar la inteligencia emocional para mejorar nuestras relaciones laborales y avanzar profesionalmente.",
-            thumbnail: "/images/episode-4.jpg",
-            publishedAt: "2023-11-26",
-            duration: "41:18",
-            viewCount: "1.1K",
-            isReel: false
-          },
-        ];
+        // Obtener información del canal
+        const channelData = await getChannelInfo();
+        if (channelData) {
+          setChannelInfo(channelData);
+        }
         
-        const exampleReels: YouTubeVideo[] = [
-          {
-            id: "reel1",
-            title: "3 técnicas de mindfulness que puedes aplicar ahora mismo",
-            description: "Ejercicios rápidos de mindfulness para momentos de estrés.",
-            thumbnail: "/images/reel-1.jpg",
-            publishedAt: "2023-10-20",
-            duration: "1:00",
-            viewCount: "5.4K",
-            isReel: true
-          },
-          {
-            id: "reel2",
-            title: "El método 50-30-20 para organizar tus finanzas",
-            description: "Una regla simple para distribuir tus ingresos de manera efectiva.",
-            thumbnail: "/images/reel-2.jpg",
-            publishedAt: "2023-11-05",
-            duration: "0:58",
-            viewCount: "4.2K",
-            isReel: true
-          },
-          {
-            id: "reel3",
-            title: "5 hábitos para aumentar tu productividad",
-            description: "Pequeños cambios para grandes resultados en tu día a día.",
-            thumbnail: "/images/reel-3.jpg",
-            publishedAt: "2023-11-18",
-            duration: "0:55",
-            viewCount: "6.8K",
-            isReel: true
-          },
-          {
-            id: "reel4",
-            title: "Cómo manejar conversaciones difíciles en el trabajo",
-            description: "Estrategias de comunicación para situaciones tensas.",
-            thumbnail: "/images/reel-4.jpg",
-            publishedAt: "2023-12-02",
-            duration: "1:00",
-            viewCount: "3.9K",
-            isReel: true
-          },
-        ];
+        // Obtener videos regulares (podcasts)
+        const videosData = await getChannelRegularVideos(12);
+        setVideos(videosData);
         
-        setVideos(exampleVideos);
-        setReels(exampleReels);
+        // Obtener reels
+        const reelsData = await getChannelReels(12);
+        setReels(reelsData);
+        
         setLoading(false);
       } catch (err) {
         setError("Error al cargar los videos de YouTube");
         setLoading(false);
-        console.error(err);
+        console.error("Error fetching YouTube data:", err);
       }
     };
     
@@ -134,6 +60,20 @@ export default function YouTubeEpisodes() {
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('es-ES', options);
+  };
+  
+  // Formatear números con separadores de miles
+  const formatNumber = (num: string) => {
+    const n = parseInt(num, 10);
+    if (isNaN(n)) return "0";
+    
+    if (n >= 1000000) {
+      return `${(n / 1000000).toFixed(1)}M`;
+    }
+    if (n >= 1000) {
+      return `${(n / 1000).toFixed(1)}K`;
+    }
+    return n.toString();
   };
 
   if (loading) {
@@ -154,8 +94,71 @@ export default function YouTubeEpisodes() {
     );
   }
 
+  // Si no hay API key configurada, mostrar datos de ejemplo
+  if ((!videos || videos.length === 0) && (!reels || reels.length === 0)) {
+    return (
+      <div className="w-full py-10 text-center">
+        <p className="text-lg text-amber-500">No se han configurado las credenciales de la API de YouTube</p>
+        <p className="mt-2 text-muted-foreground">
+          Para configurar la API de YouTube, añade tus credenciales en el archivo <code>.env.local</code>:
+        </p>
+        <pre className="mt-4 bg-muted p-4 rounded-md text-left text-sm overflow-auto">
+          NEXT_PUBLIC_YOUTUBE_API_KEY=tu_api_key<br/>
+          NEXT_PUBLIC_YOUTUBE_CHANNEL_ID=id_del_canal
+        </pre>
+        <p className="mt-4 text-muted-foreground">
+          Mientras tanto, se muestran datos de ejemplo para visualizar la interfaz.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full">
+      {/* Channel Info */}
+      {channelInfo && (
+        <div className="mb-8 rounded-lg border bg-card p-6 flex flex-col md:flex-row items-center gap-6">
+          <div className="relative h-24 w-24 overflow-hidden rounded-full">
+            <Image 
+              src={channelInfo.thumbnails.medium.url} 
+              alt={channelInfo.title}
+              fill
+              sizes="96px"
+              className="object-cover" 
+            />
+          </div>
+          <div className="flex-grow text-center md:text-left">
+            <h2 className="text-xl font-bold">{channelInfo.title}</h2>
+            <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{channelInfo.description}</p>
+            <div className="mt-3 flex flex-wrap justify-center md:justify-start gap-4">
+              <div className="text-center">
+                <span className="text-sm font-medium block">{formatNumber(channelInfo.statistics.subscriberCount)}</span>
+                <span className="text-xs text-muted-foreground">Suscriptores</span>
+              </div>
+              <div className="text-center">
+                <span className="text-sm font-medium block">{formatNumber(channelInfo.statistics.videoCount)}</span>
+                <span className="text-xs text-muted-foreground">Videos</span>
+              </div>
+              <div className="text-center">
+                <span className="text-sm font-medium block">{formatNumber(channelInfo.statistics.viewCount)}</span>
+                <span className="text-xs text-muted-foreground">Vistas</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <a 
+              href={`https://www.youtube.com/channel/${channelInfo.id}`} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+            >
+              <FaYoutube className="mr-2 h-4 w-4" />
+              Ir al canal
+            </a>
+          </div>
+        </div>
+      )}
+
       <div className="mb-8 flex items-center gap-4 border-b">
         <button
           onClick={() => setActiveTab("podcasts")}
@@ -187,119 +190,128 @@ export default function YouTubeEpisodes() {
             videos.map(video => (
               <div key={video.id} className="group flex flex-col overflow-hidden rounded-lg border bg-card text-card-foreground shadow transition-all hover:shadow-md">
                 <div className="relative h-48 w-full overflow-hidden">
-                  <div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center z-10">
-                    <div className="rounded-full bg-primary p-3 text-primary-foreground">
-                      <FaPlay className="h-4 w-4" />
+                  <a 
+                    href={`https://www.youtube.com/watch?v=${video.id}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="absolute inset-0 z-10"
+                  >
+                    <div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
+                      <div className="rounded-full bg-primary p-3 text-primary-foreground">
+                        <FaPlay className="h-4 w-4" />
+                      </div>
+                    </div>
+                  </a>
+                  <div className="h-full w-full relative">
+                    <Image 
+                      src={video.thumbnails.high.url || video.thumbnails.medium.url} 
+                      alt={video.title} 
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transition-transform group-hover:scale-105" 
+                    />
+                    <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-1 rounded text-xs text-white">
+                      {video.duration}
                     </div>
                   </div>
-                  <div className="h-full w-full relative">
-                    <div className="absolute inset-0 bg-neutral-300 animate-pulse"></div>
-                    {/* En una implementación real, aquí irían las imágenes reales de YouTube */}
-                    {/* <Image 
-                      src={video.thumbnail} 
-                      alt={video.title} 
-                      fill 
-                      className="object-cover"
-                    /> */}
-                  </div>
-                  <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-1 text-xs text-white rounded">
-                    {video.duration}
-                  </div>
                 </div>
-                
-                <div className="flex flex-col p-4 flex-grow">
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span>{formatDate(video.publishedAt)}</span>
-                    <span>{video.viewCount} visualizaciones</span>
-                  </div>
-                  
-                  <h3 className="mt-2 line-clamp-2 text-lg font-semibold group-hover:text-primary">
-                    {video.title}
+                <div className="flex flex-col flex-grow p-4">
+                  <h3 className="font-medium line-clamp-2">
+                    <a 
+                      href={`https://www.youtube.com/watch?v=${video.id}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="hover:text-primary"
+                    >
+                      {video.title}
+                    </a>
                   </h3>
-                  
-                  <p className="mt-2 line-clamp-2 text-sm text-muted-foreground flex-grow">
+                  <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
                     {video.description}
                   </p>
-                  
-                  <a 
-                    href={`https://www.youtube.com/watch?v=${video.id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center text-sm font-medium text-primary hover:underline"
-                  >
-                    <FaYoutube className="mr-2 h-4 w-4" />
-                    Ver en YouTube
-                  </a>
+                  <div className="mt-auto pt-4 flex items-center justify-between text-xs text-muted-foreground">
+                    <span>{formatDate(video.publishedAt)}</span>
+                    <span className="flex items-center">
+                      <FaEye className="mr-1 h-3 w-3" />
+                      {formatNumber(video.viewCount || "0")}
+                    </span>
+                  </div>
                 </div>
               </div>
             ))
           ) : (
-            <p className="col-span-3 text-center py-10 text-muted-foreground">No se encontraron podcasts.</p>
+            <div className="col-span-full py-8 text-center">
+              <p className="text-muted-foreground">No se encontraron podcasts.</p>
+            </div>
           )
-        ) : reels.length > 0 ? (
-          reels.map(reel => (
-            <div key={reel.id} className="group flex flex-col overflow-hidden rounded-lg border bg-card text-card-foreground shadow transition-all hover:shadow-md">
-              <div className="relative aspect-[9/16] w-full overflow-hidden">
-                <div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center z-10">
-                  <div className="rounded-full bg-primary p-3 text-primary-foreground">
-                    <FaPlay className="h-4 w-4" />
+        ) : (
+          reels.length > 0 ? (
+            reels.map(reel => (
+              <div key={reel.id} className="group flex flex-col overflow-hidden rounded-lg border bg-card text-card-foreground shadow transition-all hover:shadow-md">
+                <div className="relative h-80 w-full overflow-hidden">
+                  <a 
+                    href={`https://www.youtube.com/watch?v=${reel.id}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="absolute inset-0 z-10"
+                  >
+                    <div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
+                      <div className="rounded-full bg-primary p-3 text-primary-foreground">
+                        <FaPlay className="h-4 w-4" />
+                      </div>
+                    </div>
+                  </a>
+                  <div className="h-full w-full relative">
+                    <Image 
+                      src={reel.thumbnails.high.url || reel.thumbnails.medium.url} 
+                      alt={reel.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transition-transform group-hover:scale-105" 
+                    />
+                    <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-1 rounded text-xs text-white">
+                      {reel.duration}
+                    </div>
                   </div>
                 </div>
-                <div className="h-full w-full relative">
-                  <div className="absolute inset-0 bg-neutral-300 animate-pulse"></div>
-                  {/* En una implementación real, aquí irían las imágenes reales de YouTube */}
-                  {/* <Image 
-                    src={reel.thumbnail} 
-                    alt={reel.title} 
-                    fill 
-                    className="object-cover"
-                  /> */}
-                </div>
-                <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-1 text-xs text-white rounded">
-                  {reel.duration}
+                <div className="flex flex-col p-4">
+                  <h3 className="font-medium line-clamp-1">
+                    <a 
+                      href={`https://www.youtube.com/watch?v=${reel.id}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="hover:text-primary"
+                    >
+                      {reel.title}
+                    </a>
+                  </h3>
+                  <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
+                    <span>{formatDate(reel.publishedAt)}</span>
+                    <span className="flex items-center">
+                      <FaEye className="mr-1 h-3 w-3" />
+                      {formatNumber(reel.viewCount || "0")}
+                    </span>
+                  </div>
                 </div>
               </div>
-              
-              <div className="flex flex-col p-4 flex-grow">
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>{formatDate(reel.publishedAt)}</span>
-                  <span>{reel.viewCount} visualizaciones</span>
-                </div>
-                
-                <h3 className="mt-2 line-clamp-2 text-lg font-semibold group-hover:text-primary">
-                  {reel.title}
-                </h3>
-                
-                <p className="mt-2 line-clamp-2 text-sm text-muted-foreground flex-grow">
-                  {reel.description}
-                </p>
-                
-                <a 
-                  href={`https://www.youtube.com/shorts/${reel.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 inline-flex items-center text-sm font-medium text-primary hover:underline"
-                >
-                  <FaYoutube className="mr-2 h-4 w-4" />
-                  Ver en YouTube
-                </a>
-              </div>
+            ))
+          ) : (
+            <div className="col-span-full py-8 text-center">
+              <p className="text-muted-foreground">No se encontraron reels.</p>
             </div>
-          ))
-        ) : (
-          <p className="col-span-3 text-center py-10 text-muted-foreground">No se encontraron reels.</p>
+          )
         )}
       </div>
       
       <div className="mt-8 text-center">
         <a 
-          href="https://www.youtube.com/@EFISPODCAST"
-          target="_blank"
+          href={channelInfo ? `https://www.youtube.com/channel/${channelInfo.id}` : "https://www.youtube.com/@EFISPODCAST"} 
+          target="_blank" 
           rel="noopener noreferrer"
-          className="inline-flex items-center rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+          className="inline-flex items-center rounded-md bg-red-600 px-6 py-3 text-sm font-medium text-white hover:bg-red-700"
         >
           <FaYoutube className="mr-2 h-5 w-5" />
-          Visitar nuestro canal de YouTube
+          Ver más en YouTube
         </a>
       </div>
     </div>

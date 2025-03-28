@@ -28,6 +28,11 @@ jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_YOUTUBE_API_KEY: ${{ secrets.NEXT_PUBLIC_YOUTUBE_API_KEY }}
+      NEXT_PUBLIC_YOUTUBE_CHANNEL_ID: ${{ secrets.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID }}
+      NEXT_PUBLIC_SITE_URL: https://reneg-ai.github.io/Efis-Podcast
+      NEXT_PUBLIC_SITE_NAME: "Efis Podcast"
     steps:
       - name: Checkout
         uses: actions/checkout@v4

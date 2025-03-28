@@ -38,9 +38,9 @@ const FALLBACK_VIDEOS: YouTubeVideo[] = [
     description: "Este es un video de ejemplo que se muestra cuando la API no está disponible",
     publishedAt: new Date().toISOString(),
     thumbnails: {
-      default: { url: "/thumbnail-placeholder.jpg", width: 120, height: 90 },
-      medium: { url: "/thumbnail-placeholder.jpg", width: 320, height: 180 },
-      high: { url: "/thumbnail-placeholder.jpg", width: 480, height: 360 }
+      default: { url: "https://via.placeholder.com/120x90.png?text=Ejemplo", width: 120, height: 90 },
+      medium: { url: "https://via.placeholder.com/320x180.png?text=Ejemplo", width: 320, height: 180 },
+      high: { url: "https://via.placeholder.com/480x360.png?text=Ejemplo", width: 480, height: 360 }
     },
     channelTitle: "EFIS PODCAST",
     duration: "45:00",
@@ -53,9 +53,9 @@ const FALLBACK_VIDEOS: YouTubeVideo[] = [
     description: "Este es otro video de ejemplo para mostrar cuando no hay datos de la API",
     publishedAt: new Date(Date.now() - 86400000).toISOString(),
     thumbnails: {
-      default: { url: "/thumbnail-placeholder.jpg", width: 120, height: 90 },
-      medium: { url: "/thumbnail-placeholder.jpg", width: 320, height: 180 },
-      high: { url: "/thumbnail-placeholder.jpg", width: 480, height: 360 }
+      default: { url: "https://via.placeholder.com/120x90.png?text=Ejemplo", width: 120, height: 90 },
+      medium: { url: "https://via.placeholder.com/320x180.png?text=Ejemplo", width: 320, height: 180 },
+      high: { url: "https://via.placeholder.com/480x360.png?text=Ejemplo", width: 480, height: 360 }
     },
     channelTitle: "EFIS PODCAST",
     duration: "32:15",
@@ -73,18 +73,34 @@ export default function YouTubeEpisodes() {
   const [activeTab, setActiveTab] = useState<"podcasts" | "reels">("podcasts");
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [nextUpdate, setNextUpdate] = useState<Date | null>(null);
-  const [useLocalImages, setUseLocalImages] = useState(false);
+  const [isGitHubPages, setIsGitHubPages] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  // Verificar si estamos en producción (GitHub Pages)
+  // Verificar si estamos en el navegador y si es GitHub Pages
   useEffect(() => {
-    if (window.location.hostname === 'reneg-ai.github.io') {
-      console.log("Entorno de producción detectado: GitHub Pages");
-      setUseLocalImages(true);
+    setMounted(true);
+    // Detectar si estamos en GitHub Pages
+    if (typeof window !== 'undefined') {
+      const isGitHubPagesHost = window.location.hostname.includes('github.io');
+      setIsGitHubPages(isGitHubPagesHost);
+      console.log("¿Es GitHub Pages?", isGitHubPagesHost);
+      
+      // En GitHub Pages, usar siempre datos de ejemplo
+      if (isGitHubPagesHost) {
+        console.log("GitHub Pages detectado, usando datos de ejemplo");
+        setChannelInfo(EXAMPLE_CHANNEL);
+        setVideos(FALLBACK_VIDEOS);
+        setLoading(false);
+        setError("GitHub Pages detectado. Mostrando datos de ejemplo.");
+      }
     }
   }, []);
 
-  // Verifica que las claves API estén disponibles
+  // Verifica que las claves API estén disponibles (solo si no es GitHub Pages)
   useEffect(() => {
+    // Si es GitHub Pages o aún no está montado, no verificar las claves
+    if (isGitHubPages || !mounted) return;
+    
     const apiKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
     const channelId = process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID;
     
@@ -102,12 +118,15 @@ export default function YouTubeEpisodes() {
       setChannelInfo(EXAMPLE_CHANNEL);
       setVideos(FALLBACK_VIDEOS);
     }
-  }, []);
+  }, [mounted, isGitHubPages]);
 
-  // Cargar datos desde la API de YouTube
+  // Cargar datos desde la API de YouTube (solo si no es GitHub Pages)
   useEffect(() => {
-    // Si ya hemos determinado que faltan las claves, no hacemos la petición
-    if (error && error.includes("Faltan las claves")) {
+    // No cargar datos si:
+    // 1. Estamos en GitHub Pages
+    // 2. Faltan las claves API
+    // 3. Componente no montado
+    if (isGitHubPages || !mounted || (error && error.includes("Faltan las claves"))) {
       return;
     }
 
@@ -163,7 +182,7 @@ export default function YouTubeEpisodes() {
     };
     
     fetchYouTubeData();
-  }, [error]);
+  }, [error, mounted, isGitHubPages]);
 
   const formatDate = (date: Date) => {
     try {
@@ -202,6 +221,14 @@ export default function YouTubeEpisodes() {
     }
   };
 
+  // Manejar la ruta de imágenes para GitHub Pages
+  const getImageUrl = (url: string) => {
+    if (isGitHubPages && url.startsWith('/')) {
+      return `/Efis-Podcast${url}`;
+    }
+    return url;
+  };
+
   if (loading) {
     return (
       <div className="w-full py-20 text-center">
@@ -211,6 +238,11 @@ export default function YouTubeEpisodes() {
     );
   }
 
+  // Asegurarse de que tenemos datos para mostrar
+  if (!mounted) {
+    return null; // No renderizar nada hasta que el componente esté montado
+  }
+
   return (
     <div className="w-full">
       {/* Información del canal */}
@@ -218,11 +250,14 @@ export default function YouTubeEpisodes() {
         <div className="mb-8 p-6 bg-card rounded-lg shadow-sm border">
           <div className="flex items-center gap-4">
             <div className="relative w-20 h-20 rounded-full overflow-hidden">
-              <Image
-                src={channelInfo.thumbnails.high.url}
-                alt={channelInfo.title}
-                fill
-                className="object-cover"
+              {/* Usar un div con estilo de fondo en lugar de Image para evitar problemas */}
+              <div 
+                className="absolute inset-0 bg-center bg-cover"
+                style={{ 
+                  backgroundImage: `url(${channelInfo.thumbnails.high.url})`,
+                  width: '100%',
+                  height: '100%'
+                }}
               />
             </div>
             <div>
@@ -285,11 +320,13 @@ export default function YouTubeEpisodes() {
             >
               <div className="relative aspect-video">
                 {!video.id.startsWith("fallback") ? (
-                  <Image
-                    src={video.thumbnails.high.url}
-                    alt={video.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  // Usar un div con fondo en lugar de Image para evitar problemas
+                  <div 
+                    className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300"
+                    style={{ 
+                      backgroundImage: `url(${video.thumbnails.high.url})`,
+                      backgroundPosition: 'center'
+                    }}
                   />
                 ) : (
                   // Imagen de fallback para datos de ejemplo

@@ -4,6 +4,16 @@ const nextConfig = {
   images: {
     unoptimized: true,
     domains: ['yt3.googleusercontent.com', 'i.ytimg.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.ytimg.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.googleusercontent.com',
+      },
+    ],
   },
   // Configuración para GitHub Pages
   basePath: process.env.NODE_ENV === 'production' ? '/Efis-Podcast' : '',

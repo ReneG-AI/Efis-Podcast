@@ -5,6 +5,7 @@ export const metadata = {
   description: "Videos y Reels del canal de YouTube de Efis Podcast"
 };
 
+// Esta página es estática, por lo que funciona en GitHub Pages
 export default function YouTubePage() {
   return (
     <div className="container max-w-screen-xl py-8 md:py-12">

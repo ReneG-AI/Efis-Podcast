@@ -30,6 +30,40 @@ const EXAMPLE_CHANNEL = {
   }
 };
 
+// Ejemplo de videos para cuando la API no esté disponible
+const FALLBACK_VIDEOS: YouTubeVideo[] = [
+  {
+    id: "fallback1",
+    title: "Ejemplo de episodio de podcast",
+    description: "Este es un video de ejemplo que se muestra cuando la API no está disponible",
+    publishedAt: new Date().toISOString(),
+    thumbnails: {
+      default: { url: "/thumbnail-placeholder.jpg", width: 120, height: 90 },
+      medium: { url: "/thumbnail-placeholder.jpg", width: 320, height: 180 },
+      high: { url: "/thumbnail-placeholder.jpg", width: 480, height: 360 }
+    },
+    channelTitle: "EFIS PODCAST",
+    duration: "45:00",
+    viewCount: "1250",
+    isReel: false
+  },
+  {
+    id: "fallback2",
+    title: "Otro episodio de ejemplo",
+    description: "Este es otro video de ejemplo para mostrar cuando no hay datos de la API",
+    publishedAt: new Date(Date.now() - 86400000).toISOString(),
+    thumbnails: {
+      default: { url: "/thumbnail-placeholder.jpg", width: 120, height: 90 },
+      medium: { url: "/thumbnail-placeholder.jpg", width: 320, height: 180 },
+      high: { url: "/thumbnail-placeholder.jpg", width: 480, height: 360 }
+    },
+    channelTitle: "EFIS PODCAST",
+    duration: "32:15",
+    viewCount: "980",
+    isReel: false
+  }
+];
+
 export default function YouTubeEpisodes() {
   const [videos, setVideos] = useState<YouTubeVideo[]>([]);
   const [reels, setReels] = useState<YouTubeVideo[]>([]);
@@ -39,23 +73,44 @@ export default function YouTubeEpisodes() {
   const [activeTab, setActiveTab] = useState<"podcasts" | "reels">("podcasts");
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [nextUpdate, setNextUpdate] = useState<Date | null>(null);
+  const [useLocalImages, setUseLocalImages] = useState(false);
+
+  // Verificar si estamos en producción (GitHub Pages)
+  useEffect(() => {
+    if (window.location.hostname === 'reneg-ai.github.io') {
+      console.log("Entorno de producción detectado: GitHub Pages");
+      setUseLocalImages(true);
+    }
+  }, []);
 
   // Verifica que las claves API estén disponibles
   useEffect(() => {
     const apiKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
     const channelId = process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID;
     
-    console.log("YouTube API Key disponible:", !!apiKey);
-    console.log("YouTube Channel ID disponible:", !!channelId);
+    console.log("Variables de entorno disponibles:", {
+      siteUrl: process.env.NEXT_PUBLIC_SITE_URL,
+      siteName: process.env.NEXT_PUBLIC_SITE_NAME,
+      youtubeApiKey: !!apiKey,
+      youtubeChannelId: !!channelId
+    });
     
     if (!apiKey || !channelId) {
-      setError("Faltan las claves de la API de YouTube. Por favor, verifica la configuración.");
+      console.warn("⚠️ Faltan claves API de YouTube. Usando datos de ejemplo.");
+      setError("Faltan las claves de la API de YouTube. Mostrando datos de ejemplo.");
       setLoading(false);
+      setChannelInfo(EXAMPLE_CHANNEL);
+      setVideos(FALLBACK_VIDEOS);
     }
   }, []);
 
   // Cargar datos desde la API de YouTube
   useEffect(() => {
+    // Si ya hemos determinado que faltan las claves, no hacemos la petición
+    if (error && error.includes("Faltan las claves")) {
+      return;
+    }
+
     const fetchYouTubeData = async () => {
       try {
         setLoading(true);
@@ -78,7 +133,8 @@ export default function YouTubeEpisodes() {
           console.log(`Se encontraron ${videosData.length} videos regulares`);
           setVideos(videosData);
         } else {
-          console.warn("No se encontraron videos regulares");
+          console.warn("No se encontraron videos regulares, usando datos de ejemplo");
+          setVideos(FALLBACK_VIDEOS);
         }
         
         // Obtener reels
@@ -88,6 +144,7 @@ export default function YouTubeEpisodes() {
           setReels(reelsData);
         } else {
           console.warn("No se encontraron reels");
+          // Podríamos establecer reels de ejemplo aquí si lo deseamos
         }
         
         const now = new Date();
@@ -97,15 +154,16 @@ export default function YouTubeEpisodes() {
         setLoading(false);
       } catch (err) {
         console.error("Error al cargar datos de YouTube:", err);
-        setError("Error al cargar los videos de YouTube. Por favor, verifica la consola para más detalles.");
+        setError("Error al cargar los videos de YouTube. Usando datos de ejemplo.");
         setLoading(false);
-        // Si hay error, usar el canal de ejemplo al menos
+        // Si hay error, usar datos de ejemplo
         setChannelInfo(EXAMPLE_CHANNEL);
+        setVideos(FALLBACK_VIDEOS);
       }
     };
     
     fetchYouTubeData();
-  }, []);
+  }, [error]);
 
   const formatDate = (date: Date) => {
     try {
@@ -153,48 +211,6 @@ export default function YouTubeEpisodes() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="w-full py-10 text-center">
-        <p className="text-lg text-red-500">{error}</p>
-        <div className="mt-4 space-y-2 text-left bg-muted p-4 rounded-md max-w-xl mx-auto">
-          <p className="font-medium">Posibles soluciones:</p>
-          <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
-            <li>Verifica que la API key de YouTube sea válida y tenga los permisos correctos</li>
-            <li>Asegúrate de que el ID del canal sea correcto</li>
-            <li>Verifica que no hayas excedido la cuota diaria de YouTube API</li>
-            <li>Comprueba la consola del navegador para más detalles técnicos</li>
-          </ul>
-          <p className="mt-4 text-sm">
-            Mientras tanto, puedes visitar nuestro canal de <a href="https://www.youtube.com/@EFISPODCAST" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">YouTube</a> directamente.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  if ((!videos || videos.length === 0) && (!reels || reels.length === 0)) {
-    return (
-      <div className="w-full py-10 text-center">
-        <p className="text-lg text-amber-500">No se encontraron videos en el canal</p>
-        <p className="mt-2 text-muted-foreground">
-          No pudimos encontrar videos para mostrar. Puede que no hayamos podido conectar con la API de YouTube.
-        </p>
-        <p className="mt-4">
-          <a 
-            href="https://www.youtube.com/@EFISPODCAST" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
-          >
-            <FaYoutube className="mr-2 h-4 w-4" />
-            Ir al canal de YouTube
-          </a>
-        </p>
-      </div>
-    );
-  }
-
   return (
     <div className="w-full">
       {/* Información del canal */}
@@ -219,6 +235,14 @@ export default function YouTubeEpisodes() {
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Mensaje de error si existe */}
+      {error && (
+        <div className="w-full mb-6 p-4 border border-amber-200 bg-amber-50 rounded-md text-amber-700">
+          <p>{error}</p>
+          <p className="text-xs mt-2">Estamos mostrando contenido de ejemplo. Visita nuestro canal de <a href="https://www.youtube.com/@EFISPODCAST" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">YouTube</a> para ver el contenido real.</p>
         </div>
       )}
 
@@ -260,12 +284,19 @@ export default function YouTubeEpisodes() {
               className="block"
             >
               <div className="relative aspect-video">
-                <Image
-                  src={video.thumbnails.high.url}
-                  alt={video.title}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                />
+                {!video.id.startsWith("fallback") ? (
+                  <Image
+                    src={video.thumbnails.high.url}
+                    alt={video.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                ) : (
+                  // Imagen de fallback para datos de ejemplo
+                  <div className="w-full h-full bg-gray-300 flex items-center justify-center">
+                    <FaYoutube className="w-16 h-16 text-gray-500" />
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                   <FaPlay className="w-12 h-12 text-white" />
                 </div>

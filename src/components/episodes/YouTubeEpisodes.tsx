@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { FaYoutube, FaPlay, FaRegClock, FaEye, FaSync } from "react-icons/fa";
+import { FaSpinner, FaClock, FaEye } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
 import { 
@@ -11,9 +11,6 @@ import {
   type YouTubeVideo,
   type YouTubeChannel 
 } from "@/lib/api/youtube";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Loader2, Clock, Eye } from 'lucide-react';
 
 // Datos de ejemplo para usar si la API falla
 const EXAMPLE_CHANNEL = {
@@ -150,12 +147,12 @@ export default function YouTubeEpisodes() {
               <li>Comprueba si hay un problema con tu clave de API</li>
             </ul>
           </div>
-          <Button 
+          <button 
             onClick={loadYouTubeData} 
-            className="mt-4 bg-red-600 hover:bg-red-700 text-white"
+            className="mt-4 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md"
           >
             Reintentar
-          </Button>
+          </button>
         </div>
         <div className="text-center py-8">
           <p className="mb-4">Mientras tanto, puedes visitar nuestro canal oficial:</p>
@@ -177,7 +174,9 @@ export default function YouTubeEpisodes() {
       <div className="container mx-auto py-8 px-4">
         <h1 className="text-3xl font-bold mb-6">Canal de YouTube</h1>
         <div className="flex flex-col items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+          <div className="animate-spin text-primary mb-4">
+            <FaSpinner size={32} />
+          </div>
           <p className="text-lg text-muted-foreground">Cargando videos de YouTube...</p>
         </div>
       </div>
@@ -241,100 +240,118 @@ export default function YouTubeEpisodes() {
           </a>
         </div>
       ) : (
-        <Tabs defaultValue="podcasts" value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="mb-6">
-            <TabsTrigger value="podcasts">
+        <div>
+          {/* Tabs de navegación */}
+          <div className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground mb-6">
+            <button
+              onClick={() => setActiveTab("podcasts")}
+              className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ${
+                activeTab === "podcasts"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "hover:bg-background/50 hover:text-foreground"
+              }`}
+            >
               Podcasts ({videos.length})
-            </TabsTrigger>
-            <TabsTrigger value="reels">
+            </button>
+            <button
+              onClick={() => setActiveTab("reels")}
+              className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ${
+                activeTab === "reels"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "hover:bg-background/50 hover:text-foreground"
+              }`}
+            >
               Reels ({reels.length})
-            </TabsTrigger>
-          </TabsList>
+            </button>
+          </div>
           
-          <TabsContent value="podcasts" className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {videos.map(video => (
-                <a 
-                  key={video.id}
-                  href={`https://www.youtube.com/watch?v=${video.id}`}
-                  target="_blank"
-                  className="group"
-                >
-                  <div className="overflow-hidden rounded-lg border bg-card hover:shadow-lg transition-shadow duration-300">
-                    <div className="relative">
-                      <Image 
-                        src={video.thumbnails.high.url} 
-                        alt={video.title}
-                        width={video.thumbnails.high.width}
-                        height={video.thumbnails.high.height}
-                        className="w-full object-cover aspect-video group-hover:scale-105 transition-transform duration-300"
-                      />
-                      {video.duration && (
-                        <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                          {video.duration}
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-4">
-                      <h3 className="font-medium line-clamp-2 mb-2 group-hover:text-primary">
-                        {video.title}
-                      </h3>
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <div className="flex items-center mr-4">
-                          <Eye className="w-4 h-4 mr-1" />
-                          {formatNumber(video.viewCount || '0')}
-                        </div>
-                        <div className="flex items-center">
-                          <Clock className="w-4 h-4 mr-1" />
-                          {formatDate(video.publishedAt)}
+          {/* Contenido de las tabs */}
+          <div className="mt-2 space-y-6">
+            {activeTab === "podcasts" && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {videos.map(video => (
+                  <a 
+                    key={video.id}
+                    href={`https://www.youtube.com/watch?v=${video.id}`}
+                    target="_blank"
+                    className="group"
+                  >
+                    <div className="overflow-hidden rounded-lg border bg-card hover:shadow-lg transition-shadow duration-300">
+                      <div className="relative">
+                        <Image 
+                          src={video.thumbnails.high.url} 
+                          alt={video.title}
+                          width={video.thumbnails.high.width}
+                          height={video.thumbnails.high.height}
+                          className="w-full object-cover aspect-video group-hover:scale-105 transition-transform duration-300"
+                        />
+                        {video.duration && (
+                          <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                            {video.duration}
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-4">
+                        <h3 className="font-medium line-clamp-2 mb-2 group-hover:text-primary">
+                          {video.title}
+                        </h3>
+                        <div className="flex items-center text-sm text-muted-foreground">
+                          <div className="flex items-center mr-4">
+                            <FaEye className="w-4 h-4 mr-1" />
+                            {formatNumber(video.viewCount || '0')}
+                          </div>
+                          <div className="flex items-center">
+                            <FaClock className="w-4 h-4 mr-1" />
+                            {formatDate(video.publishedAt)}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="reels" className="space-y-6">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-              {reels.map(reel => (
-                <a 
-                  key={reel.id}
-                  href={`https://www.youtube.com/shorts/${reel.id}`}
-                  target="_blank"
-                  className="group"
-                >
-                  <div className="overflow-hidden rounded-lg border bg-card hover:shadow-lg transition-shadow duration-300">
-                    <div className="relative">
-                      <Image 
-                        src={reel.thumbnails.high.url} 
-                        alt={reel.title}
-                        width={reel.thumbnails.high.width}
-                        height={reel.thumbnails.high.height}
-                        className="w-full object-cover aspect-[9/16] group-hover:scale-105 transition-transform duration-300"
-                      />
-                      {reel.duration && (
-                        <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                          {reel.duration}
+                  </a>
+                ))}
+              </div>
+            )}
+            
+            {activeTab === "reels" && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                {reels.map(reel => (
+                  <a 
+                    key={reel.id}
+                    href={`https://www.youtube.com/shorts/${reel.id}`}
+                    target="_blank"
+                    className="group"
+                  >
+                    <div className="overflow-hidden rounded-lg border bg-card hover:shadow-lg transition-shadow duration-300">
+                      <div className="relative">
+                        <Image 
+                          src={reel.thumbnails.high.url} 
+                          alt={reel.title}
+                          width={reel.thumbnails.high.width}
+                          height={reel.thumbnails.high.height}
+                          className="w-full object-cover aspect-[9/16] group-hover:scale-105 transition-transform duration-300"
+                        />
+                        {reel.duration && (
+                          <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                            {reel.duration}
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-2">
+                        <h3 className="text-sm font-medium line-clamp-1 group-hover:text-primary">
+                          {reel.title}
+                        </h3>
+                        <div className="flex items-center text-xs text-muted-foreground mt-1">
+                          <FaEye className="w-3 h-3 mr-1" />
+                          {formatNumber(reel.viewCount || '0')}
                         </div>
-                      )}
-                    </div>
-                    <div className="p-2">
-                      <h3 className="text-sm font-medium line-clamp-1 group-hover:text-primary">
-                        {reel.title}
-                      </h3>
-                      <div className="flex items-center text-xs text-muted-foreground mt-1">
-                        <Eye className="w-3 h-3 mr-1" />
-                        {formatNumber(reel.viewCount || '0')}
                       </div>
                     </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );

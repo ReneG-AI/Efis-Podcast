@@ -2,6 +2,8 @@
 
 Aplicación web para el Podcast de Efis sobre desarrollo personal y profesional.
 
+> ⚠️ Este es un repositorio privado. Si necesitas acceso, contacta al administrador del proyecto.
+
 ## Características
 
 - Listado de episodios con reproductor integrado
@@ -12,9 +14,9 @@ Aplicación web para el Podcast de Efis sobre desarrollo personal y profesional.
 
 ## Instalación
 
-1. Clona el repositorio:
+1. Clona el repositorio (requiere acceso):
 ```bash
-git clone https://github.com/yourusername/Efis-Podcast.git
+git clone https://github.com/ReneG-AI/Efis-Podcast.git
 cd Efis-Podcast
 ```
 
@@ -24,7 +26,8 @@ npm install
 ```
 
 3. Configura las variables de entorno:
-   - Crea un archivo `.env.local` basado en `.env.example`
+   - Copia el archivo `.env.example` a `.env.local`
+   - Completa las variables con tus propias claves
    - O utiliza el script `start.bat` que creará uno básico automáticamente
 
 ## Configuración de YouTube API
@@ -74,8 +77,15 @@ npm run build
 
 ## Colaboración
 
-1. Haz fork del repositorio
+1. Solicita acceso al repositorio
 2. Crea una rama para tu feature (`git checkout -b feature/amazing-feature`)
 3. Haz commit de tus cambios (`git commit -m 'Add some amazing feature'`)
 4. Push a la rama (`git push origin feature/amazing-feature`)
 5. Abre un Pull Request
+
+## Seguridad
+
+- No compartas tus claves de API
+- No subas archivos `.env` al repositorio
+- Mantén actualizadas las dependencias
+- Reporta cualquier problema de seguridad al administrador

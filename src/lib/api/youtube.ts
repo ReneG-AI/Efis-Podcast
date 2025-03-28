@@ -60,9 +60,9 @@ const EXAMPLE_VIDEOS: YouTubeVideo[] = [
     description: "Este es un video de ejemplo cuando la API no está disponible",
     publishedAt: new Date().toISOString(),
     thumbnails: {
-      default: { url: "https://i.ytimg.com/vi/example1/default.jpg", width: 120, height: 90 },
-      medium: { url: "https://i.ytimg.com/vi/example1/mqdefault.jpg", width: 320, height: 180 },
-      high: { url: "https://i.ytimg.com/vi/example1/hqdefault.jpg", width: 480, height: 360 }
+      default: { url: "https://via.placeholder.com/120x90.png?text=Ejemplo", width: 120, height: 90 },
+      medium: { url: "https://via.placeholder.com/320x180.png?text=Ejemplo", width: 320, height: 180 },
+      high: { url: "https://via.placeholder.com/480x360.png?text=Ejemplo", width: 480, height: 360 }
     },
     channelTitle: "EFIS PODCAST",
     duration: "30:00",
@@ -78,9 +78,9 @@ const EXAMPLE_REELS: YouTubeVideo[] = [
     description: "Este es un reel de ejemplo cuando la API no está disponible",
     publishedAt: new Date().toISOString(),
     thumbnails: {
-      default: { url: "https://i.ytimg.com/vi/example2/default.jpg", width: 120, height: 90 },
-      medium: { url: "https://i.ytimg.com/vi/example2/mqdefault.jpg", width: 320, height: 180 },
-      high: { url: "https://i.ytimg.com/vi/example2/hqdefault.jpg", width: 480, height: 360 }
+      default: { url: "https://via.placeholder.com/120x90.png?text=Reel", width: 120, height: 90 },
+      medium: { url: "https://via.placeholder.com/320x180.png?text=Reel", width: 320, height: 180 },
+      high: { url: "https://via.placeholder.com/480x360.png?text=Reel", width: 480, height: 360 }
     },
     channelTitle: "EFIS PODCAST",
     duration: "0:30",
@@ -88,6 +88,9 @@ const EXAMPLE_REELS: YouTubeVideo[] = [
     isReel: true
   }
 ];
+
+// Verificar si estamos en el navegador
+const isBrowser = typeof window !== 'undefined';
 
 // Función para identificar si un video es un Reel basado en sus proporciones o hashtags
 function isYouTubeReel(video: any): boolean {
@@ -159,10 +162,16 @@ function formatDuration(duration: string): string {
 export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]> {
   console.log('Obteniendo videos del canal...');
   
+  // Verificar si estamos en GitHub Pages
+  if (isBrowser && window.location.hostname.includes('github.io')) {
+    console.log('Detectado GitHub Pages, usando datos de ejemplo');
+    return EXAMPLE_VIDEOS;
+  }
+  
   // Intentar obtener de la caché primero
   try {
     const cachedVideos = await getCachedVideos();
-    if (cachedVideos) {
+    if (cachedVideos && cachedVideos.length > 0) {
       console.log('Usando videos en caché');
       return cachedVideos;
     }
@@ -250,6 +259,27 @@ export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]>
 export async function getChannelInfo(): Promise<YouTubeChannel | null> {
   console.log('Obteniendo información del canal...');
   
+  // Verificar si estamos en GitHub Pages
+  if (isBrowser && window.location.hostname.includes('github.io')) {
+    console.log('Detectado GitHub Pages, usando datos de ejemplo');
+    return {
+      id: "UCj_orkn7ilVdxmpElajgEfQ",
+      title: "EFIS PODCAST",
+      description: "Canal de EFIS PODCAST",
+      customUrl: "@EFISPODCAST",
+      thumbnails: {
+        default: { url: "https://yt3.googleusercontent.com/ytc/AIf8zZRbNQH9d5ldjOKm1uqiZiCf6t2UpqYfQ9RFkx4d=s88-c-k-c0x00ffffff-no-rj", width: 88, height: 88 },
+        medium: { url: "https://yt3.googleusercontent.com/ytc/AIf8zZRbNQH9d5ldjOKm1uqiZiCf6t2UpqYfQ9RFkx4d=s240-c-k-c0x00ffffff-no-rj", width: 240, height: 240 },
+        high: { url: "https://yt3.googleusercontent.com/ytc/AIf8zZRbNQH9d5ldjOKm1uqiZiCf6t2UpqYfQ9RFkx4d=s800-c-k-c0x00ffffff-no-rj", width: 800, height: 800 }
+      },
+      statistics: {
+        viewCount: "12345",
+        subscriberCount: "1234",
+        videoCount: "45"
+      }
+    };
+  }
+  
   // Intentar obtener de la caché primero
   try {
     const cachedChannel = await getCachedChannel();
@@ -319,10 +349,16 @@ export async function getChannelInfo(): Promise<YouTubeChannel | null> {
 
 // Función para obtener solo los reels
 export async function getChannelReels(maxResults = 20): Promise<YouTubeVideo[]> {
+  // Verificar si estamos en GitHub Pages
+  if (isBrowser && window.location.hostname.includes('github.io')) {
+    console.log('Detectado GitHub Pages, usando datos de ejemplo');
+    return EXAMPLE_REELS;
+  }
+  
   try {
     // Intentar obtener de la caché primero
     const cachedReels = await getCachedReels();
-    if (cachedReels) {
+    if (cachedReels && cachedReels.length > 0) {
       console.log('Usando reels en caché');
       return cachedReels;
     }
@@ -334,10 +370,12 @@ export async function getChannelReels(maxResults = 20): Promise<YouTubeVideo[]> 
     const result = reels.slice(0, Math.min(reels.length, maxResults));
     
     // Guardar en caché
-    try {
-      await cacheReels(result);
-    } catch (error) {
-      console.error('Error al guardar reels en caché:', error);
+    if (result.length > 0) {
+      try {
+        await cacheReels(result);
+      } catch (error) {
+        console.error('Error al guardar reels en caché:', error);
+      }
     }
     
     return result.length > 0 ? result : EXAMPLE_REELS;
@@ -349,6 +387,12 @@ export async function getChannelReels(maxResults = 20): Promise<YouTubeVideo[]> 
 
 // Función para obtener solo los videos regulares (no reels)
 export async function getChannelRegularVideos(maxResults = 20): Promise<YouTubeVideo[]> {
+  // Verificar si estamos en GitHub Pages
+  if (isBrowser && window.location.hostname.includes('github.io')) {
+    console.log('Detectado GitHub Pages, usando datos de ejemplo');
+    return EXAMPLE_VIDEOS;
+  }
+  
   try {
     const allVideos = await getChannelVideos(maxResults * 2);
     const regularVideos = allVideos.filter(video => !video.isReel);
@@ -363,6 +407,12 @@ export async function getChannelRegularVideos(maxResults = 20): Promise<YouTubeV
 
 // Función para obtener un video específico por ID
 export async function getVideoById(videoId: string): Promise<YouTubeVideo | null> {
+  // Verificar si estamos en GitHub Pages
+  if (isBrowser && window.location.hostname.includes('github.io')) {
+    console.log('Detectado GitHub Pages, usando datos de ejemplo');
+    return EXAMPLE_VIDEOS[0];
+  }
+  
   if (!YOUTUBE_API_KEY) {
     console.error('YouTube API key faltante');
     return null;

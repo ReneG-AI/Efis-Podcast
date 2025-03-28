@@ -21,12 +21,21 @@ const nextConfig = {
   trailingSlash: true,
   // Configuración para evitar que las variables de entorno se expongan en el código fuente
   webpack: (config, { isServer }) => {
+    // Ignorar módulos del lado del servidor cuando se ejecuta en el navegador
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
+        path: false,
+        os: false,
         net: false,
         tls: false,
+        child_process: false,
+        crypto: false,
+        stream: false,
+        http: false,
+        https: false,
+        zlib: false,
       };
     }
     return config;

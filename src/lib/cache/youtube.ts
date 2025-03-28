@@ -1,101 +1,126 @@
-import fs from 'fs';
-import path from 'path';
-import { YouTubeVideo, YouTubeChannel } from '../api/youtube';
+// Sistema de caché para datos de YouTube
+import type { YouTubeVideo, YouTubeChannel } from '../api/youtube';
 
-const CACHE_DIR = path.join(process.cwd(), '.cache', 'youtube');
-const CACHE_DURATION = 1000 * 60 * 60 * 24 * 7; // 7 días en milisegundos
+// Duración del caché: 7 días (en milisegundos)
+const CACHE_DURATION = 1000 * 60 * 60 * 24 * 7;
 
-// Asegurarse de que el directorio de caché existe
-if (!fs.existsSync(CACHE_DIR)) {
-  fs.mkdirSync(CACHE_DIR, { recursive: true });
-}
+// Claves para localStorage
+const CACHE_KEYS = {
+  VIDEOS: 'youtube_videos_cache',
+  REELS: 'youtube_reels_cache',
+  CHANNEL: 'youtube_channel_cache'
+};
 
+// Interfaz para datos almacenados en caché
 interface CacheData<T> {
   data: T;
   timestamp: number;
-  lastVideoDate: string; // Fecha del video más reciente
+  expiration: number;
+  lastVideoDate?: string;
 }
 
-function getCachePath(key: string): string {
-  return path.join(CACHE_DIR, `${key}.json`);
+// Verificar si la caché expiró
+function isCacheExpired<T>(cacheData: CacheData<T> | null): boolean {
+  if (!cacheData) return true;
+  return Date.now() > cacheData.expiration;
 }
 
-function readCache<T>(key: string): T | null {
+// Función para guardar datos en localStorage
+function setCache<T>(key: string, data: T, lastVideoDate?: string): void {
   try {
-    const cachePath = getCachePath(key);
-    if (!fs.existsSync(cachePath)) return null;
+    if (typeof window === 'undefined') return; // Solo ejecutar en el cliente
+    
+    const cacheData: CacheData<T> = {
+      data,
+      timestamp: Date.now(),
+      expiration: Date.now() + CACHE_DURATION,
+      lastVideoDate
+    };
+    
+    localStorage.setItem(key, JSON.stringify(cacheData));
+    console.log(`Datos guardados en caché: ${key}`);
+  } catch (error) {
+    console.error(`Error al guardar en caché ${key}:`, error);
+  }
+}
 
-    const cacheContent = fs.readFileSync(cachePath, 'utf-8');
-    const cache: CacheData<T> = JSON.parse(cacheContent);
-
-    // Verificar si la caché ha expirado
-    if (Date.now() - cache.timestamp > CACHE_DURATION) {
+// Función para obtener datos de localStorage
+function getCache<T>(key: string): CacheData<T> | null {
+  try {
+    if (typeof window === 'undefined') return null; // Solo ejecutar en el cliente
+    
+    const cachedData = localStorage.getItem(key);
+    if (!cachedData) return null;
+    
+    const parsedData = JSON.parse(cachedData) as CacheData<T>;
+    
+    // Verificar si expiró
+    if (isCacheExpired(parsedData)) {
+      console.log(`Caché expirado para ${key}`);
+      localStorage.removeItem(key);
       return null;
     }
-
-    return cache.data;
+    
+    return parsedData;
   } catch (error) {
-    console.error(`Error reading cache for ${key}:`, error);
+    console.error(`Error al leer caché ${key}:`, error);
     return null;
   }
 }
 
-function writeCache<T>(key: string, data: T, lastVideoDate: string): void {
-  try {
-    const cachePath = getCachePath(key);
-    const cache: CacheData<T> = {
-      data,
-      timestamp: Date.now(),
-      lastVideoDate
-    };
-    fs.writeFileSync(cachePath, JSON.stringify(cache, null, 2));
-  } catch (error) {
-    console.error(`Error writing cache for ${key}:`, error);
-  }
-}
-
-// Claves de caché
-const CACHE_KEYS = {
-  VIDEOS: 'videos',
-  REELS: 'reels',
-  CHANNEL: 'channel'
-} as const;
-
+// Funciones para videos
 export async function getCachedVideos(): Promise<YouTubeVideo[] | null> {
-  return readCache<YouTubeVideo[]>(CACHE_KEYS.VIDEOS);
+  const cacheData = getCache<YouTubeVideo[]>(CACHE_KEYS.VIDEOS);
+  return cacheData ? cacheData.data : null;
 }
 
+export async function cacheVideos(videos: YouTubeVideo[]): Promise<void> {
+  // Obtener la fecha del video más reciente
+  const sortedVideos = [...videos].sort((a, b) => 
+    new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+  );
+  
+  const lastVideoDate = sortedVideos.length > 0 ? sortedVideos[0].publishedAt : undefined;
+  setCache(CACHE_KEYS.VIDEOS, videos, lastVideoDate);
+}
+
+// Funciones para reels
 export async function getCachedReels(): Promise<YouTubeVideo[] | null> {
-  return readCache<YouTubeVideo[]>(CACHE_KEYS.REELS);
+  const cacheData = getCache<YouTubeVideo[]>(CACHE_KEYS.REELS);
+  return cacheData ? cacheData.data : null;
 }
 
+export async function cacheReels(reels: YouTubeVideo[]): Promise<void> {
+  // Obtener la fecha del reel más reciente
+  const sortedReels = [...reels].sort((a, b) => 
+    new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+  );
+  
+  const lastVideoDate = sortedReels.length > 0 ? sortedReels[0].publishedAt : undefined;
+  setCache(CACHE_KEYS.REELS, reels, lastVideoDate);
+}
+
+// Funciones para información del canal
 export async function getCachedChannel(): Promise<YouTubeChannel | null> {
-  return readCache<YouTubeChannel>(CACHE_KEYS.CHANNEL);
+  const cacheData = getCache<YouTubeChannel>(CACHE_KEYS.CHANNEL);
+  return cacheData ? cacheData.data : null;
 }
 
-export function cacheVideos(videos: YouTubeVideo[]): void {
-  const lastVideoDate = videos[0]?.publishedAt || new Date().toISOString();
-  writeCache(CACHE_KEYS.VIDEOS, videos, lastVideoDate);
+export async function cacheChannel(channelInfo: YouTubeChannel): Promise<void> {
+  setCache(CACHE_KEYS.CHANNEL, channelInfo);
 }
 
-export function cacheReels(reels: YouTubeVideo[]): void {
-  const lastVideoDate = reels[0]?.publishedAt || new Date().toISOString();
-  writeCache(CACHE_KEYS.REELS, reels, lastVideoDate);
-}
-
-export function cacheChannel(channel: YouTubeChannel): void {
-  writeCache(CACHE_KEYS.CHANNEL, channel, new Date().toISOString());
-}
-
-// Función para limpiar la caché
+// Función para limpiar toda la caché
 export function clearCache(): void {
   try {
-    const files = fs.readdirSync(CACHE_DIR);
-    for (const file of files) {
-      fs.unlinkSync(path.join(CACHE_DIR, file));
-    }
-    console.log('YouTube cache cleared successfully');
+    if (typeof window === 'undefined') return;
+    
+    localStorage.removeItem(CACHE_KEYS.VIDEOS);
+    localStorage.removeItem(CACHE_KEYS.REELS);
+    localStorage.removeItem(CACHE_KEYS.CHANNEL);
+    
+    console.log('Caché de YouTube eliminada');
   } catch (error) {
-    console.error('Error clearing YouTube cache:', error);
+    console.error('Error al limpiar la caché:', error);
   }
 } 

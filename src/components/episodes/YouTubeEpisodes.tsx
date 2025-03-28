@@ -12,6 +12,24 @@ import {
   type YouTubeChannel 
 } from "@/lib/api/youtube";
 
+// Datos de ejemplo para usar si la API falla
+const EXAMPLE_CHANNEL = {
+  id: "UCj_orkn7ilVdxmpElajgEfQ",
+  title: "EFIS PODCAST",
+  description: "Canal de EFIS PODCAST",
+  customUrl: "@EFISPODCAST",
+  thumbnails: {
+    default: { url: "https://yt3.googleusercontent.com/ytc/AIf8zZRbNQH9d5ldjOKm1uqiZiCf6t2UpqYfQ9RFkx4d=s88-c-k-c0x00ffffff-no-rj", width: 88, height: 88 },
+    medium: { url: "https://yt3.googleusercontent.com/ytc/AIf8zZRbNQH9d5ldjOKm1uqiZiCf6t2UpqYfQ9RFkx4d=s240-c-k-c0x00ffffff-no-rj", width: 240, height: 240 },
+    high: { url: "https://yt3.googleusercontent.com/ytc/AIf8zZRbNQH9d5ldjOKm1uqiZiCf6t2UpqYfQ9RFkx4d=s800-c-k-c0x00ffffff-no-rj", width: 800, height: 800 }
+  },
+  statistics: {
+    viewCount: "12345",
+    subscriberCount: "1234",
+    videoCount: "45"
+  }
+};
+
 export default function YouTubeEpisodes() {
   const [videos, setVideos] = useState<YouTubeVideo[]>([]);
   const [reels, setReels] = useState<YouTubeVideo[]>([]);
@@ -21,6 +39,20 @@ export default function YouTubeEpisodes() {
   const [activeTab, setActiveTab] = useState<"podcasts" | "reels">("podcasts");
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [nextUpdate, setNextUpdate] = useState<Date | null>(null);
+
+  // Verifica que las claves API estén disponibles
+  useEffect(() => {
+    const apiKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
+    const channelId = process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID;
+    
+    console.log("YouTube API Key disponible:", !!apiKey);
+    console.log("YouTube Channel ID disponible:", !!channelId);
+    
+    if (!apiKey || !channelId) {
+      setError("Faltan las claves de la API de YouTube. Por favor, verifica la configuración.");
+      setLoading(false);
+    }
+  }, []);
 
   // Cargar datos desde la API de YouTube
   useEffect(() => {
@@ -36,6 +68,8 @@ export default function YouTubeEpisodes() {
           setChannelInfo(channelData);
         } else {
           console.error("No se pudo obtener información del canal");
+          // Usar datos de ejemplo si no se puede obtener la información real
+          setChannelInfo(EXAMPLE_CHANNEL);
         }
         
         // Obtener videos regulares (podcasts)
@@ -65,6 +99,8 @@ export default function YouTubeEpisodes() {
         console.error("Error al cargar datos de YouTube:", err);
         setError("Error al cargar los videos de YouTube. Por favor, verifica la consola para más detalles.");
         setLoading(false);
+        // Si hay error, usar el canal de ejemplo al menos
+        setChannelInfo(EXAMPLE_CHANNEL);
       }
     };
     
@@ -72,28 +108,40 @@ export default function YouTubeEpisodes() {
   }, []);
 
   const formatDate = (date: Date) => {
-    const options: Intl.DateTimeFormatOptions = { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    };
-    return date.toLocaleDateString('es-ES', options);
+    try {
+      const options: Intl.DateTimeFormatOptions = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      };
+      return date.toLocaleDateString('es-ES', options);
+    } catch (error) {
+      console.error("Error al formatear fecha:", error);
+      return "Fecha no disponible";
+    }
   };
   
   // Formatear números con separadores de miles
   const formatNumber = (num: string) => {
-    const n = parseInt(num, 10);
-    if (isNaN(n)) return "0";
+    if (!num) return "0";
     
-    if (n >= 1000000) {
-      return `${(n / 1000000).toFixed(1)}M`;
+    try {
+      const n = parseInt(num, 10);
+      if (isNaN(n)) return "0";
+      
+      if (n >= 1000000) {
+        return `${(n / 1000000).toFixed(1)}M`;
+      }
+      if (n >= 1000) {
+        return `${(n / 1000).toFixed(1)}K`;
+      }
+      return n.toString();
+    } catch (error) {
+      console.error("Error al formatear número:", error);
+      return "0";
     }
-    if (n >= 1000) {
-      return `${(n / 1000).toFixed(1)}K`;
-    }
-    return n.toString();
   };
 
   if (loading) {
@@ -130,7 +178,7 @@ export default function YouTubeEpisodes() {
       <div className="w-full py-10 text-center">
         <p className="text-lg text-amber-500">No se encontraron videos en el canal</p>
         <p className="mt-2 text-muted-foreground">
-          No pudimos encontrar videos para mostrar. Intenta revisar las credenciales de YouTube o espera un momento.
+          No pudimos encontrar videos para mostrar. Puede que no hayamos podido conectar con la API de YouTube.
         </p>
         <p className="mt-4">
           <a 

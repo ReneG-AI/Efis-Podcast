@@ -38,8 +38,8 @@ export interface YouTubeChannel {
 }
 
 // Configuración de la API
-const YOUTUBE_API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY || '';
-const YOUTUBE_CHANNEL_ID = process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID || '';
+const YOUTUBE_API_KEY = typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_YOUTUBE_API_KEY || '' : '';
+const YOUTUBE_CHANNEL_ID = typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID || '' : '';
 const YOUTUBE_API_BASE_URL = 'https://www.googleapis.com/youtube/v3';
 
 // Importar funciones de caché
@@ -52,55 +52,107 @@ import {
   cacheChannel
 } from '../cache/youtube';
 
+// Datos de ejemplo para cuando la API falla
+const EXAMPLE_VIDEOS: YouTubeVideo[] = [
+  {
+    id: "example1",
+    title: "Ejemplo de video de podcast",
+    description: "Este es un video de ejemplo cuando la API no está disponible",
+    publishedAt: new Date().toISOString(),
+    thumbnails: {
+      default: { url: "https://i.ytimg.com/vi/example1/default.jpg", width: 120, height: 90 },
+      medium: { url: "https://i.ytimg.com/vi/example1/mqdefault.jpg", width: 320, height: 180 },
+      high: { url: "https://i.ytimg.com/vi/example1/hqdefault.jpg", width: 480, height: 360 }
+    },
+    channelTitle: "EFIS PODCAST",
+    duration: "30:00",
+    viewCount: "1000",
+    isReel: false
+  }
+];
+
+const EXAMPLE_REELS: YouTubeVideo[] = [
+  {
+    id: "example2",
+    title: "Ejemplo de reel",
+    description: "Este es un reel de ejemplo cuando la API no está disponible",
+    publishedAt: new Date().toISOString(),
+    thumbnails: {
+      default: { url: "https://i.ytimg.com/vi/example2/default.jpg", width: 120, height: 90 },
+      medium: { url: "https://i.ytimg.com/vi/example2/mqdefault.jpg", width: 320, height: 180 },
+      high: { url: "https://i.ytimg.com/vi/example2/hqdefault.jpg", width: 480, height: 360 }
+    },
+    channelTitle: "EFIS PODCAST",
+    duration: "0:30",
+    viewCount: "500",
+    isReel: true
+  }
+];
+
 // Función para identificar si un video es un Reel basado en sus proporciones o hashtags
 function isYouTubeReel(video: any): boolean {
-  // Si la descripción o tags mencionan #shorts o #reel
-  const hasShortTag = 
-    video.snippet?.description?.toLowerCase().includes('#short') ||
-    video.snippet?.description?.toLowerCase().includes('#reel') ||
-    (video.snippet?.tags && video.snippet.tags.some((tag: string) => 
-      tag.toLowerCase().includes('short') || 
-      tag.toLowerCase().includes('reel')
-    ));
-  
-  // Videos cortos (menos de 1 minuto)
-  const isShortDuration = 
-    video.contentDetails?.duration && 
-    parseDuration(video.contentDetails.duration) < 60;
+  try {
+    // Si la descripción o tags mencionan #shorts o #reel
+    const hasShortTag = 
+      video.snippet?.description?.toLowerCase().includes('#short') ||
+      video.snippet?.description?.toLowerCase().includes('#reel') ||
+      (video.snippet?.tags && video.snippet.tags.some((tag: string) => 
+        tag.toLowerCase().includes('short') || 
+        tag.toLowerCase().includes('reel')
+      ));
     
-  return hasShortTag || isShortDuration;
+    // Videos cortos (menos de 1 minuto)
+    const isShortDuration = 
+      video.contentDetails?.duration && 
+      parseDuration(video.contentDetails.duration) < 60;
+      
+    return hasShortTag || isShortDuration;
+  } catch (error) {
+    console.error('Error al verificar si es un reel:', error);
+    return false;
+  }
 }
 
 // Función para analizar la duración en formato ISO 8601
 function parseDuration(duration: string): number {
-  const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
-  
-  const hours = (match && match[1]) 
-    ? parseInt(match[1].replace('H', '')) 
-    : 0;
-  const minutes = (match && match[2]) 
-    ? parseInt(match[2].replace('M', '')) 
-    : 0;
-  const seconds = (match && match[3]) 
-    ? parseInt(match[3].replace('S', '')) 
-    : 0;
+  try {
+    const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
     
-  return hours * 3600 + minutes * 60 + seconds;
+    const hours = (match && match[1]) 
+      ? parseInt(match[1].replace('H', '')) 
+      : 0;
+    const minutes = (match && match[2]) 
+      ? parseInt(match[2].replace('M', '')) 
+      : 0;
+    const seconds = (match && match[3]) 
+      ? parseInt(match[3].replace('S', '')) 
+      : 0;
+      
+    return hours * 3600 + minutes * 60 + seconds;
+  } catch (error) {
+    console.error('Error al analizar duración:', error);
+    return 0;
+  }
 }
 
 // Formatea la duración para mostrarla de manera legible
 function formatDuration(duration: string): string {
-  const seconds = parseDuration(duration);
-  
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const remainingSeconds = seconds % 60;
-  
-  if (hours > 0) {
-    return `${hours}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  try {
+    const seconds = parseDuration(duration);
+    
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+    
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    }
+    
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  } catch (error) {
+    console.error('Error al formatear duración:', error);
+    return "0:00";
   }
-  
-  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
 // Función para obtener videos del canal
@@ -108,15 +160,19 @@ export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]>
   console.log('Obteniendo videos del canal...');
   
   // Intentar obtener de la caché primero
-  const cachedVideos = await getCachedVideos();
-  if (cachedVideos) {
-    console.log('Usando videos en caché');
-    return cachedVideos;
+  try {
+    const cachedVideos = await getCachedVideos();
+    if (cachedVideos) {
+      console.log('Usando videos en caché');
+      return cachedVideos;
+    }
+  } catch (error) {
+    console.error('Error al obtener videos de la caché:', error);
   }
   
   if (!YOUTUBE_API_KEY || !YOUTUBE_CHANNEL_ID) {
     console.error('YouTube API key o Channel ID faltantes');
-    return [];
+    return EXAMPLE_VIDEOS;
   }
 
   try {
@@ -131,7 +187,7 @@ export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]>
       console.error('Error en búsqueda de videos:', playlistResponse.status, playlistResponse.statusText);
       const errorText = await playlistResponse.text();
       console.error('Detalles del error:', errorText);
-      return [];
+      return EXAMPLE_VIDEOS;
     }
     
     const playlistData = await playlistResponse.json();
@@ -139,7 +195,7 @@ export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]>
     
     if (!playlistData.items || playlistData.items.length === 0) {
       console.warn('No se encontraron videos para el canal');
-      return [];
+      return EXAMPLE_VIDEOS;
     }
     
     const videoIds = playlistData.items.map((item: any) => item.id.videoId).join(',');
@@ -151,7 +207,7 @@ export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]>
     
     if (!videoResponse.ok) {
       console.error('Error en obtener detalles de videos:', videoResponse.status, videoResponse.statusText);
-      return [];
+      return EXAMPLE_VIDEOS;
     }
     
     const videoData = await videoResponse.json();
@@ -177,12 +233,16 @@ export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]>
     });
 
     // Guardar en caché
-    cacheVideos(videos);
+    try {
+      await cacheVideos(videos);
+    } catch (error) {
+      console.error('Error al guardar videos en caché:', error);
+    }
     
     return videos;
   } catch (error) {
     console.error('Error obteniendo videos de YouTube:', error);
-    return [];
+    return EXAMPLE_VIDEOS;
   }
 }
 
@@ -191,10 +251,14 @@ export async function getChannelInfo(): Promise<YouTubeChannel | null> {
   console.log('Obteniendo información del canal...');
   
   // Intentar obtener de la caché primero
-  const cachedChannel = await getCachedChannel();
-  if (cachedChannel) {
-    console.log('Usando información del canal en caché');
-    return cachedChannel;
+  try {
+    const cachedChannel = await getCachedChannel();
+    if (cachedChannel) {
+      console.log('Usando información del canal en caché');
+      return cachedChannel;
+    }
+  } catch (error) {
+    console.error('Error al obtener canal de la caché:', error);
   }
   
   if (!YOUTUBE_API_KEY || !YOUTUBE_CHANNEL_ID) {
@@ -240,7 +304,11 @@ export async function getChannelInfo(): Promise<YouTubeChannel | null> {
     };
 
     // Guardar en caché
-    cacheChannel(channelInfo);
+    try {
+      await cacheChannel(channelInfo);
+    } catch (error) {
+      console.error('Error al guardar canal en caché:', error);
+    }
     
     return channelInfo;
   } catch (error) {
@@ -249,28 +317,48 @@ export async function getChannelInfo(): Promise<YouTubeChannel | null> {
   }
 }
 
-// Función para obtener solo los Reels
+// Función para obtener solo los reels
 export async function getChannelReels(maxResults = 20): Promise<YouTubeVideo[]> {
-  // Intentar obtener de la caché primero
-  const cachedReels = await getCachedReels();
-  if (cachedReels) {
-    console.log('Usando reels en caché');
-    return cachedReels;
+  try {
+    // Intentar obtener de la caché primero
+    const cachedReels = await getCachedReels();
+    if (cachedReels) {
+      console.log('Usando reels en caché');
+      return cachedReels;
+    }
+    
+    const allVideos = await getChannelVideos(maxResults * 2);
+    const reels = allVideos.filter(video => video.isReel);
+    
+    // Si no hay suficientes reels, devolver todos los que hay
+    const result = reels.slice(0, Math.min(reels.length, maxResults));
+    
+    // Guardar en caché
+    try {
+      await cacheReels(result);
+    } catch (error) {
+      console.error('Error al guardar reels en caché:', error);
+    }
+    
+    return result.length > 0 ? result : EXAMPLE_REELS;
+  } catch (error) {
+    console.error('Error obteniendo reels de YouTube:', error);
+    return EXAMPLE_REELS;
   }
-
-  const videos = await getChannelVideos(maxResults);
-  const reels = videos.filter(video => video.isReel);
-  
-  // Guardar en caché
-  cacheReels(reels);
-  
-  return reels;
 }
 
-// Función para obtener videos regulares (no reels)
+// Función para obtener solo los videos regulares (no reels)
 export async function getChannelRegularVideos(maxResults = 20): Promise<YouTubeVideo[]> {
-  const videos = await getChannelVideos(maxResults);
-  return videos.filter(video => !video.isReel);
+  try {
+    const allVideos = await getChannelVideos(maxResults * 2);
+    const regularVideos = allVideos.filter(video => !video.isReel);
+    return regularVideos.slice(0, Math.min(regularVideos.length, maxResults)).length > 0 ? 
+      regularVideos.slice(0, Math.min(regularVideos.length, maxResults)) : 
+      EXAMPLE_VIDEOS;
+  } catch (error) {
+    console.error('Error obteniendo videos regulares de YouTube:', error);
+    return EXAMPLE_VIDEOS;
+  }
 }
 
 // Función para obtener un video específico por ID
@@ -286,7 +374,7 @@ export async function getVideoById(videoId: string): Promise<YouTubeVideo | null
     const response = await fetch(videoUrl);
     
     if (!response.ok) {
-      console.error('Error en obtener video específico:', response.status, response.statusText);
+      console.error('Error en obtener video:', response.status, response.statusText);
       return null;
     }
     
@@ -315,7 +403,7 @@ export async function getVideoById(videoId: string): Promise<YouTubeVideo | null
       isReel
     };
   } catch (error) {
-    console.error('Error obteniendo video específico de YouTube:', error);
+    console.error('Error obteniendo video de YouTube:', error);
     return null;
   }
 } 

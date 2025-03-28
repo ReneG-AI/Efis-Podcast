@@ -4,6 +4,9 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // Configuración para GitHub Pages
+  basePath: process.env.NODE_ENV === 'production' ? '/Efis-Podcast' : '',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/Efis-Podcast/' : '',
   env: {
     NEXT_PUBLIC_YOUTUBE_API_KEY: process.env.NEXT_PUBLIC_YOUTUBE_API_KEY,
     NEXT_PUBLIC_YOUTUBE_CHANNEL_ID: process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID,

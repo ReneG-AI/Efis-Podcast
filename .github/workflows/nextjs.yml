@@ -72,6 +72,12 @@ jobs:
           # If source files changed but packages didn't, rebuild from a prior cache.
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
+      - name: Create env file
+        run: |
+          echo "NEXT_PUBLIC_YOUTUBE_API_KEY=${{ secrets.NEXT_PUBLIC_YOUTUBE_API_KEY }}" > .env.local
+          echo "NEXT_PUBLIC_YOUTUBE_CHANNEL_ID=${{ secrets.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID }}" >> .env.local
+          echo "NEXT_PUBLIC_SITE_URL=https://reneg-ai.github.io/Efis-Podcast" >> .env.local
+          echo "NEXT_PUBLIC_SITE_NAME=Efis Podcast" >> .env.local
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build with Next.js

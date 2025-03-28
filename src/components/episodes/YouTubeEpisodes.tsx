@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { FaYoutube, FaPlay, FaRegClock, FaEye, FaSync } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +11,9 @@ import {
   type YouTubeVideo,
   type YouTubeChannel 
 } from "@/lib/api/youtube";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Loader2, Clock, Eye } from 'lucide-react';
 
 // Datos de ejemplo para usar si la API falla
 const EXAMPLE_CHANNEL = {
@@ -65,126 +68,53 @@ const FALLBACK_VIDEOS: YouTubeVideo[] = [
 ];
 
 export default function YouTubeEpisodes() {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [videos, setVideos] = useState<YouTubeVideo[]>([]);
   const [reels, setReels] = useState<YouTubeVideo[]>([]);
-  const [channelInfo, setChannelInfo] = useState<YouTubeChannel | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [activeTab, setActiveTab] = useState<"podcasts" | "reels">("podcasts");
+  const [channel, setChannel] = useState<YouTubeChannel | null>(null);
+  const [activeTab, setActiveTab] = useState("podcasts");
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
-  const [nextUpdate, setNextUpdate] = useState<Date | null>(null);
-  const [isGitHubPages, setIsGitHubPages] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
-  // Verificar si estamos en el navegador y si es GitHub Pages
-  useEffect(() => {
-    setMounted(true);
-    // Detectar si estamos en GitHub Pages
-    if (typeof window !== 'undefined') {
-      const isGitHubPagesHost = window.location.hostname.includes('github.io');
-      setIsGitHubPages(isGitHubPagesHost);
-      console.log("¿Es GitHub Pages?", isGitHubPagesHost);
-      
-      // En GitHub Pages, usar siempre datos de ejemplo
-      if (isGitHubPagesHost) {
-        console.log("GitHub Pages detectado, usando datos de ejemplo");
-        setChannelInfo(EXAMPLE_CHANNEL);
-        setVideos(FALLBACK_VIDEOS);
-        setLoading(false);
-        setError("GitHub Pages detectado. Mostrando datos de ejemplo.");
+  // Función para cargar datos del canal de YouTube
+  const loadYouTubeData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    console.log("Cargando datos de YouTube...");
+
+    try {
+      // Obtener información del canal
+      const channelInfo = await getChannelInfo();
+      if (channelInfo) {
+        setChannel(channelInfo);
+      } else {
+        console.warn("No se pudo obtener información del canal");
       }
+
+      // Obtener videos regulares (podcasts)
+      const regularVideos = await getChannelRegularVideos();
+      setVideos(regularVideos || []);
+
+      // Obtener reels/shorts
+      const videoReels = await getChannelReels();
+      setReels(videoReels || []);
+
+      // Actualizar la hora de la última actualización
+      setLastUpdate(new Date());
+    } catch (err) {
+      console.error("Error al cargar datos de YouTube:", err);
+      setError("No se pudieron cargar los videos. Por favor, inténtalo de nuevo más tarde.");
+    } finally {
+      setLoading(false);
     }
   }, []);
 
-  // Verifica que las claves API estén disponibles (solo si no es GitHub Pages)
   useEffect(() => {
-    // Si es GitHub Pages o aún no está montado, no verificar las claves
-    if (isGitHubPages || !mounted) return;
-    
-    const apiKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
-    const channelId = process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID;
-    
-    console.log("Variables de entorno disponibles:", {
-      siteUrl: process.env.NEXT_PUBLIC_SITE_URL,
-      siteName: process.env.NEXT_PUBLIC_SITE_NAME,
-      youtubeApiKey: !!apiKey,
-      youtubeChannelId: !!channelId
-    });
-    
-    if (!apiKey || !channelId) {
-      console.warn("⚠️ Faltan claves API de YouTube. Usando datos de ejemplo.");
-      setError("Faltan las claves de la API de YouTube. Mostrando datos de ejemplo.");
-      setLoading(false);
-      setChannelInfo(EXAMPLE_CHANNEL);
-      setVideos(FALLBACK_VIDEOS);
-    }
-  }, [mounted, isGitHubPages]);
+    loadYouTubeData();
+  }, [loadYouTubeData]);
 
-  // Cargar datos desde la API de YouTube (solo si no es GitHub Pages)
-  useEffect(() => {
-    // No cargar datos si:
-    // 1. Estamos en GitHub Pages
-    // 2. Faltan las claves API
-    // 3. Componente no montado
-    if (isGitHubPages || !mounted || (error && error.includes("Faltan las claves"))) {
-      return;
-    }
-
-    const fetchYouTubeData = async () => {
-      try {
-        setLoading(true);
-        console.log("Iniciando carga de datos de YouTube...");
-        
-        // Obtener información del canal
-        const channelData = await getChannelInfo();
-        if (channelData) {
-          console.log("Información del canal cargada correctamente");
-          setChannelInfo(channelData);
-        } else {
-          console.error("No se pudo obtener información del canal");
-          // Usar datos de ejemplo si no se puede obtener la información real
-          setChannelInfo(EXAMPLE_CHANNEL);
-        }
-        
-        // Obtener videos regulares (podcasts)
-        const videosData = await getChannelRegularVideos(12);
-        if (videosData && videosData.length > 0) {
-          console.log(`Se encontraron ${videosData.length} videos regulares`);
-          setVideos(videosData);
-        } else {
-          console.warn("No se encontraron videos regulares, usando datos de ejemplo");
-          setVideos(FALLBACK_VIDEOS);
-        }
-        
-        // Obtener reels
-        const reelsData = await getChannelReels(12);
-        if (reelsData && reelsData.length > 0) {
-          console.log(`Se encontraron ${reelsData.length} reels`);
-          setReels(reelsData);
-        } else {
-          console.warn("No se encontraron reels");
-          // Podríamos establecer reels de ejemplo aquí si lo deseamos
-        }
-        
-        const now = new Date();
-        setLastUpdate(now);
-        // Calcular la próxima actualización (7 días desde ahora)
-        setNextUpdate(new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000));
-        setLoading(false);
-      } catch (err) {
-        console.error("Error al cargar datos de YouTube:", err);
-        setError("Error al cargar los videos de YouTube. Usando datos de ejemplo.");
-        setLoading(false);
-        // Si hay error, usar datos de ejemplo
-        setChannelInfo(EXAMPLE_CHANNEL);
-        setVideos(FALLBACK_VIDEOS);
-      }
-    };
-    
-    fetchYouTubeData();
-  }, [error, mounted, isGitHubPages]);
-
-  const formatDate = (date: Date) => {
+  // Formatear fecha
+  const formatDate = (dateString: string) => {
     try {
       const options: Intl.DateTimeFormatOptions = { 
         year: 'numeric', 
@@ -193,188 +123,219 @@ export default function YouTubeEpisodes() {
         hour: '2-digit',
         minute: '2-digit'
       };
-      return date.toLocaleDateString('es-ES', options);
-    } catch (error) {
-      console.error("Error al formatear fecha:", error);
-      return "Fecha no disponible";
+      return new Date(dateString).toLocaleDateString('es-ES', options);
+    } catch (e) {
+      return dateString;
     }
   };
-  
-  // Formatear números con separadores de miles
+
+  // Formatear número con separador de miles
   const formatNumber = (num: string) => {
-    if (!num) return "0";
-    
-    try {
-      const n = parseInt(num, 10);
-      if (isNaN(n)) return "0";
-      
-      if (n >= 1000000) {
-        return `${(n / 1000000).toFixed(1)}M`;
-      }
-      if (n >= 1000) {
-        return `${(n / 1000).toFixed(1)}K`;
-      }
-      return n.toString();
-    } catch (error) {
-      console.error("Error al formatear número:", error);
-      return "0";
-    }
+    return parseInt(num).toLocaleString('es-ES');
   };
 
-  // Manejar la ruta de imágenes para GitHub Pages
-  const getImageUrl = (url: string) => {
-    if (isGitHubPages && url.startsWith('/')) {
-      return `/Efis-Podcast${url}`;
-    }
-    return url;
-  };
-
-  if (loading) {
+  // Si hay un error, mostrar mensaje
+  if (error) {
     return (
-      <div className="w-full py-20 text-center">
-        <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></div>
-        <p className="mt-4 text-lg text-muted-foreground">Cargando videos de YouTube...</p>
+      <div className="container mx-auto py-8 px-4">
+        <h1 className="text-3xl font-bold mb-6">Canal de YouTube</h1>
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+          <h3 className="text-lg font-medium text-red-800 dark:text-red-200">Error al cargar contenido</h3>
+          <p className="text-red-700 dark:text-red-300 mt-2">{error}</p>
+          <div className="mt-4">
+            <h4 className="font-medium text-red-800 dark:text-red-200">Posibles soluciones:</h4>
+            <ul className="list-disc list-inside text-red-700 dark:text-red-300 mt-1">
+              <li>Verifica tu conexión a internet</li>
+              <li>Asegúrate de tener configurada la API de YouTube</li>
+              <li>Comprueba si hay un problema con tu clave de API</li>
+            </ul>
+          </div>
+          <Button 
+            onClick={loadYouTubeData} 
+            className="mt-4 bg-red-600 hover:bg-red-700 text-white"
+          >
+            Reintentar
+          </Button>
+        </div>
+        <div className="text-center py-8">
+          <p className="mb-4">Mientras tanto, puedes visitar nuestro canal oficial:</p>
+          <a 
+            href="https://www.youtube.com/@EFISPODCAST" 
+            target="_blank"
+            className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+          >
+            Ver en YouTube
+          </a>
+        </div>
       </div>
     );
   }
 
-  // Asegurarse de que tenemos datos para mostrar
-  if (!mounted) {
-    return null; // No renderizar nada hasta que el componente esté montado
+  // Si está cargando, mostrar spinner
+  if (loading) {
+    return (
+      <div className="container mx-auto py-8 px-4">
+        <h1 className="text-3xl font-bold mb-6">Canal de YouTube</h1>
+        <div className="flex flex-col items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+          <p className="text-lg text-muted-foreground">Cargando videos de YouTube...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="w-full">
+    <div className="container mx-auto py-8 px-4">
+      <h1 className="text-3xl font-bold mb-6">Canal de YouTube</h1>
+      <p className="mb-6 text-muted-foreground">Videos y Shorts del canal oficial de Efis Podcast en YouTube.</p>
+      
+      {lastUpdate && (
+        <p className="text-xs text-muted-foreground mb-4">
+          Última actualización: {lastUpdate.toLocaleString('es-ES')}
+        </p>
+      )}
+
       {/* Información del canal */}
-      {channelInfo && (
-        <div className="mb-8 p-6 bg-card rounded-lg shadow-sm border">
-          <div className="flex items-center gap-4">
-            <div className="relative w-20 h-20 rounded-full overflow-hidden">
-              {/* Usar un div con estilo de fondo en lugar de Image para evitar problemas */}
-              <div 
-                className="absolute inset-0 bg-center bg-cover"
-                style={{ 
-                  backgroundImage: `url(${channelInfo.thumbnails.high.url})`,
-                  width: '100%',
-                  height: '100%'
-                }}
-              />
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold">{channelInfo.title}</h2>
-              <p className="text-muted-foreground mt-1">{channelInfo.customUrl}</p>
-              <div className="flex gap-4 mt-2 text-sm text-muted-foreground">
-                <span>{formatNumber(channelInfo.statistics.subscriberCount)} suscriptores</span>
-                <span>{formatNumber(channelInfo.statistics.videoCount)} videos</span>
-                <span>{formatNumber(channelInfo.statistics.viewCount)} visualizaciones</span>
-              </div>
+      {channel && (
+        <div className="flex flex-col md:flex-row items-center gap-4 p-4 bg-secondary/20 rounded-lg mb-6">
+          <div className="shrink-0">
+            <Image 
+              src={channel.thumbnails.medium.url} 
+              alt={channel.title}
+              width={100}
+              height={100}
+              className="rounded-full"
+            />
+          </div>
+          <div className="flex-grow text-center md:text-left">
+            <h2 className="text-xl font-bold">{channel.title}</h2>
+            <p className="text-sm text-muted-foreground">@{channel.customUrl}</p>
+            <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-2 text-sm text-muted-foreground">
+              <span>{formatNumber(channel.statistics.subscriberCount)} suscriptores</span>
+              <span>{formatNumber(channel.statistics.videoCount)} videos</span>
+              <span>{formatNumber(channel.statistics.viewCount)} visualizaciones</span>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Mensaje de error si existe */}
-      {error && (
-        <div className="w-full mb-6 p-4 border border-amber-200 bg-amber-50 rounded-md text-amber-700">
-          <p>{error}</p>
-          <p className="text-xs mt-2">Estamos mostrando contenido de ejemplo. Visita nuestro canal de <a href="https://www.youtube.com/@EFISPODCAST" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">YouTube</a> para ver el contenido real.</p>
-        </div>
-      )}
-
-      {/* Tabs de navegación */}
-      <div className="flex gap-4 mb-6">
-        <button
-          onClick={() => setActiveTab("podcasts")}
-          className={`px-4 py-2 rounded-md transition-colors ${
-            activeTab === "podcasts"
-              ? "bg-primary text-primary-foreground"
-              : "bg-muted hover:bg-muted/80"
-          }`}
-        >
-          Podcasts ({videos.length})
-        </button>
-        <button
-          onClick={() => setActiveTab("reels")}
-          className={`px-4 py-2 rounded-md transition-colors ${
-            activeTab === "reels"
-              ? "bg-primary text-primary-foreground"
-              : "bg-muted hover:bg-muted/80"
-          }`}
-        >
-          Reels ({reels.length})
-        </button>
-      </div>
-
-      {/* Grid de videos */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {(activeTab === "podcasts" ? videos : reels).map((video) => (
-          <div
-            key={video.id}
-            className="group relative bg-card rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
-          >
-            <Link
-              href={`https://www.youtube.com/watch?v=${video.id}`}
+          <div className="shrink-0">
+            <a 
+              href={`https://www.youtube.com/channel/${channel.id}`} 
               target="_blank"
-              rel="noopener noreferrer"
-              className="block"
+              className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
             >
-              <div className="relative aspect-video">
-                {!video.id.startsWith("fallback") ? (
-                  // Usar un div con fondo en lugar de Image para evitar problemas
-                  <div 
-                    className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300"
-                    style={{ 
-                      backgroundImage: `url(${video.thumbnails.high.url})`,
-                      backgroundPosition: 'center'
-                    }}
-                  />
-                ) : (
-                  // Imagen de fallback para datos de ejemplo
-                  <div className="w-full h-full bg-gray-300 flex items-center justify-center">
-                    <FaYoutube className="w-16 h-16 text-gray-500" />
-                  </div>
-                )}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <FaPlay className="w-12 h-12 text-white" />
-                </div>
-              </div>
-              <div className="p-4">
-                <h3 className="font-medium line-clamp-2 group-hover:text-primary transition-colors">
-                  {video.title}
-                </h3>
-                <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
-                  <span className="flex items-center gap-1">
-                    <FaRegClock className="w-3 h-3" />
-                    {video.duration}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <FaEye className="w-3 h-3" />
-                    {formatNumber(video.viewCount || "0")}
-                  </span>
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  {formatDate(new Date(video.publishedAt))}
-                </p>
-              </div>
-            </Link>
+              Ver en YouTube
+            </a>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
 
-      {/* Información de actualización */}
-      <div className="mt-6 text-center space-y-2">
-        {lastUpdate && (
-          <p className="text-sm text-muted-foreground flex items-center justify-center gap-2">
-            <FaSync className="w-4 h-4" />
-            Última actualización: {formatDate(lastUpdate)}
-          </p>
-        )}
-        {nextUpdate && (
-          <p className="text-xs text-muted-foreground">
-            Próxima actualización: {formatDate(nextUpdate)}
-          </p>
-        )}
-      </div>
+      {/* Si no hay videos, mostrar mensaje */}
+      {videos.length === 0 && reels.length === 0 ? (
+        <div className="text-center py-8 border rounded-lg">
+          <p className="mb-4">No se encontraron videos en el canal.</p>
+          <a 
+            href="https://www.youtube.com/@EFISPODCAST" 
+            target="_blank"
+            className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+          >
+            Ver en YouTube
+          </a>
+        </div>
+      ) : (
+        <Tabs defaultValue="podcasts" value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="mb-6">
+            <TabsTrigger value="podcasts">
+              Podcasts ({videos.length})
+            </TabsTrigger>
+            <TabsTrigger value="reels">
+              Reels ({reels.length})
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="podcasts" className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {videos.map(video => (
+                <a 
+                  key={video.id}
+                  href={`https://www.youtube.com/watch?v=${video.id}`}
+                  target="_blank"
+                  className="group"
+                >
+                  <div className="overflow-hidden rounded-lg border bg-card hover:shadow-lg transition-shadow duration-300">
+                    <div className="relative">
+                      <Image 
+                        src={video.thumbnails.high.url} 
+                        alt={video.title}
+                        width={video.thumbnails.high.width}
+                        height={video.thumbnails.high.height}
+                        className="w-full object-cover aspect-video group-hover:scale-105 transition-transform duration-300"
+                      />
+                      {video.duration && (
+                        <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                          {video.duration}
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-medium line-clamp-2 mb-2 group-hover:text-primary">
+                        {video.title}
+                      </h3>
+                      <div className="flex items-center text-sm text-muted-foreground">
+                        <div className="flex items-center mr-4">
+                          <Eye className="w-4 h-4 mr-1" />
+                          {formatNumber(video.viewCount || '0')}
+                        </div>
+                        <div className="flex items-center">
+                          <Clock className="w-4 h-4 mr-1" />
+                          {formatDate(video.publishedAt)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="reels" className="space-y-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+              {reels.map(reel => (
+                <a 
+                  key={reel.id}
+                  href={`https://www.youtube.com/shorts/${reel.id}`}
+                  target="_blank"
+                  className="group"
+                >
+                  <div className="overflow-hidden rounded-lg border bg-card hover:shadow-lg transition-shadow duration-300">
+                    <div className="relative">
+                      <Image 
+                        src={reel.thumbnails.high.url} 
+                        alt={reel.title}
+                        width={reel.thumbnails.high.width}
+                        height={reel.thumbnails.high.height}
+                        className="w-full object-cover aspect-[9/16] group-hover:scale-105 transition-transform duration-300"
+                      />
+                      {reel.duration && (
+                        <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                          {reel.duration}
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-2">
+                      <h3 className="text-sm font-medium line-clamp-1 group-hover:text-primary">
+                        {reel.title}
+                      </h3>
+                      <div className="flex items-center text-xs text-muted-foreground mt-1">
+                        <Eye className="w-3 h-3 mr-1" />
+                        {formatNumber(reel.viewCount || '0')}
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
+      )}
     </div>
   );
 } 

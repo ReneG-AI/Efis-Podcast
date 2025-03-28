@@ -38,8 +38,19 @@ export interface YouTubeChannel {
 }
 
 // Configuración de la API
-const YOUTUBE_API_KEY = typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_YOUTUBE_API_KEY || '' : '';
-const YOUTUBE_CHANNEL_ID = typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID || '' : '';
+// Valores predeterminados de las claves de API
+const DEFAULT_API_KEY = 'AIzaSyDlZTI4JfF8uzwjKcdtDau8mgP8VKfBRQ0';
+const DEFAULT_CHANNEL_ID = 'UCj_orkn7ilVdxmpElajgEfQ';
+
+// Obtener las claves de las variables de entorno o usar valores predeterminados
+const YOUTUBE_API_KEY = typeof window !== 'undefined' 
+  ? (process.env.NEXT_PUBLIC_YOUTUBE_API_KEY || DEFAULT_API_KEY) 
+  : DEFAULT_API_KEY;
+
+const YOUTUBE_CHANNEL_ID = typeof window !== 'undefined'
+  ? (process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID || DEFAULT_CHANNEL_ID)
+  : DEFAULT_CHANNEL_ID;
+
 const YOUTUBE_API_BASE_URL = 'https://www.googleapis.com/youtube/v3';
 
 // Importar funciones de caché
@@ -91,6 +102,9 @@ const EXAMPLE_REELS: YouTubeVideo[] = [
 
 // Verificar si estamos en el navegador
 const isBrowser = typeof window !== 'undefined';
+
+// Verificar si deberíamos usar datos de ejemplo (solo para depuración)
+const USE_EXAMPLE_DATA = false;
 
 // Función para identificar si un video es un Reel basado en sus proporciones o hashtags
 function isYouTubeReel(video: any): boolean {
@@ -162,9 +176,9 @@ function formatDuration(duration: string): string {
 export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]> {
   console.log('Obteniendo videos del canal...');
   
-  // Verificar si estamos en GitHub Pages
-  if (isBrowser && window.location.hostname.includes('github.io')) {
-    console.log('Detectado GitHub Pages, usando datos de ejemplo');
+  // Si se establece usar datos de ejemplo, retornar ejemplos
+  if (USE_EXAMPLE_DATA) {
+    console.log('Usando datos de ejemplo (modo desarrollo)');
     return EXAMPLE_VIDEOS;
   }
   
@@ -180,8 +194,7 @@ export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]>
   }
   
   if (!YOUTUBE_API_KEY || !YOUTUBE_CHANNEL_ID) {
-    console.error('YouTube API key o Channel ID faltantes');
-    return EXAMPLE_VIDEOS;
+    console.error('YouTube API key o Channel ID faltantes, usando valores predeterminados');
   }
 
   try {
@@ -259,9 +272,9 @@ export async function getChannelVideos(maxResults = 50): Promise<YouTubeVideo[]>
 export async function getChannelInfo(): Promise<YouTubeChannel | null> {
   console.log('Obteniendo información del canal...');
   
-  // Verificar si estamos en GitHub Pages
-  if (isBrowser && window.location.hostname.includes('github.io')) {
-    console.log('Detectado GitHub Pages, usando datos de ejemplo');
+  // Si se establece usar datos de ejemplo, retornar ejemplos
+  if (USE_EXAMPLE_DATA) {
+    console.log('Usando datos de ejemplo (modo desarrollo)');
     return {
       id: "UCj_orkn7ilVdxmpElajgEfQ",
       title: "EFIS PODCAST",
@@ -292,8 +305,7 @@ export async function getChannelInfo(): Promise<YouTubeChannel | null> {
   }
   
   if (!YOUTUBE_API_KEY || !YOUTUBE_CHANNEL_ID) {
-    console.error('YouTube API key o Channel ID faltantes');
-    return null;
+    console.error('YouTube API key o Channel ID faltantes, usando valores predeterminados');
   }
 
   try {
@@ -349,9 +361,9 @@ export async function getChannelInfo(): Promise<YouTubeChannel | null> {
 
 // Función para obtener solo los reels
 export async function getChannelReels(maxResults = 20): Promise<YouTubeVideo[]> {
-  // Verificar si estamos en GitHub Pages
-  if (isBrowser && window.location.hostname.includes('github.io')) {
-    console.log('Detectado GitHub Pages, usando datos de ejemplo');
+  // Si se establece usar datos de ejemplo, retornar ejemplos
+  if (USE_EXAMPLE_DATA) {
+    console.log('Usando datos de ejemplo (modo desarrollo)');
     return EXAMPLE_REELS;
   }
   
@@ -387,9 +399,9 @@ export async function getChannelReels(maxResults = 20): Promise<YouTubeVideo[]> 
 
 // Función para obtener solo los videos regulares (no reels)
 export async function getChannelRegularVideos(maxResults = 20): Promise<YouTubeVideo[]> {
-  // Verificar si estamos en GitHub Pages
-  if (isBrowser && window.location.hostname.includes('github.io')) {
-    console.log('Detectado GitHub Pages, usando datos de ejemplo');
+  // Si se establece usar datos de ejemplo, retornar ejemplos
+  if (USE_EXAMPLE_DATA) {
+    console.log('Usando datos de ejemplo (modo desarrollo)');
     return EXAMPLE_VIDEOS;
   }
   
@@ -407,9 +419,9 @@ export async function getChannelRegularVideos(maxResults = 20): Promise<YouTubeV
 
 // Función para obtener un video específico por ID
 export async function getVideoById(videoId: string): Promise<YouTubeVideo | null> {
-  // Verificar si estamos en GitHub Pages
-  if (isBrowser && window.location.hostname.includes('github.io')) {
-    console.log('Detectado GitHub Pages, usando datos de ejemplo');
+  // Si se establece usar datos de ejemplo, retornar ejemplos
+  if (USE_EXAMPLE_DATA) {
+    console.log('Usando datos de ejemplo (modo desarrollo)');
     return EXAMPLE_VIDEOS[0];
   }
   

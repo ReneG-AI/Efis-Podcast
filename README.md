@@ -30,21 +30,39 @@ npm install
    - Completa las variables con tus propias claves
    - O utiliza el script `start.bat` que creará uno básico automáticamente
 
-## Configuración de YouTube API
+## Integración con YouTube
 
-Para que funcione la integración con YouTube:
+Este proyecto incluye una integración completa con la API de YouTube que permite:
 
-1. Asegúrate de que las siguientes variables están configuradas en `.env.local`:
+- Mostrar los videos y reels más recientes del canal
+- Implementar un sistema de caché para reducir llamadas a la API
+- Visualizar estadísticas del canal (suscriptores, vistas, etc.)
+- Ofrecer acceso directo a los videos en YouTube
+
+### Configuración de la API de YouTube
+
+Para configurar la API de YouTube necesitas:
+
+1. Obtener una clave de API de YouTube desde la [Google Cloud Console](https://console.cloud.google.com/)
+2. Habilitar la API de YouTube Data v3 en tu proyecto de Google
+3. Añadir la clave de API y el ID del canal en tu archivo `.env.local`:
+
 ```
-NEXT_PUBLIC_YOUTUBE_API_KEY=tu_clave_api
-NEXT_PUBLIC_YOUTUBE_CHANNEL_ID=id_de_tu_canal
+NEXT_PUBLIC_YOUTUBE_API_KEY=tu_clave_api_aquí
+NEXT_PUBLIC_YOUTUBE_CHANNEL_ID=id_del_canal_aquí
 ```
 
-2. Si necesitas generar una nueva clave de API:
-   - Ve a [Google Cloud Console](https://console.cloud.google.com/)
-   - Crea un proyecto nuevo
-   - Habilita YouTube Data API v3
-   - Genera una clave de API en "Credenciales"
+Si no configuras estas variables, el sistema utilizará valores predeterminados que pueden estar sujetos a limitaciones de cuota.
+
+### Sistema de Caché
+
+La integración incluye un sistema de caché que:
+- Almacena los datos en localStorage
+- Actualiza la información cada 7 días
+- Reduce significativamente las llamadas a la API
+- Mejora la velocidad de carga de la página
+
+Para forzar una actualización de los datos, puedes borrar la caché del navegador o utilizar la función `clearCache()` desde la consola de desarrollo.
 
 ## Ejecutar en desarrollo
 

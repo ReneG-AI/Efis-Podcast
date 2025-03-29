@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { FaSpinner, FaClock, FaEye } from "react-icons/fa";
+import { FaSpinner, FaClock, FaEye, FaYoutube } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
 import { 
@@ -134,33 +134,46 @@ export default function YouTubeEpisodes() {
   // Si hay un error, mostrar mensaje
   if (error) {
     return (
-      <div className="container mx-auto py-8 px-4">
-        <h1 className="text-3xl font-bold mb-6">Canal de YouTube</h1>
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
-          <h3 className="text-lg font-medium text-red-800 dark:text-red-200">Error al cargar contenido</h3>
-          <p className="text-red-700 dark:text-red-300 mt-2">{error}</p>
-          <div className="mt-4">
-            <h4 className="font-medium text-red-800 dark:text-red-200">Posibles soluciones:</h4>
-            <ul className="list-disc list-inside text-red-700 dark:text-red-300 mt-1">
-              <li>Verifica tu conexión a internet</li>
-              <li>Asegúrate de tener configurada la API de YouTube</li>
-              <li>Comprueba si hay un problema con tu clave de API</li>
-            </ul>
-          </div>
-          <button 
-            onClick={loadYouTubeData} 
-            className="mt-4 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md"
-          >
-            Reintentar
-          </button>
+      <div className="container mx-auto py-12 px-4">
+        <div className="relative mb-10">
+          <h1 className="text-3xl font-extrabold tracking-wider text-gradient-brand mb-4">CANAL DE YOUTUBE</h1>
+          <div className="w-20 h-1 bg-gradient-brand rounded-full"></div>
         </div>
+        
+        <div className="bg-card border border-border/50 rounded-xl p-6 mb-8 relative overflow-hidden">
+          <div className="absolute inset-0 sound-waves-pattern opacity-10"></div>
+          <div className="relative z-10">
+            <div className="flex items-center text-red-500 mb-4">
+              <FaYoutube className="w-6 h-6 mr-2" />
+              <h3 className="text-lg font-bold">Error al cargar contenido</h3>
+            </div>
+            <p className="text-foreground/80 mb-4">{error}</p>
+            <div className="mt-6 bg-background/50 backdrop-blur-sm rounded-lg p-4">
+              <h4 className="font-medium mb-2">Posibles soluciones:</h4>
+              <ul className="list-disc list-inside text-foreground/70 space-y-1">
+                <li>Verifica tu conexión a internet</li>
+                <li>Asegúrate de tener configurada la API de YouTube</li>
+                <li>Comprueba si hay un problema con tu clave de API</li>
+              </ul>
+            </div>
+            <button 
+              onClick={loadYouTubeData} 
+              className="mt-6 bg-gradient-brand hover:opacity-90 transition-opacity px-5 py-2 rounded-lg font-medium flex items-center text-sm"
+            >
+              <FaSpinner className="w-4 h-4 mr-2" />
+              Reintentar
+            </button>
+          </div>
+        </div>
+        
         <div className="text-center py-8">
-          <p className="mb-4">Mientras tanto, puedes visitar nuestro canal oficial:</p>
+          <p className="mb-4 text-foreground/70">Mientras tanto, puedes visitar nuestro canal oficial:</p>
           <a 
             href="https://www.youtube.com/@EFISPODCAST" 
             target="_blank"
-            className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+            className="inline-flex items-center px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
           >
+            <FaYoutube className="mr-2" />
             Ver en YouTube
           </a>
         </div>
@@ -171,83 +184,118 @@ export default function YouTubeEpisodes() {
   // Si está cargando, mostrar spinner
   if (loading) {
     return (
-      <div className="container mx-auto py-8 px-4">
-        <h1 className="text-3xl font-bold mb-6">Canal de YouTube</h1>
-        <div className="flex flex-col items-center justify-center py-12">
-          <div className="animate-spin text-primary mb-4">
-            <FaSpinner size={32} />
+      <div className="container mx-auto py-12 px-4">
+        <div className="relative mb-10">
+          <h1 className="text-3xl font-extrabold tracking-wider text-gradient-brand mb-4">CANAL DE YOUTUBE</h1>
+          <div className="w-20 h-1 bg-gradient-brand rounded-full"></div>
+        </div>
+        
+        <div className="flex flex-col items-center justify-center py-20">
+          <div className="relative">
+            <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full"></div>
+            <div className="relative animate-spin text-primary">
+              <FaSpinner size={40} />
+            </div>
           </div>
-          <p className="text-lg text-muted-foreground">Cargando videos de YouTube...</p>
+          <p className="mt-6 text-lg text-foreground/70">Cargando videos de YouTube...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-6">Canal de YouTube</h1>
-      <p className="mb-6 text-muted-foreground">Videos y Shorts del canal oficial de Efis Podcast en YouTube.</p>
+    <div className="container mx-auto py-12 px-4">
+      <div className="relative mb-10">
+        <h1 className="text-3xl font-extrabold tracking-wider text-gradient-brand mb-4">CANAL DE YOUTUBE</h1>
+        <div className="w-20 h-1 bg-gradient-brand rounded-full"></div>
+      </div>
+      
+      <p className="mb-8 text-foreground/80 max-w-3xl">
+        Videos y shorts del canal oficial de Efis Podcast en YouTube. Contenido exclusivo, entrevistas y momentos destacados.
+      </p>
       
       {lastUpdate && (
-        <p className="text-xs text-muted-foreground mb-4">
+        <p className="text-xs text-foreground/60 mb-6">
           Última actualización: {lastUpdate.toLocaleString('es-ES')}
         </p>
       )}
 
       {/* Información del canal */}
       {channel && (
-        <div className="flex flex-col md:flex-row items-center gap-4 p-4 bg-secondary/20 rounded-lg mb-6">
-          <div className="shrink-0">
-            <Image 
-              src={channel.thumbnails.medium.url} 
-              alt={channel.title}
-              width={100}
-              height={100}
-              className="rounded-full"
-            />
-          </div>
-          <div className="flex-grow text-center md:text-left">
-            <h2 className="text-xl font-bold">{channel.title}</h2>
-            <p className="text-sm text-muted-foreground">@{channel.customUrl}</p>
-            <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-2 text-sm text-muted-foreground">
-              <span>{formatNumber(channel.statistics.subscriberCount)} suscriptores</span>
-              <span>{formatNumber(channel.statistics.videoCount)} videos</span>
-              <span>{formatNumber(channel.statistics.viewCount)} visualizaciones</span>
+        <div className="bg-card border border-border/50 rounded-xl overflow-hidden mb-10 relative">
+          <div className="absolute inset-0 sound-waves-pattern opacity-10"></div>
+          
+          <div className="relative z-10 flex flex-col md:flex-row items-center gap-6 p-6">
+            <div className="shrink-0">
+              <div className="relative">
+                <div className="absolute inset-0 bg-primary/20 blur-md rounded-full"></div>
+                <div className="relative">
+                  <Image 
+                    src={channel.thumbnails.medium.url} 
+                    alt={channel.title}
+                    width={120}
+                    height={120}
+                    className="rounded-full border-2 border-secondary/30"
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="shrink-0">
-            <a 
-              href={`https://www.youtube.com/channel/${channel.id}`} 
-              target="_blank"
-              className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-            >
-              Ver en YouTube
-            </a>
+            
+            <div className="flex-grow text-center md:text-left">
+              <h2 className="text-2xl font-bold mb-1">{channel.title}</h2>
+              <p className="text-foreground/70 mb-3">@{channel.customUrl}</p>
+              <div className="flex flex-wrap justify-center md:justify-start gap-6 mt-2">
+                <div className="flex flex-col items-center md:items-start">
+                  <span className="text-xl font-bold text-gradient-brand">{formatNumber(channel.statistics.subscriberCount)}</span>
+                  <span className="text-xs text-foreground/60 uppercase tracking-wide">suscriptores</span>
+                </div>
+                <div className="flex flex-col items-center md:items-start">
+                  <span className="text-xl font-bold text-gradient-brand">{formatNumber(channel.statistics.videoCount)}</span>
+                  <span className="text-xs text-foreground/60 uppercase tracking-wide">videos</span>
+                </div>
+                <div className="flex flex-col items-center md:items-start">
+                  <span className="text-xl font-bold text-gradient-brand">{formatNumber(channel.statistics.viewCount)}</span>
+                  <span className="text-xs text-foreground/60 uppercase tracking-wide">visualizaciones</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="shrink-0">
+              <a 
+                href={`https://www.youtube.com/channel/${channel.id}`} 
+                target="_blank"
+                className="inline-flex items-center px-5 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
+                <FaYoutube className="mr-2" />
+                Ver canal
+              </a>
+            </div>
           </div>
         </div>
       )}
 
       {/* Si no hay videos, mostrar mensaje */}
       {videos.length === 0 && reels.length === 0 ? (
-        <div className="text-center py-8 border rounded-lg">
-          <p className="mb-4">No se encontraron videos en el canal.</p>
+        <div className="bg-card border border-border/50 rounded-xl p-10 text-center">
+          <p className="text-xl text-foreground/70 mb-6">No se encontraron videos en el canal.</p>
           <a 
             href="https://www.youtube.com/@EFISPODCAST" 
             target="_blank"
-            className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+            className="inline-flex items-center px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
           >
+            <FaYoutube className="mr-2" />
             Ver en YouTube
           </a>
         </div>
       ) : (
         <div>
           {/* Tabs de navegación */}
-          <div className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground mb-6">
+          <div className="inline-flex p-1 rounded-lg bg-card border border-border/50 mb-8">
             <button
               onClick={() => setActiveTab("podcasts")}
-              className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ${
+              className={`inline-flex items-center justify-center px-5 py-2.5 rounded-md font-medium transition-all ${
                 activeTab === "podcasts"
-                  ? "bg-background text-foreground shadow-sm"
+                  ? "bg-gradient-brand shadow-md text-white"
                   : "hover:bg-background/50 hover:text-foreground"
               }`}
             >
@@ -255,9 +303,9 @@ export default function YouTubeEpisodes() {
             </button>
             <button
               onClick={() => setActiveTab("reels")}
-              className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ${
+              className={`inline-flex items-center justify-center px-5 py-2.5 rounded-md font-medium transition-all ${
                 activeTab === "reels"
-                  ? "bg-background text-foreground shadow-sm"
+                  ? "bg-gradient-brand shadow-md text-white"
                   : "hover:bg-background/50 hover:text-foreground"
               }`}
             >
@@ -266,7 +314,7 @@ export default function YouTubeEpisodes() {
           </div>
           
           {/* Contenido de las tabs */}
-          <div className="mt-2 space-y-6">
+          <div className="mt-6 space-y-6">
             {activeTab === "podcasts" && (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {videos.map(video => (
@@ -276,32 +324,43 @@ export default function YouTubeEpisodes() {
                     target="_blank"
                     className="group"
                   >
-                    <div className="overflow-hidden rounded-lg border bg-card hover:shadow-lg transition-shadow duration-300">
+                    <div className="bg-card border border-border/50 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-primary/20">
                       <div className="relative">
                         <Image 
                           src={video.thumbnails.high.url} 
                           alt={video.title}
                           width={video.thumbnails.high.width}
                           height={video.thumbnails.high.height}
-                          className="w-full object-cover aspect-video group-hover:scale-105 transition-transform duration-300"
+                          className="w-full object-cover aspect-video group-hover:scale-105 transition-transform duration-500"
                         />
+                        
+                        {/* Gradiente sobre la imagen */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        
+                        {/* Icono de play en hover */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div className="bg-primary/90 rounded-full p-3 transform scale-0 group-hover:scale-100 transition-transform duration-300">
+                            <FaYoutube className="w-8 h-8 text-white" />
+                          </div>
+                        </div>
+                        
                         {video.duration && (
-                          <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                          <div className="absolute bottom-3 right-3 bg-background/80 backdrop-blur-sm text-xs px-2 py-1 rounded-md">
                             {video.duration}
                           </div>
                         )}
                       </div>
                       <div className="p-4">
-                        <h3 className="font-medium line-clamp-2 mb-2 group-hover:text-primary">
+                        <h3 className="font-semibold line-clamp-2 mb-2 group-hover:text-primary transition-colors">
                           {video.title}
                         </h3>
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <div className="flex items-center mr-4">
-                            <FaEye className="w-4 h-4 mr-1" />
+                        <div className="flex items-center justify-between text-sm text-foreground/70">
+                          <div className="flex items-center">
+                            <FaEye className="w-4 h-4 mr-1 text-primary/70" />
                             {formatNumber(video.viewCount || '0')}
                           </div>
                           <div className="flex items-center">
-                            <FaClock className="w-4 h-4 mr-1" />
+                            <FaClock className="w-4 h-4 mr-1 text-primary/70" />
                             {formatDate(video.publishedAt)}
                           </div>
                         </div>
@@ -321,27 +380,35 @@ export default function YouTubeEpisodes() {
                     target="_blank"
                     className="group"
                   >
-                    <div className="overflow-hidden rounded-lg border bg-card hover:shadow-lg transition-shadow duration-300">
+                    <div className="bg-card border border-border/50 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-primary/20">
                       <div className="relative">
                         <Image 
                           src={reel.thumbnails.high.url} 
                           alt={reel.title}
                           width={reel.thumbnails.high.width}
                           height={reel.thumbnails.high.height}
-                          className="w-full object-cover aspect-[9/16] group-hover:scale-105 transition-transform duration-300"
+                          className="w-full object-cover aspect-[9/16] group-hover:scale-105 transition-transform duration-500"
                         />
+                        
+                        {/* Overlay en hover */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                          <div className="bg-primary/90 rounded-full p-2 transform scale-0 group-hover:scale-100 transition-transform duration-300">
+                            <FaYoutube className="w-5 h-5 text-white" />
+                          </div>
+                        </div>
+                        
                         {reel.duration && (
-                          <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                          <div className="absolute bottom-2 right-2 bg-background/80 backdrop-blur-sm text-xs px-2 py-0.5 rounded-md">
                             {reel.duration}
                           </div>
                         )}
                       </div>
-                      <div className="p-2">
-                        <h3 className="text-sm font-medium line-clamp-1 group-hover:text-primary">
+                      <div className="p-3">
+                        <h3 className="text-sm font-medium line-clamp-1 group-hover:text-primary transition-colors">
                           {reel.title}
                         </h3>
-                        <div className="flex items-center text-xs text-muted-foreground mt-1">
-                          <FaEye className="w-3 h-3 mr-1" />
+                        <div className="flex items-center text-xs text-foreground/70 mt-1">
+                          <FaEye className="w-3 h-3 mr-1 text-primary/70" />
                           {formatNumber(reel.viewCount || '0')}
                         </div>
                       </div>

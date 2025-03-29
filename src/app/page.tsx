@@ -1,161 +1,223 @@
-import Image from "next/image";
-import Link from "next/link";
-import { FaSpotify, FaApple, FaGoogle, FaYoutube } from "react-icons/fa";
-import RecentEpisodes from "@/components/episodes/RecentEpisodes";
-import { platforms } from "@/platforms";
+import Link from 'next/link';
+import Image from 'next/image';
+import { FaYoutube, FaHeadphones, FaSpotify, FaItunes, FaArrowRight } from 'react-icons/fa';
 
 export default function Home() {
   return (
-    <div className="flex flex-col gap-12 pb-8">
-      {/* Hero Section */}
-      <section className="relative py-20 md:py-28 overflow-hidden">
-        {/* Fondo con degradado */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-background"></div>
+    <main className="flex flex-col min-h-screen">
+      {/* Sección Hero */}
+      <section className="relative w-full py-20 lg:py-32 overflow-hidden">
+        {/* Patrón de ondas sonoras en el fondo */}
+        <div className="absolute inset-0 sound-waves-pattern"></div>
         
-        {/* Círculos decorativos */}
-        <div className="absolute top-20 right-[10%] w-64 h-64 rounded-full bg-primary/5 blur-3xl"></div>
-        <div className="absolute bottom-10 left-[5%] w-80 h-80 rounded-full bg-primary/5 blur-3xl"></div>
+        {/* Resplandor de gradiente en el fondo */}
+        <div className="absolute top-1/4 left-1/4 w-1/2 h-1/2 bg-primary/20 blur-[120px] rounded-full"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-1/3 h-1/3 bg-secondary/20 blur-[100px] rounded-full"></div>
         
-        <div className="container relative z-10 flex flex-col items-center text-center">
-          <div className="inline-block relative">
-            <span className="absolute -inset-1 rounded-lg bg-gradient-to-r from-primary/20 to-primary/40 blur-xl opacity-70"></span>
-            <h1 className="relative text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
-              Efis Podcast
+        <div className="container relative mx-auto px-4 z-10">
+          <div className="flex flex-col items-center text-center">
+            <h1 className="text-gradient-brand mb-6">
+              EFIS PODCAST
             </h1>
-          </div>
-          <p className="mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
-            Conversaciones que inspiran, historias que transforman. Tu podcast de crecimiento personal y profesional.
-          </p>
-          
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link
-              href="/episodes"
-              className="inline-flex h-11 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-md hover:shadow-lg"
-            >
-              Escuchar ahora
-            </Link>
-            <Link
-              href="/about"
-              className="inline-flex h-11 items-center justify-center rounded-md border border-input bg-background/80 backdrop-blur-sm px-8 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-sm hover:shadow-md"
-            >
-              Conócenos
-            </Link>
-            <Link
-              href="/youtube"
-              className="inline-flex h-11 items-center justify-center rounded-md bg-red-600 px-8 text-sm font-medium text-white hover:bg-red-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-md hover:shadow-lg"
-            >
-              <FaYoutube className="mr-2 h-5 w-5" />
-              Ver Videos
-            </Link>
-          </div>
-          
-          <div className="mt-10">
-            <div className="text-center text-sm text-muted-foreground">
-              Disponible en
-            </div>
-            <div className="mt-4 flex flex-wrap justify-center gap-8">
-              {platforms.map((platform) => {
-                const Icon = platform.icon;
-                return (
-                  <a
-                    key={platform.name}
-                    href={platform.href}
-                    className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-105"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Icon className={`h-5 w-5 ${platform.name === 'Spotify' ? 'text-green-500' : 
-                                              platform.name === 'Apple Podcasts' ? 'text-purple-500' : 
-                                              platform.name === 'Google Podcasts' ? 'text-blue-500' : 
-                                              'text-red-600'}`} />
-                    <span>{platform.name}</span>
-                  </a>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
-      
-      {/* Recent Episodes Section */}
-      <section className="container py-12">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-bold tracking-tight">Episodios recientes</h2>
-          <Link
-            href="/episodes"
-            className="text-sm font-medium text-primary hover:underline"
-          >
-            Ver todos los episodios
-          </Link>
-        </div>
-        
-        <RecentEpisodes />
-      </section>
-      
-      {/* Newsletter Section */}
-      <section className="relative py-16 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-background"></div>
-        
-        <div className="container relative z-10">
-          <div className="mx-auto max-w-3xl overflow-hidden rounded-2xl bg-background/80 backdrop-blur-sm shadow-xl">
-            <div className="flex flex-col md:flex-row">
-              <div className="bg-primary/10 p-6 md:p-10 flex flex-col justify-center items-center md:items-start text-center md:text-left space-y-4 md:w-1/2">
-                <h2 className="text-3xl font-bold tracking-tight">Únete a nuestra comunidad</h2>
-                <p className="text-muted-foreground max-w-md">
-                  Suscríbete para recibir notificaciones sobre nuevos episodios, invitados especiales y contenido exclusivo.
-                </p>
-                <div className="hidden md:flex mt-6 space-x-4">
-                  {platforms.map((platform) => {
-                    const Icon = platform.icon;
-                    return (
-                      <a
-                        key={platform.name}
-                        href={platform.href}
-                        className="w-8 h-8 flex items-center justify-center rounded-full bg-background/50 text-primary hover:bg-primary hover:text-background transition-all duration-300"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={platform.name}
-                      >
-                        <Icon className="h-4 w-4" />
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
+            
+            <p className="text-lg md:text-xl text-foreground/80 max-w-2xl mb-8">
+              Un espacio de conversación, reflexión y aprendizaje sobre desarrollo personal y profesional. Entrevistas, debates y contenido para potenciar tu crecimiento.
+            </p>
+            
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 mb-12">
+              <Link
+                href="/episodes"
+                className="bg-gradient-brand hover:opacity-90 transition-opacity px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2"
+              >
+                <FaHeadphones className="h-5 w-5" />
+                <span>Escuchar episodios</span>
+              </Link>
               
-              <div className="p-6 md:p-10 md:w-1/2">
-                <form className="space-y-4">
-                  <div className="space-y-2">
-                    <label htmlFor="name" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Nombre</label>
-                    <input
-                      id="name"
-                      type="text"
-                      placeholder="Tu nombre"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Correo electrónico</label>
-                    <input
-                      id="email"
-                      type="email"
-                      placeholder="Tu correo electrónico"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      required
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="w-full h-10 rounded-md bg-primary text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 shadow-sm"
-                  >
-                    Suscribirse
-                  </button>
-                </form>
+              <Link
+                href="/youtube"
+                className="bg-background border border-primary/30 hover:border-primary/60 transition-colors px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2"
+              >
+                <FaYoutube className="h-5 w-5 text-red-500" />
+                <span>Ver en YouTube</span>
+              </Link>
+            </div>
+            
+            {/* Disponible en */}
+            <div className="w-full">
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-4">Disponible en</p>
+              <div className="flex flex-wrap justify-center gap-6">
+                <PlatformLogo name="Spotify" icon={<FaSpotify className="text-[#1DB954]" />} />
+                <PlatformLogo name="Apple Podcasts" icon={<FaItunes className="text-[#872EC4]" />} />
+                <PlatformLogo name="YouTube" icon={<FaYoutube className="text-[#FF0000]" />} />
+                {/* Más plataformas aquí */}
               </div>
             </div>
           </div>
         </div>
       </section>
+      
+      {/* Sección de Episodios Destacados */}
+      <section className="w-full py-16 bg-card">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-2xl font-bold">EPISODIOS DESTACADOS</h2>
+            <Link href="/episodes" className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors">
+              <span>Ver todos</span>
+              <FaArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Episode Card 1 */}
+            <FeaturedEpisodeCard
+              title="Crecimiento personal en la era digital"
+              description="Conversamos sobre las estrategias más efectivas para el desarrollo personal en un mundo hiperconectado."
+              duration="45:30"
+              date="15 Mar 2023"
+              image="/images/placeholder-episode.jpg"
+              href="/episodes/1"
+            />
+            
+            {/* Episode Card 2 */}
+            <FeaturedEpisodeCard
+              title="La productividad y el bienestar"
+              description="¿Cómo equilibrar la productividad con el bienestar personal? Exploramos técnicas y enfoques."
+              duration="38:15"
+              date="22 Feb 2023"
+              image="/images/placeholder-episode.jpg"
+              href="/episodes/2"
+            />
+            
+            {/* Episode Card 3 */}
+            <FeaturedEpisodeCard
+              title="Inteligencia emocional en el trabajo"
+              description="Analizamos la importancia de la inteligencia emocional en entornos laborales modernos."
+              duration="42:50"
+              date="8 Feb 2023"
+              image="/images/placeholder-episode.jpg"
+              href="/episodes/3"
+            />
+          </div>
+        </div>
+      </section>
+      
+      {/* Sección Testimonios/Stats */}
+      <section className="w-full py-16 relative">
+        {/* Resplandor de gradiente en el fondo */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-1/2 bg-primary/10 blur-[120px] rounded-full"></div>
+        
+        <div className="container relative mx-auto px-4 z-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <StatCard number="50+" label="Episodios" />
+            <StatCard number="10K+" label="Oyentes mensuales" />
+            <StatCard number="4.8" label="Calificación promedio" />
+          </div>
+        </div>
+      </section>
+      
+      {/* Sección Suscríbete */}
+      <section className="w-full py-16 bg-card">
+        <div className="container mx-auto px-4">
+          <div className="bg-gradient-to-br from-background to-background/80 border border-border/50 rounded-xl p-8 relative overflow-hidden">
+            {/* Patrón de ondas sonoras */}
+            <div className="absolute inset-0 sound-waves-pattern opacity-30"></div>
+            
+            <div className="relative z-10 flex flex-col items-center text-center">
+              <h2 className="text-2xl font-bold mb-4">ÚNETE A NUESTRA COMUNIDAD</h2>
+              
+              <p className="text-foreground/80 max-w-2xl mb-8">
+                Recibe notificaciones sobre nuevos episodios, contenido exclusivo y más directamente en tu correo.
+              </p>
+              
+              <form className="w-full max-w-md flex flex-col sm:flex-row gap-2">
+                <input
+                  type="email"
+                  placeholder="Tu correo electrónico"
+                  className="flex-1 px-4 py-3 rounded-lg bg-background border border-border focus:outline-none focus:border-primary"
+                  required
+                />
+                <button
+                  type="submit"
+                  className="bg-gradient-brand hover:opacity-90 transition-opacity px-6 py-3 rounded-lg font-medium"
+                >
+                  Suscribirse
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+// Componente para logos de plataformas
+function PlatformLogo({ name, icon }: { name: string; icon: React.ReactNode }) {
+  return (
+    <div className="flex items-center gap-2">
+      <div className="text-2xl">
+        {icon}
+      </div>
+      <span className="text-sm text-foreground/70">{name}</span>
+    </div>
+  );
+}
+
+// Componente para tarjetas de episodios destacados
+function FeaturedEpisodeCard({
+  title,
+  description,
+  duration,
+  date,
+  image,
+  href
+}: {
+  title: string;
+  description: string;
+  duration: string;
+  date: string;
+  image: string;
+  href: string;
+}) {
+  return (
+    <Link href={href} className="group">
+      <div className="bg-background border border-border/50 rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300">
+        <div className="relative aspect-video">
+          <Image
+            src={image}
+            alt={title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background/90 to-transparent h-1/2"></div>
+          <div className="absolute bottom-3 left-3 bg-background/80 backdrop-blur-sm text-xs px-2 py-1 rounded-full">
+            {duration}
+          </div>
+        </div>
+        
+        <div className="p-4">
+          <h3 className="text-lg font-semibold line-clamp-1 group-hover:text-primary transition-colors">
+            {title}
+          </h3>
+          <p className="text-sm text-muted-foreground line-clamp-2 mt-2 mb-3">
+            {description}
+          </p>
+          <div className="text-xs text-foreground/70">
+            {date}
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+// Componente para estadísticas
+function StatCard({ number, label }: { number: string; label: string }) {
+  return (
+    <div className="flex flex-col items-center">
+      <span className="text-5xl font-extrabold text-gradient-brand mb-2">{number}</span>
+      <span className="text-sm uppercase tracking-wider text-muted-foreground">{label}</span>
     </div>
   );
 } 

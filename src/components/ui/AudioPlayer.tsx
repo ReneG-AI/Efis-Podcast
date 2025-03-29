@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaBackward, FaForward } from 'react-icons/fa';
+import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
 import AudioVisualizer from './AudioVisualizer';
 
 interface AudioPlayerProps {
@@ -66,11 +66,17 @@ export default function AudioPlayer({
     setIsMuted(!isMuted);
   };
   
-  // Avanzar o retroceder
-  const seek = (amount: number) => {
-    if (!audioRef.current) return;
+  // Avanzar o retroceder con doble clic
+  const handleProgressBarClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!audioRef.current || !duration) return;
     
-    audioRef.current.currentTime += amount;
+    const progressBar = e.currentTarget;
+    const clickPosition = e.clientX - progressBar.getBoundingClientRect().left;
+    const progressBarWidth = progressBar.clientWidth;
+    const newTime = (clickPosition / progressBarWidth) * duration;
+    
+    audioRef.current.currentTime = newTime;
+    setCurrentTime(newTime);
   };
   
   // Cambiar posición de reproducción
@@ -141,29 +147,32 @@ export default function AudioPlayer({
   // Variante Mini
   if (variant === 'mini') {
     return (
-      <div className={`flex items-center gap-2 p-2 rounded-lg bg-card/60 backdrop-blur-sm ${className}`}>
+      <div className={`flex items-center gap-2 p-2 rounded-lg bg-background/40 backdrop-blur-sm ${className}`}>
         <button 
           onClick={togglePlay}
-          className="bg-primary rounded-full p-2 text-white focus:outline-none"
+          className="text-primary hover:text-primary/80 transition-colors"
           aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
         >
-          {isPlaying ? <FaPause size={10} /> : <FaPlay size={10} />}
+          {isPlaying ? <FaPause size={12} /> : <FaPlay size={12} />}
         </button>
         
-        <div className="flex-1 flex flex-col min-w-0">
+        <div className="flex-1 flex flex-col min-w-0 gap-1">
           {title && (
-            <div className="text-xs font-medium line-clamp-1">{title}</div>
+            <div className="text-xs font-medium line-clamp-1 text-foreground/80">{title}</div>
           )}
-          <div className="w-full h-1 bg-background/50 rounded-full overflow-hidden">
+          <div 
+            className="w-full h-1 bg-primary/10 rounded-full overflow-hidden cursor-pointer"
+            onClick={handleProgressBarClick}
+          >
             <motion.div 
-              className="h-full bg-primary"
+              className="h-full bg-primary/60"
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.1 }}
             />
           </div>
         </div>
         
-        <div className="text-xs text-foreground/70">
+        <div className="text-xs text-foreground/60">
           {formatTime(currentTime)}
         </div>
       </div>
@@ -173,37 +182,23 @@ export default function AudioPlayer({
   // Variante Default
   if (variant === 'default') {
     return (
-      <div className={`p-3 rounded-lg border border-border/50 bg-card/80 backdrop-blur-sm ${className}`}>
-        <div className="flex items-center gap-4 mb-2">
-          <button
-            onClick={togglePlay}
-            className="bg-primary rounded-full p-3 text-white focus:outline-none hover:bg-primary/90 transition-colors"
-            aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
-          >
-            {isPlaying ? <FaPause size={14} /> : <FaPlay size={14} />}
-          </button>
-          
+      <div className={`p-4 rounded-lg border border-border/20 bg-background/40 backdrop-blur-sm ${className}`}>
+        <div className="flex flex-col gap-3">
           {title && (
-            <div className="font-medium line-clamp-1">{title}</div>
+            <div className="text-sm font-medium text-foreground/80">{title}</div>
           )}
           
-          <div className="flex items-center gap-1 ml-auto">
-            <button
-              onClick={toggleMute}
-              className="p-2 rounded-full hover:bg-background/50 transition-colors"
-              aria-label={isMuted ? 'Activar sonido' : 'Silenciar'}
+          <div className="relative">
+            <div 
+              className="w-full h-2 bg-primary/10 rounded-full overflow-hidden cursor-pointer"
+              onClick={handleProgressBarClick}
             >
-              {isMuted ? <FaVolumeMute size={14} /> : <FaVolumeUp size={14} />}
-            </button>
-          </div>
-        </div>
-        
-        <div className="flex items-center gap-3">
-          <div className="text-xs text-foreground/70">
-            {formatTime(currentTime)}
-          </div>
-          
-          <div className="flex-1 relative h-2">
+              <motion.div 
+                className="h-full bg-primary/60"
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.1 }}
+              />
+            </div>
             <input
               type="range"
               min={0}
@@ -215,119 +210,132 @@ export default function AudioPlayer({
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
               aria-label="Progreso de reproducción"
             />
-            <div className="w-full h-1 bg-background/50 rounded-full overflow-hidden mt-0.5">
-              <motion.div 
-                className="h-full bg-primary"
-                animate={{ width: `${progress}%` }}
-                transition={{ duration: 0.1 }}
-              />
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={togglePlay}
+                className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
+              >
+                {isPlaying ? <FaPause size={12} /> : <FaPlay size={12} />}
+              </button>
+              
+              <div className="text-xs text-foreground/60">
+                {formatTime(currentTime)} / {formatTime(duration)}
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <button
+                onClick={toggleMute}
+                className="text-foreground/60 hover:text-foreground/80 transition-colors"
+                aria-label={isMuted ? 'Activar sonido' : 'Silenciar'}
+              >
+                {isMuted ? <FaVolumeMute size={14} /> : <FaVolumeUp size={14} />}
+              </button>
+              
+              <div className="relative w-16 h-2">
+                <div className="w-full h-1 bg-primary/10 rounded-full overflow-hidden mt-0.5">
+                  <motion.div 
+                    className="h-full bg-primary/60"
+                    animate={{ width: `${volume * 100}%` }}
+                    transition={{ duration: 0.1 }}
+                  />
+                </div>
+                <input
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={volume}
+                  onChange={handleVolumeChange}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                  aria-label="Volumen"
+                />
+              </div>
             </div>
           </div>
           
-          <div className="text-xs text-foreground/70">
-            {formatTime(duration)}
-          </div>
+          {isPlaying && (
+            <div className="mt-2 h-6 opacity-60">
+              <AudioVisualizer barCount={32} maxHeight={16} className="w-full" />
+            </div>
+          )}
         </div>
         
-        {isPlaying && (
-          <div className="mt-3">
-            <AudioVisualizer barCount={24} maxHeight={20} className="w-full" />
-          </div>
-        )}
+        <audio ref={audioRef} src={src} preload="metadata" />
       </div>
     );
   }
   
-  // Variante Full
+  // Variante Full (también simplificada)
   return (
-    <div className={`p-4 rounded-xl border border-border/50 bg-card ${className}`}>
-      <div className="relative mb-6">
-        <AnimatePresence>
-          {isPlaying && (
-            <motion.div 
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-              className="mb-4"
-            >
-              <AudioVisualizer barCount={50} maxHeight={60} className="w-full" />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-      
+    <div className={`p-4 rounded-xl border border-border/20 bg-background/40 backdrop-blur-sm ${className}`}>
       {title && (
-        <h3 className="font-semibold text-lg mb-4">{title}</h3>
+        <h3 className="font-medium text-base mb-4 text-center text-foreground/80">{title}</h3>
       )}
       
-      <div className="flex justify-center gap-6 mb-6">
-        <button
-          onClick={() => seek(-10)}
-          className="p-3 rounded-full hover:bg-background/50 transition-colors"
-          aria-label="Retroceder 10 segundos"
-        >
-          <FaBackward size={16} />
-        </button>
-        
+      <div className="flex justify-center mb-5">
         <button
           onClick={togglePlay}
-          className="bg-gradient-brand rounded-full p-4 text-white focus:outline-none hover:opacity-90 transition-opacity shadow-md"
+          className="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-r from-primary/80 to-primary shadow-md text-white hover:opacity-90 transition-opacity"
           aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
         >
-          {isPlaying ? <FaPause size={20} /> : <FaPlay size={20} />}
-        </button>
-        
-        <button
-          onClick={() => seek(10)}
-          className="p-3 rounded-full hover:bg-background/50 transition-colors"
-          aria-label="Avanzar 10 segundos"
-        >
-          <FaForward size={16} />
+          {isPlaying ? <FaPause size={18} /> : <FaPlay size={18} className="ml-1" />}
         </button>
       </div>
       
-      <div className="flex items-center gap-3 mb-4">
-        <div className="text-sm text-foreground/70">
-          {formatTime(currentTime)}
+      <AnimatePresence>
+        {isPlaying && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="mb-4 overflow-hidden"
+          >
+            <AudioVisualizer barCount={40} maxHeight={30} className="w-full opacity-70" />
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
+      <div className="flex flex-col gap-2 mb-4">
+        <div 
+          className="w-full h-2 bg-primary/10 rounded-full overflow-hidden cursor-pointer"
+          onClick={handleProgressBarClick}
+        >
+          <motion.div 
+            className="h-full bg-primary/60"
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.1 }}
+          />
         </div>
         
-        <div className="flex-1 relative h-2">
-          <input
-            type="range"
-            min={0}
-            max={duration || 100}
-            value={currentTime}
-            onChange={handleSeek}
-            onMouseDown={() => setIsDragging(true)}
-            onMouseUp={() => setIsDragging(false)}
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-            aria-label="Progreso de reproducción"
-          />
-          <div className="w-full h-2 bg-background/50 rounded-full overflow-hidden">
+        <div className="flex items-center justify-between text-xs text-foreground/60">
+          <div>{formatTime(currentTime)}</div>
+          <div>{formatTime(duration)}</div>
+        </div>
+      </div>
+      
+      <div className="flex items-center justify-end gap-2">
+        <button
+          onClick={toggleMute}
+          className="text-foreground/60 hover:text-foreground/80 transition-colors"
+          aria-label={isMuted ? 'Activar sonido' : 'Silenciar'}
+        >
+          {isMuted ? <FaVolumeMute size={14} /> : <FaVolumeUp size={14} />}
+        </button>
+        
+        <div className="relative w-20 h-2">
+          <div className="w-full h-1 bg-primary/10 rounded-full overflow-hidden mt-0.5">
             <motion.div 
-              className="h-full bg-gradient-brand"
-              animate={{ width: `${progress}%` }}
+              className="h-full bg-primary/60"
+              animate={{ width: `${volume * 100}%` }}
               transition={{ duration: 0.1 }}
             />
           </div>
-        </div>
-        
-        <div className="text-sm text-foreground/70">
-          {formatTime(duration)}
-        </div>
-      </div>
-      
-      <div className="flex items-center gap-3">
-        <button
-          onClick={toggleMute}
-          className="p-2 rounded-full hover:bg-background/50 transition-colors"
-          aria-label={isMuted ? 'Activar sonido' : 'Silenciar'}
-        >
-          {isMuted ? <FaVolumeMute size={16} /> : <FaVolumeUp size={16} />}
-        </button>
-        
-        <div className="flex-1 relative h-2 max-w-[100px]">
           <input
             type="range"
             min={0}
@@ -338,13 +346,6 @@ export default function AudioPlayer({
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
             aria-label="Volumen"
           />
-          <div className="w-full h-1 bg-background/50 rounded-full overflow-hidden mt-0.5">
-            <motion.div 
-              className="h-full bg-primary"
-              animate={{ width: `${volume * 100}%` }}
-              transition={{ duration: 0.1 }}
-            />
-          </div>
         </div>
       </div>
       

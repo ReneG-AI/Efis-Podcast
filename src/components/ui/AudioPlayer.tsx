@@ -231,7 +231,7 @@ export default function AudioPlayer({
         
         {isPlaying && (
           <div className="mt-3">
-            <AudioVisualizer isPlaying={isPlaying} barCount={24} height={20} color="var(--primary)" />
+            <AudioVisualizer barCount={24} maxHeight={20} className="w-full" />
           </div>
         )}
       </div>
@@ -251,7 +251,7 @@ export default function AudioPlayer({
               transition={{ duration: 0.3 }}
               className="mb-4"
             >
-              <AudioVisualizer isPlaying={isPlaying} barCount={50} height={60} color="var(--primary)" />
+              <AudioVisualizer barCount={50} maxHeight={60} className="w-full" />
             </motion.div>
           )}
         </AnimatePresence>

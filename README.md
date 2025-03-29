@@ -1,23 +1,23 @@
-# Efis Podcast
+# Efis Podcast Website
 
-Aplicación web para el Podcast de Efis sobre desarrollo personal y profesional.
+Sitio web oficial para un podcast sobre desarrollo personal y profesional.
 
-> ⚠️ Este es un repositorio privado. Si necesitas acceso, contacta al administrador del proyecto.
+> ⚠️ Este es un repositorio privado. Para contribuir, contacta al administrador del proyecto.
 
 ## Características
 
-- Listado de episodios con reproductor integrado
-- Canal de YouTube con videos y reels
-- Diseño responsive y moderno
-- Modo oscuro/claro
-- Optimizado para SEO
+- Sitio web moderno y responsive
+- Integración con servicios de streaming
+- Listado de episodios y contenido multimedia
+- Modo oscuro/claro automático
+- Optimizado para SEO y rendimiento
 
 ## Instalación
 
 1. Clona el repositorio (requiere acceso):
 ```bash
-git clone https://github.com/ReneG-AI/Efis-Podcast.git
-cd Efis-Podcast
+git clone [URL_REPOSITORIO]
+cd [NOMBRE_DIRECTORIO]
 ```
 
 2. Instala dependencias:
@@ -27,46 +27,44 @@ npm install
 
 3. Configura las variables de entorno:
    - Copia el archivo `.env.example` a `.env.local`
-   - Completa las variables con tus propias claves
-   - O utiliza el script `start.bat` que creará uno básico automáticamente
+   - Rellena las variables según las instrucciones en el archivo
+   - El script `start.bat` puede ayudarte a configurar lo básico
 
-## Integración con YouTube
+## Integración con API de contenido multimedia
 
-Este proyecto incluye una integración completa con la API de YouTube que permite:
+Este proyecto incluye integración con APIs para mostrar contenido multimedia que permite:
 
-- Mostrar los videos y reels más recientes del canal
-- Implementar un sistema de caché para reducir llamadas a la API
-- Visualizar estadísticas del canal (suscriptores, vistas, etc.)
-- Ofrecer acceso directo a los videos en YouTube
+- Visualizar contenido reciente
+- Sistema de caché para optimizar rendimiento
+- Estadísticas y métricas
+- Enlaces directos a las plataformas originales
 
-### Configuración de la API de YouTube
+### Configuración de APIs
 
-Para configurar la API de YouTube necesitas:
+Para configurar las integraciones necesitas:
 
-1. Obtener una clave de API de YouTube desde la [Google Cloud Console](https://console.cloud.google.com/)
-2. Habilitar la API de YouTube Data v3 en tu proyecto de Google
-3. Añadir la clave de API y el ID del canal en tu archivo `.env.local`:
+1. Obtener las claves de API necesarias desde los respectivos proveedores
+2. Habilitar los servicios requeridos en cada plataforma
+3. Añadir las claves en tu archivo `.env.local` siguiendo el formato del ejemplo
 
 ```
-NEXT_PUBLIC_YOUTUBE_API_KEY=tu_clave_api_aquí
-NEXT_PUBLIC_YOUTUBE_CHANNEL_ID=id_del_canal_aquí
+NEXT_PUBLIC_API_KEY=tu_clave_aquí
+NEXT_PUBLIC_CHANNEL_ID=tu_id_aquí
 ```
 
-Si no configuras estas variables, el sistema utilizará valores predeterminados que pueden estar sujetos a limitaciones de cuota.
+El sistema tiene valores predeterminados de ejemplo para desarrollo, pero están sujetos a limitaciones.
 
 ### Sistema de Caché
 
 La integración incluye un sistema de caché que:
-- Almacena los datos en localStorage
-- Actualiza la información cada 7 días
-- Reduce significativamente las llamadas a la API
+- Almacena los datos localmente en el navegador
+- Actualiza la información periódicamente
+- Reduce significativamente las llamadas a las APIs
 - Mejora la velocidad de carga de la página
 
-Para forzar una actualización de los datos, puedes borrar la caché del navegador o utilizar la función `clearCache()` desde la consola de desarrollo.
+Para forzar una actualización de los datos durante el desarrollo, puedes limpiar el almacenamiento del navegador.
 
 ## Ejecutar en desarrollo
-
-Utiliza el script de inicio para ejecutar el proyecto con verificación de configuración:
 
 ```bash
 # Windows
@@ -83,11 +81,11 @@ Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 - `src/app/` - Páginas de la aplicación (Next.js App Router)
 - `src/components/` - Componentes reutilizables
 - `src/lib/` - Utilidades, APIs y configuraciones
-- `public/` - Archivos estáticos (imágenes, fuentes, etc.)
+- `public/` - Archivos estáticos
 
 ## Despliegue
 
-La aplicación está optimizada para ser desplegada en Vercel:
+La aplicación está optimizada para ser desplegada en plataformas modernas:
 
 ```bash
 npm run build
@@ -96,9 +94,9 @@ npm run build
 ## Colaboración
 
 1. Solicita acceso al repositorio
-2. Crea una rama para tu feature (`git checkout -b feature/amazing-feature`)
-3. Haz commit de tus cambios (`git commit -m 'Add some amazing feature'`)
-4. Push a la rama (`git push origin feature/amazing-feature`)
+2. Crea una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
+3. Haz commit de tus cambios (`git commit -m 'Añadir nueva funcionalidad'`)
+4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
 5. Abre un Pull Request
 
 ## Seguridad

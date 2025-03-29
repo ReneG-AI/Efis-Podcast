@@ -1,110 +1,142 @@
 "use client";
 
 import Link from "next/link";
-import Logo from './Logo';
-import { FaYoutube, FaSpotify, FaItunes, FaTwitter, FaInstagram, FaTiktok } from "react-icons/fa";
+import { FaSpotify, FaYoutube, FaPodcast, FaItunes, FaTiktok, FaInstagram, FaTwitter } from "react-icons/fa";
+import Logo from "@/components/brand/Logo";
+
+const socialLinks = [
+  {
+    name: "Spotify",
+    href: "https://open.spotify.com/show/example",
+    icon: <FaSpotify size={18} />,
+    color: "hover:text-[#1ED760]"
+  },
+  {
+    name: "Apple Podcasts",
+    href: "https://podcasts.apple.com/podcast/example",
+    icon: <FaItunes size={18} />,
+    color: "hover:text-[#8e44ad]"
+  },
+  {
+    name: "YouTube",
+    href: "https://youtube.com/@example",
+    icon: <FaYoutube size={18} />,
+    color: "hover:text-[#FF0000]"
+  },
+  {
+    name: "TikTok",
+    href: "https://tiktok.com/@example",
+    icon: <FaTiktok size={16} />,
+    color: "hover:text-foreground"
+  },
+  {
+    name: "Instagram",
+    href: "https://instagram.com/example",
+    icon: <FaInstagram size={18} />,
+    color: "hover:text-[#E1306C]"
+  },
+  {
+    name: "Twitter",
+    href: "https://twitter.com/example",
+    icon: <FaTwitter size={18} />,
+    color: "hover:text-[#1DA1F2]"
+  }
+];
+
+// Links rápidos para el footer
+const quickLinks = [
+  { label: "Episodios", href: "/episodes" },
+  { label: "YouTube", href: "/youtube" },
+  { label: "Sobre nosotros", href: "/about" },
+  { label: "Política de privacidad", href: "/privacy" }
+];
+
+interface SocialLinkProps {
+  href: string;
+  icon: React.ReactNode;
+  name: string;
+  color: string;
+}
+
+const SocialLink = ({ href, icon, name, color }: SocialLinkProps) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    className={`flex items-center gap-2 text-foreground/70 transition-all duration-300 ${color} hover:scale-110`}
+    aria-label={name}
+  >
+    <span className="text-lg">{icon}</span>
+    <span className="text-sm">{name}</span>
+  </a>
+);
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className="bg-card border-t border-border relative overflow-hidden">
-      {/* Patrón de ondas sonoras como fondo */}
-      <div className="absolute inset-0 sound-waves-pattern opacity-20"></div>
-      
-      <div className="container mx-auto px-4 py-12 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+    <footer className="relative border-t border-border/60 overflow-hidden">
+      {/* Patrón de ondas de sonido en el fondo */}
+      <div className="absolute inset-0 pointer-events-none opacity-5">
+        <svg viewBox="0 0 1200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <path d="M0,100 C150,180 350,0 500,100 C650,180 850,0 1000,100 C1150,180 1350,0 1500,100 V200 H0 Z" className="fill-primary"></path>
+          <path d="M0,100 C150,20 350,180 500,100 C650,20 850,180 1000,100 C1150,20 1350,180 1500,100 V200 H0 Z" className="fill-primary"></path>
+          <path d="M0,100 C150,140 350,60 500,100 C650,140 850,60 1000,100 C1150,140 1350,60 1500,100 V200 H0 Z" className="fill-primary/50"></path>
+        </svg>
+      </div>
+
+      <div className="container mx-auto py-12 px-4 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Logo y descripción */}
-          <div className="md:col-span-1">
-            <Logo size="normal" />
-            <p className="mt-4 text-muted-foreground">
-              Contenido innovador sobre desarrollo personal y profesional. Entrevistas, debates y reflexiones para potenciar tu crecimiento.
+          <div className="flex flex-col space-y-3">
+            <Logo size="md" />
+            <p className="text-muted-foreground text-sm mt-2 max-w-xs">
+              EFIS Podcast es tu portal de información y entretenimiento sobre tecnología, aviación y mucho más.
             </p>
           </div>
-          
-          {/* Enlaces rápidos */}
-          <div className="md:col-span-1">
-            <h3 className="text-md font-semibold mb-4 text-gradient-brand">ENLACES</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/" className="text-muted-foreground hover:text-primary transition-colors">
-                  Inicio
-                </Link>
-              </li>
-              <li>
-                <Link href="/episodes" className="text-muted-foreground hover:text-primary transition-colors">
-                  Episodios
-                </Link>
-              </li>
-              <li>
-                <Link href="/youtube" className="text-muted-foreground hover:text-primary transition-colors">
-                  YouTube
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="text-muted-foreground hover:text-primary transition-colors">
-                  Sobre Nosotros
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors">
-                  Contacto
-                </Link>
-              </li>
+
+          {/* Links rápidos */}
+          <div>
+            <h3 className="font-bold text-foreground mb-4">Enlaces rápidos</h3>
+            <ul className="space-y-3">
+              {quickLinks.map((link) => (
+                <li key={link.href}>
+                  <Link 
+                    href={link.href}
+                    className="text-foreground/70 hover:text-foreground transition-colors duration-300 text-sm"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
-          
+
           {/* Redes sociales */}
-          <div className="md:col-span-1">
-            <h3 className="text-md font-semibold mb-4 text-gradient-brand">SÍGUENOS</h3>
-            <div className="flex flex-wrap gap-4">
-              <SocialLink href="https://youtube.com/@EFISPODCAST" icon={<FaYoutube className="w-5 h-5" />} label="YouTube" />
-              <SocialLink href="#" icon={<FaSpotify className="w-5 h-5" />} label="Spotify" />
-              <SocialLink href="#" icon={<FaItunes className="w-5 h-5" />} label="Apple Podcasts" />
-              <SocialLink href="#" icon={<FaTwitter className="w-5 h-5" />} label="Twitter" />
-              <SocialLink href="#" icon={<FaInstagram className="w-5 h-5" />} label="Instagram" />
-              <SocialLink href="#" icon={<FaTiktok className="w-5 h-5" />} label="TikTok" />
+          <div>
+            <h3 className="font-bold text-foreground mb-4">Síguenos</h3>
+            <div className="flex flex-col space-y-3">
+              {socialLinks.map((link) => (
+                <SocialLink
+                  key={link.name}
+                  href={link.href}
+                  icon={link.icon}
+                  name={link.name}
+                  color={link.color}
+                />
+              ))}
             </div>
           </div>
         </div>
-        
-        {/* Línea divisoria */}
-        <div className="border-t border-border/50 my-8"></div>
-        
-        {/* Copyright */}
-        <div className="flex flex-col sm:flex-row justify-between items-center">
-          <p className="text-sm text-muted-foreground">
-            © {currentYear} Efis Podcast. Todos los derechos reservados.
+
+        {/* Copyright y línea final */}
+        <div className="flex flex-col sm:flex-row justify-between items-center border-t border-border/30 mt-10 pt-6 text-sm text-muted-foreground">
+          <p>© {currentYear} EFIS Podcast. Todos los derechos reservados.</p>
+          <p className="mt-2 sm:mt-0">
+            Diseñado con <span className="text-red-500">♥</span> por EFIS Team
           </p>
-          
-          <div className="flex items-center space-x-4 mt-4 sm:mt-0">
-            <Link href="/privacy" className="text-xs text-muted-foreground hover:text-primary transition-colors">
-              Privacidad
-            </Link>
-            <Link href="/terms" className="text-xs text-muted-foreground hover:text-primary transition-colors">
-              Términos de uso
-            </Link>
-            <Link href="/cookies" className="text-xs text-muted-foreground hover:text-primary transition-colors">
-              Cookies
-            </Link>
-          </div>
         </div>
       </div>
     </footer>
-  );
-}
-
-function SocialLink({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
-  return (
-    <a 
-      href={href} 
-      target="_blank" 
-      rel="noopener noreferrer"
-      className="flex items-center justify-center w-10 h-10 rounded-full bg-accent/10 hover:bg-accent/20 text-foreground hover:text-accent transition-all"
-      title={label}
-      aria-label={label}
-    >
-      {icon}
-    </a>
   );
 } 

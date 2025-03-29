@@ -1,223 +1,151 @@
 "use client";
 
-import { useState } from 'react';
-import Image from 'next/image';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { FaPlay, FaPause, FaClock, FaHeadphones } from 'react-icons/fa';
-import AudioVisualizer from '../ui/AudioVisualizer';
+import { FaPlay, FaPause, FaHeadphones } from 'react-icons/fa';
 
-interface EpisodeCardProps {
-  id: string;
+import AudioVisualizer from '@/components/ui/AudioVisualizer';
+
+export interface EpisodeCardProps {
   title: string;
-  description?: string;
+  description: string;
   image: string;
   duration: string;
-  date: string;
-  listens?: string;
-  audioUrl?: string;
+  number?: string;
+  date?: string;
   href: string;
+  audioUrl?: string;
   variant?: 'default' | 'featured' | 'compact';
+  onPlay?: () => void;
 }
 
 export default function EpisodeCard({
-  id,
   title,
   description,
   image,
   duration,
+  number,
   date,
-  listens,
-  audioUrl,
   href,
-  variant = 'default'
+  audioUrl,
+  variant = 'default',
+  onPlay
 }: EpisodeCardProps) {
-  const [isPlaying, setIsPlaying] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [audio] = useState(typeof Audio !== 'undefined' ? new Audio(audioUrl) : null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showAudio, setShowAudio] = useState(false);
 
-  // Configurar dimensiones y estilos basados en la variante
-  const cardStyles = {
-    'default': 'bg-card border border-border/50 rounded-xl overflow-hidden',
-    'featured': 'bg-gradient-to-br from-background to-card border border-primary/20 rounded-xl overflow-hidden shadow-lg',
-    'compact': 'bg-card/60 backdrop-blur-sm border border-border/30 rounded-lg overflow-hidden'
-  };
-
-  const imageStyles = {
-    'default': 'aspect-video',
-    'featured': 'aspect-[4/3]',
-    'compact': 'aspect-square w-20 h-20 rounded-lg'
-  };
-
-  // Función para reproducir/pausar audio
-  const toggleAudio = (e: React.MouseEvent) => {
+  // Simular reproducción de audio
+  const handlePlayClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    e.stopPropagation();
-
-    if (!audio) return;
-
-    if (isPlaying) {
-      audio.pause();
-    } else {
-      audio.play();
-    }
     setIsPlaying(!isPlaying);
+    setShowAudio(true);
+    
+    if (onPlay) {
+      onPlay();
+    }
   };
 
-  // Detener audio cuando el componente se desmonta
-  const handleCardClick = () => {
-    if (isPlaying && audio) {
-      audio.pause();
-      setIsPlaying(false);
+  // Determinar clases basadas en la variante
+  const getCardClasses = () => {
+    switch (variant) {
+      case 'featured':
+        return 'col-span-1 md:col-span-2 md:row-span-2';
+      case 'compact':
+        return 'flex flex-row h-24';
+      default:
+        return '';
     }
   };
 
   return (
-    <Link 
-      href={href} 
-      className="block group" 
-      onClick={handleCardClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+    <motion.div 
+      className={`group ${getCardClasses()}`}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      whileHover={{ y: -5 }}
     >
-      <motion.div 
-        className={`${cardStyles[variant]} hover:shadow-lg transition-all duration-300 relative`}
-        whileHover={{ 
-          y: -5,
-          transition: { duration: 0.2 }
-        }}
-      >
-        {variant === 'compact' ? (
-          <div className="flex items-center p-3 gap-4">
-            <div className={`relative shrink-0 ${imageStyles[variant]}`}>
-              <Image
-                src={image}
-                alt={title}
-                width={80}
-                height={80}
-                className="rounded-lg object-cover"
-              />
-              <motion.div 
-                className="absolute inset-0 flex items-center justify-center"
+      <Link href={href} className="block h-full">
+        <div className="bg-background border border-border/60 rounded-xl overflow-hidden transition-all duration-300 h-full hover:shadow-lg relative">
+          {/* Imagen del episodio */}
+          <div className={`relative ${variant === 'compact' ? 'w-24 h-full' : 'h-48'} overflow-hidden`}>
+            <Image 
+              src={image} 
+              alt={title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-70"></div>
+            
+            {/* Duración */}
+            <div className="absolute bottom-3 left-3 bg-primary/90 text-primary-foreground px-2 py-1 text-xs font-medium rounded">
+              {duration}
+            </div>
+            
+            {/* Número del episodio */}
+            {number && (
+              <div className="absolute top-3 right-3 bg-card/90 text-foreground px-2 py-1 text-xs font-bold rounded">
+                {number}
+              </div>
+            )}
+            
+            {/* Botón de reproducción que aparece al hacer hover */}
+            {audioUrl && (
+              <motion.button
+                className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={handlePlayClick}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: isHovered ? 1 : 0 }}
-                transition={{ duration: 0.2 }}
+                exit={{ opacity: 0 }}
               >
-                <div 
-                  className="bg-primary/80 rounded-full p-2 cursor-pointer"
-                  onClick={toggleAudio}
+                <motion.div 
+                  className="bg-primary text-white p-3 rounded-full"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  {isPlaying ? (
-                    <FaPause className="w-3 h-3 text-white" />
-                  ) : (
-                    <FaPlay className="w-3 h-3 text-white" />
-                  )}
-                </div>
-              </motion.div>
-            </div>
-            
-            <div className="flex-1 min-w-0">
-              <h3 className="font-medium text-sm line-clamp-1 group-hover:text-primary transition-colors">
-                {title}
-              </h3>
-              
-              <div className="flex items-center justify-between mt-1">
-                <span className="text-xs text-foreground/70">{date}</span>
-                <span className="text-xs flex items-center text-foreground/70">
-                  <FaClock className="w-3 h-3 mr-1" />
-                  {duration}
-                </span>
-              </div>
-              
-              {isPlaying && (
-                <div className="mt-1">
-                  <AudioVisualizer 
-                    isPlaying={isPlaying} 
-                    color="var(--primary)" 
-                    barCount={10}
-                    height={15}
-                  />
-                </div>
-              )}
-            </div>
+                  {isPlaying ? <FaPause /> : <FaPlay />}
+                </motion.div>
+              </motion.button>
+            )}
           </div>
-        ) : (
-          <>
-            <div className="relative">
-              <Image
-                src={image}
-                alt={title}
-                width={500}
-                height={variant === 'featured' ? 375 : 280}
-                className={`w-full object-cover ${imageStyles[variant]} group-hover:scale-105 transition-transform duration-500`}
-              />
-              
-              {/* Gradiente sobre la imagen */}
-              <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              
-              {/* Botón de reproducir */}
-              <motion.div 
-                className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ 
-                  scale: isHovered ? 1 : 0.8, 
-                  opacity: isHovered ? 1 : 0 
-                }}
-                transition={{ duration: 0.3 }}
-              >
-                <div 
-                  className="bg-primary/90 rounded-full p-3 transform transition-transform duration-300 cursor-pointer shadow-lg"
-                  onClick={toggleAudio}
-                >
-                  {isPlaying ? (
-                    <FaPause className="w-6 h-6 text-white" />
-                  ) : (
-                    <FaPlay className="w-6 h-6 text-white" />
-                  )}
-                </div>
-              </motion.div>
-              
-              <div className="absolute bottom-3 right-3 bg-background/80 backdrop-blur-sm text-xs px-2 py-1 rounded-md">
-                {duration}
-              </div>
-            </div>
+          
+          {/* Contenido del episodio */}
+          <div className={`p-4 ${variant === 'compact' ? 'flex-1' : ''}`}>
+            <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors line-clamp-2">
+              {title}
+            </h3>
             
-            <div className="p-4">
-              <h3 className={`font-semibold line-clamp-2 group-hover:text-primary transition-colors ${variant === 'featured' ? 'text-lg' : 'text-base'}`}>
-                {title}
-              </h3>
-              
-              {description && (
-                <p className="text-sm text-foreground/70 line-clamp-2 mt-2 mb-3">
-                  {description}
-                </p>
-              )}
-              
-              <div className="flex items-center justify-between text-sm text-foreground/70">
-                <span>{date}</span>
-                
-                {listens && (
-                  <div className="flex items-center">
-                    <FaHeadphones className="w-4 h-4 mr-1 text-primary/70" />
-                    {listens}
-                  </div>
-                )}
+            {variant !== 'compact' && (
+              <p className="text-muted-foreground text-sm line-clamp-2 mb-3">
+                {description}
+              </p>
+            )}
+            
+            {date && (
+              <div className="text-xs text-muted-foreground">
+                {date}
               </div>
-              
-              {isPlaying && (
-                <div className="mt-3 pt-3 border-t border-border/30">
-                  <AudioVisualizer 
-                    isPlaying={isPlaying} 
-                    color="var(--primary)" 
-                    barCount={30}
-                    height={20}
-                  />
-                </div>
-              )}
-            </div>
-          </>
-        )}
-      </motion.div>
-    </Link>
+            )}
+            
+            {/* Visualizador de audio */}
+            {showAudio && isPlaying && audioUrl && (
+              <div className="mt-2 h-8">
+                <AudioVisualizer barCount={40} maxHeight={40} className="w-full h-8" />
+              </div>
+            )}
+          </div>
+          
+          {/* Indicador de reproducción */}
+          {isPlaying && (
+            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-brand" />
+          )}
+        </div>
+      </Link>
+    </motion.div>
   );
 } 

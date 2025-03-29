@@ -1,76 +1,68 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 
 interface AudioVisualizerProps {
-  isPlaying?: boolean;
-  color?: string;
-  barCount?: number;
-  height?: number;
   className?: string;
+  barCount?: number;
+  barGap?: number;
+  minHeight?: number;
+  maxHeight?: number;
 }
 
-export default function AudioVisualizer({
-  isPlaying = false,
-  color = 'currentColor',
-  barCount = 20,
-  height = 30,
+export default function AudioVisualizer({ 
   className = '',
+  barCount = 100,
+  barGap = 4,
+  minHeight = 10,
+  maxHeight = 100
 }: AudioVisualizerProps) {
-  const [bars, setBars] = useState<number[]>([]);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  
-  // Generar valores aleatorios para las barras
-  const generateBars = () => {
-    const newBars = [];
-    for (let i = 0; i < barCount; i++) {
-      // valores entre 0.2 y 1
-      newBars.push(isPlaying ? Math.random() * 0.8 + 0.2 : 0.1);
-    }
-    setBars(newBars);
-  };
-  
+  const [heights, setHeights] = useState<number[]>([]);
+
+  // Generar alturas iniciales aleatorias
   useEffect(() => {
-    // Si está reproduciendo, actualiza las barras cada 100ms
-    if (isPlaying) {
-      generateBars();
-      intervalRef.current = setInterval(generateBars, 100);
-    } else {
-      // Si no está reproduciendo, genera barras planas
-      const flatBars = Array(barCount).fill(0.1);
-      setBars(flatBars);
-      
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    }
+    const initialHeights = Array.from({ length: barCount }, () => 
+      getRandomHeight(minHeight, maxHeight)
+    );
+    setHeights(initialHeights);
+  }, [barCount, minHeight, maxHeight]);
+
+  // Función para obtener una altura aleatoria
+  const getRandomHeight = (min: number, max: number) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+
+  // Generar propiedades de animación para cada barra
+  const generateAnimationProps = (index: number) => {
+    const delay = (index % 13) * 0.1;
+    const duration = 0.8 + (Math.random() * 0.6);
     
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
+    return {
+      height: [`${getRandomHeight(minHeight, maxHeight)}%`, `${getRandomHeight(minHeight, maxHeight)}%`],
+      transition: {
+        duration,
+        repeat: Infinity,
+        repeatType: "reverse" as const,
+        ease: "easeInOut",
+        delay
       }
     };
-  }, [isPlaying, barCount]);
-  
+  };
+
   return (
-    <div className={`flex items-end justify-center gap-[2px] h-[${height}px] ${className}`}>
-      <AnimatePresence>
-        {bars.map((value, index) => (
-          <motion.div
-            key={index}
-            initial={{ height: '10%' }}
-            animate={{ height: `${value * 100}%` }}
-            transition={{
-              type: 'spring',
-              stiffness: 300,
-              damping: 20,
-            }}
-            style={{ backgroundColor: color }}
-            className="w-1 rounded-full"
-          />
-        ))}
-      </AnimatePresence>
+    <div className={`w-full h-full flex items-end justify-center gap-[2px] ${className}`}>
+      {heights.map((_, index) => (
+        <motion.div
+          key={index}
+          className="w-[2px] bg-gradient-brand rounded-t-full opacity-70"
+          animate={generateAnimationProps(index)}
+          style={{ 
+            marginLeft: `${barGap}px`,
+            height: `${heights[index]}%`
+          }}
+        />
+      ))}
     </div>
   );
 } 

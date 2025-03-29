@@ -41,7 +41,7 @@ export default function Header() {
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled 
-        ? 'py-2 glass-effect shadow-lg border-b' 
+        ? 'py-2 bg-card/90 backdrop-blur-sm shadow-md border-b border-border/30' 
         : 'py-4 bg-transparent'
     }`}>
       <div className="container mx-auto px-4">
@@ -55,7 +55,7 @@ export default function Header() {
               <Link 
                 key={link.href} 
                 href={link.href} 
-                className="relative px-4 py-2 rounded-lg text-foreground/80 hover:text-foreground transition-colors group"
+                className="relative px-4 py-2 rounded-lg text-foreground/70 hover:text-foreground transition-colors group"
               >
                 <span>{link.name}</span>
                 <motion.span 
@@ -85,7 +85,7 @@ export default function Header() {
       <AnimatePresence>
         {isOpen && (
           <motion.div 
-            className="absolute top-full left-0 right-0 bg-card shadow-lg border-t border-border md:hidden"
+            className="absolute top-full left-0 right-0 bg-card/95 shadow-lg border-t border-border/30 backdrop-blur-sm md:hidden"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
@@ -97,7 +97,7 @@ export default function Header() {
                   <Link 
                     key={link.href} 
                     href={link.href} 
-                    className="flex items-center px-4 py-3 rounded-lg border-gradient-brand hover:bg-muted/50 transition-colors"
+                    className="flex items-center px-4 py-3 rounded-lg hover:bg-primary/5 transition-colors"
                     onClick={() => setIsOpen(false)}
                   >
                     {link.icon}

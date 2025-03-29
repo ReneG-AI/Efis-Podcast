@@ -147,13 +147,13 @@ export default function AudioPlayer({
   // Variante Mini
   if (variant === 'mini') {
     return (
-      <div className={`flex items-center gap-2 p-2 rounded-lg bg-background/40 backdrop-blur-sm ${className}`}>
+      <div className={`flex items-center gap-2 p-2 rounded-lg bg-card/60 backdrop-blur-sm border border-border/20 ${className}`}>
         <button 
           onClick={togglePlay}
-          className="text-primary hover:text-primary/80 transition-colors"
+          className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
           aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
         >
-          {isPlaying ? <FaPause size={12} /> : <FaPlay size={12} />}
+          {isPlaying ? <FaPause size={10} /> : <FaPlay size={10} className="ml-0.5" />}
         </button>
         
         <div className="flex-1 flex flex-col min-w-0 gap-1">
@@ -161,11 +161,11 @@ export default function AudioPlayer({
             <div className="text-xs font-medium line-clamp-1 text-foreground/80">{title}</div>
           )}
           <div 
-            className="w-full h-1 bg-primary/10 rounded-full overflow-hidden cursor-pointer"
+            className="w-full h-1 bg-secondary rounded-full overflow-hidden cursor-pointer"
             onClick={handleProgressBarClick}
           >
             <motion.div 
-              className="h-full bg-primary/60"
+              className="h-full bg-primary"
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.1 }}
             />
@@ -182,7 +182,7 @@ export default function AudioPlayer({
   // Variante Default
   if (variant === 'default') {
     return (
-      <div className={`p-4 rounded-lg border border-border/20 bg-background/40 backdrop-blur-sm ${className}`}>
+      <div className={`p-4 rounded-lg border border-border/40 bg-card/80 backdrop-blur-sm ${className}`}>
         <div className="flex flex-col gap-3">
           {title && (
             <div className="text-sm font-medium text-foreground/80">{title}</div>
@@ -190,11 +190,11 @@ export default function AudioPlayer({
           
           <div className="relative">
             <div 
-              className="w-full h-2 bg-primary/10 rounded-full overflow-hidden cursor-pointer"
+              className="w-full h-2 bg-secondary rounded-full overflow-hidden cursor-pointer"
               onClick={handleProgressBarClick}
             >
               <motion.div 
-                className="h-full bg-primary/60"
+                className="h-full bg-primary"
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 0.1 }}
               />
@@ -219,7 +219,7 @@ export default function AudioPlayer({
                 className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
                 aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
               >
-                {isPlaying ? <FaPause size={12} /> : <FaPlay size={12} />}
+                {isPlaying ? <FaPause size={12} /> : <FaPlay size={12} className="ml-0.5" />}
               </button>
               
               <div className="text-xs text-foreground/60">
@@ -237,9 +237,9 @@ export default function AudioPlayer({
               </button>
               
               <div className="relative w-16 h-2">
-                <div className="w-full h-1 bg-primary/10 rounded-full overflow-hidden mt-0.5">
+                <div className="w-full h-1 bg-secondary rounded-full overflow-hidden mt-0.5">
                   <motion.div 
-                    className="h-full bg-primary/60"
+                    className="h-full bg-primary"
                     animate={{ width: `${volume * 100}%` }}
                     transition={{ duration: 0.1 }}
                   />
@@ -259,7 +259,7 @@ export default function AudioPlayer({
           </div>
           
           {isPlaying && (
-            <div className="mt-2 h-6 opacity-60">
+            <div className="mt-2 h-6 opacity-50">
               <AudioVisualizer barCount={32} maxHeight={16} className="w-full" />
             </div>
           )}
@@ -270,17 +270,17 @@ export default function AudioPlayer({
     );
   }
   
-  // Variante Full (también simplificada)
+  // Variante Full
   return (
-    <div className={`p-4 rounded-xl border border-border/20 bg-background/40 backdrop-blur-sm ${className}`}>
+    <div className={`p-4 rounded-xl border border-border/40 bg-card/90 backdrop-blur-sm shadow-sm ${className}`}>
       {title && (
-        <h3 className="font-medium text-base mb-4 text-center text-foreground/80">{title}</h3>
+        <h3 className="font-medium text-base mb-4 text-center text-foreground/90">{title}</h3>
       )}
       
       <div className="flex justify-center mb-5">
         <button
           onClick={togglePlay}
-          className="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-r from-primary/80 to-primary shadow-md text-white hover:opacity-90 transition-opacity"
+          className="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-brand shadow-md text-white hover:opacity-90 transition-all"
           aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
         >
           {isPlaying ? <FaPause size={18} /> : <FaPlay size={18} className="ml-1" />}
@@ -296,18 +296,18 @@ export default function AudioPlayer({
             transition={{ duration: 0.3 }}
             className="mb-4 overflow-hidden"
           >
-            <AudioVisualizer barCount={40} maxHeight={30} className="w-full opacity-70" />
+            <AudioVisualizer barCount={40} maxHeight={30} className="w-full opacity-50" />
           </motion.div>
         )}
       </AnimatePresence>
       
       <div className="flex flex-col gap-2 mb-4">
         <div 
-          className="w-full h-2 bg-primary/10 rounded-full overflow-hidden cursor-pointer"
+          className="w-full h-2 bg-secondary rounded-full overflow-hidden cursor-pointer"
           onClick={handleProgressBarClick}
         >
           <motion.div 
-            className="h-full bg-primary/60"
+            className="h-full bg-gradient-brand"
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.1 }}
           />
@@ -329,9 +329,9 @@ export default function AudioPlayer({
         </button>
         
         <div className="relative w-20 h-2">
-          <div className="w-full h-1 bg-primary/10 rounded-full overflow-hidden mt-0.5">
+          <div className="w-full h-1 bg-secondary rounded-full overflow-hidden mt-0.5">
             <motion.div 
-              className="h-full bg-primary/60"
+              className="h-full bg-primary"
               animate={{ width: `${volume * 100}%` }}
               transition={{ duration: 0.1 }}
             />

@@ -13,209 +13,233 @@ interface LogoProps {
   href?: string;
 }
 
-export function Logo({ 
-  variant = 'default', 
+export default function Logo({
+  variant = 'default',
   size = 'md',
   showEfis = true,
   className = '',
-  animated = true,
+  animated = false,
   href = '/'
 }: LogoProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const [hasLoaded, setHasLoaded] = useState(false);
-
-  // Configuraciones según tamaño
-  const sizeClasses = {
-    sm: 'text-lg',
+  const [isLoaded, setIsLoaded] = useState(false);
+  
+  useEffect(() => {
+    // Simular tiempo de carga para la animación inicial
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, []);
+  
+  // Tamaños para diferentes variantes
+  const sizes = {
+    sm: 'text-xl',
     md: 'text-2xl',
-    lg: 'text-4xl',
-    xl: 'text-6xl'
+    lg: 'text-3xl',
+    xl: 'text-4xl'
   };
-
-  // Configuraciones según variante
-  const variantClasses = {
-    default: 'text-gradient-brand',
+  
+  // Colores para diferentes variantes
+  const colors = {
+    default: '',
     light: 'text-white',
     dark: 'text-foreground'
   };
-
-  // Animaciones para las letras
-  const letterContainerVariants = {
-    hidden: {},
-    visible: {
+  
+  // Variantes de animación para las letras
+  const letterVariants = {
+    hidden: {
+      opacity: 0,
+      y: 20
+    },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
       transition: {
-        staggerChildren: 0.075
+        delay: i * 0.1,
+        duration: 0.5,
+        ease: [0.22, 1, 0.36, 1]
+      }
+    }),
+    hover: {
+      y: [0, -2, 0],
+      transition: {
+        duration: 0.3
       }
     }
   };
-
-  const letterVariants = {
-    hidden: { 
-      y: 20, 
-      opacity: 0 
+  
+  // Variantes de animación para las ondas de sonido
+  const soundWaveVariants = {
+    hidden: {
+      opacity: 0,
+      scaleY: 0
     },
-    visible: { 
-      y: 0, 
+    visible: (i: number) => ({
+      opacity: 0.7,
+      scaleY: 1,
+      transition: {
+        delay: 0.5 + (i * 0.05),
+        duration: 0.4,
+        ease: "easeOut"
+      }
+    }),
+    hover: {
+      scaleY: [1, 1.5, 1],
       opacity: 1,
       transition: {
-        type: "spring",
-        stiffness: 400,
-        damping: 16
+        duration: 0.6,
+        repeat: Infinity,
+        repeatType: "reverse" as const,
+        ease: "easeInOut"
       }
     }
   };
-
-  // Determinar las clases para las ondas sonoras
-  const getWaveClasses = () => {
-    const waveHeights = {
-      sm: 'h-2.5',
-      md: 'h-3.5',
-      lg: 'h-5',
-      xl: 'h-8'
-    };
-    
-    return `flex items-end gap-[2px] ${waveHeights[size]} ml-2`;
-  };
-
-  // Efecto para animar en la carga inicial
-  useEffect(() => {
-    setHasLoaded(true);
-  }, []);
-
-  // Componente con efecto de letra a letra
+  
+  // Componente Logo Animado
   const AnimatedLogo = () => (
-    <div className="flex flex-col">
-      {showEfis && (
-        <motion.div 
-          className="overflow-hidden"
-          initial="hidden"
-          animate={hasLoaded ? "visible" : "hidden"}
-          variants={letterContainerVariants}
-        >
-          <div className="flex">
+    <div
+      className={`flex items-center gap-1 ${sizes[size]} font-bold ${colors[variant]} ${className}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Contenedor del Logo */}
+      <div className="relative flex items-center">
+        {/* Letras EFIS */}
+        {showEfis && (
+          <div className="flex items-center gap-[1px] mr-1">
             {['E', 'F', 'I', 'S'].map((letter, i) => (
-              <motion.span 
-                key={i} 
-                className={`font-black tracking-wider leading-none ${sizeClasses[size]} ${variantClasses[variant]}`}
+              <motion.span
+                key={letter}
+                custom={i}
+                initial="hidden"
+                animate={isLoaded ? "visible" : "hidden"}
+                whileHover="hover"
                 variants={letterVariants}
+                className={
+                  letter === 'F' || letter === 'S' 
+                    ? 'text-gradient-brand font-extrabold'
+                    : ''
+                }
               >
                 {letter}
               </motion.span>
             ))}
           </div>
-        </motion.div>
-      )}
-      
-      <motion.div 
-        className="overflow-hidden"
-        initial="hidden"
-        animate={hasLoaded ? "visible" : "hidden"}
-        variants={letterContainerVariants}
-      >
-        <div className="flex">
-          {['P', 'O', 'D', 'C', 'A', 'S', 'T'].map((letter, i) => (
-            <motion.span 
-              key={i} 
-              className={`font-bold tracking-wider leading-none ${showEfis ? 'mt-1' : ''} ${sizeClasses[size]} ${variantClasses[variant]}`}
-              variants={letterVariants}
-            >
-              {letter}
-            </motion.span>
+        )}
+        
+        {/* Palabra PODCAST */}
+        <div className="flex items-center mt-1">
+          <div className="flex items-center gap-[1px]">
+            {['P', 'O', 'D', 'C', 'A', 'S', 'T'].map((letter, i) => (
+              <motion.span
+                key={letter}
+                custom={i + (showEfis ? 4 : 0)}
+                initial="hidden"
+                animate={isLoaded ? "visible" : "hidden"}
+                whileHover="hover"
+                variants={letterVariants}
+                className={
+                  letter === 'P' || letter === 'C' || letter === 'T'
+                    ? 'text-gradient-brand font-extrabold'
+                    : ''
+                }
+              >
+                {letter}
+              </motion.span>
+            ))}
+          </div>
+        </div>
+        
+        {/* Ondas de sonido animadas */}
+        <div className="absolute -right-3 top-1/2 -translate-y-1/2 flex items-center gap-[2px] h-[60%]">
+          {[0, 1, 2].map((i) => (
+            <motion.div
+              key={i}
+              custom={i}
+              initial="hidden"
+              animate={isLoaded ? "visible" : "hidden"}
+              variants={soundWaveVariants}
+              whileHover="hover"
+              className={`w-[2px] h-full rounded-full ${
+                i === 1 ? 'bg-gradient-brand' : 'bg-secondary'
+              }`}
+              style={{
+                originY: 0.5,
+                height: `${60 + i * 15}%`
+              }}
+            />
           ))}
         </div>
-      </motion.div>
+        
+        {/* Efecto de desenfoque al hacer hover */}
+        {isHovered && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.15 }}
+            exit={{ opacity: 0 }}
+            className="absolute -inset-4 bg-primary/10 rounded-full blur-xl"
+          />
+        )}
+      </div>
     </div>
   );
-
-  // Logo sin animación
+  
+  // Componente Logo Estático
   const StaticLogo = () => (
-    <div className="flex flex-col">
+    <div className={`flex items-center gap-1 ${sizes[size]} font-bold ${colors[variant]} ${className}`}>
+      {/* Letras EFIS */}
       {showEfis && (
-        <span className={`font-black tracking-wider leading-none ${sizeClasses[size]} ${variantClasses[variant]}`}>
-          EFIS
-        </span>
+        <div className="flex items-center gap-[1px] mr-1">
+          <span className="text-gradient-brand font-extrabold">E</span>
+          <span>F</span>
+          <span>I</span>
+          <span className="text-gradient-brand font-extrabold">S</span>
+        </div>
       )}
-      <span className={`font-bold tracking-wider leading-none ${showEfis ? 'mt-1' : ''} ${sizeClasses[size]} ${variantClasses[variant]}`}>
-        PODCAST
-      </span>
-    </div>
-  );
-
-  return (
-    <Link 
-      href={href} 
-      className={`group flex items-center ${className}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {/* Logo según si está animado o no */}
-      {animated ? <AnimatedLogo /> : <StaticLogo />}
       
-      {/* Animación de ondas sonoras */}
-      <div className={getWaveClasses()}>
-        <motion.div 
-          className={`sound-wave h-[40%] ${isHovered ? 'animate-[sound-wave_1s_infinite_ease-in-out]' : ''}`}
-          animate={isHovered ? { scaleY: [0.4, 1, 0.4] } : { scaleY: 0.4 }}
-          transition={{ 
-            duration: 1, 
-            repeat: isHovered ? Infinity : 0,
-            repeatType: "loop"
-          }}
-        />
-        <motion.div 
-          className={`sound-wave h-[85%] ${isHovered ? 'animate-[sound-wave_1s_infinite_ease-in-out_0.2s]' : ''}`}
-          animate={isHovered ? { scaleY: [0.6, 1, 0.6] } : { scaleY: 0.6 }}
-          transition={{ 
-            duration: 1, 
-            repeat: isHovered ? Infinity : 0,
-            repeatType: "loop",
-            delay: 0.2
-          }}
-        />
-        <motion.div 
-          className={`sound-wave h-[95%] ${isHovered ? 'animate-[sound-wave_1s_infinite_ease-in-out_0.4s]' : ''}`}
-          animate={isHovered ? { scaleY: [0.8, 1, 0.8] } : { scaleY: 0.8 }}
-          transition={{ 
-            duration: 1, 
-            repeat: isHovered ? Infinity : 0,
-            repeatType: "loop",
-            delay: 0.4
-          }}
-        />
-        <motion.div 
-          className={`sound-wave h-[75%] ${isHovered ? 'animate-[sound-wave_1s_infinite_ease-in-out_0.6s]' : ''}`}
-          animate={isHovered ? { scaleY: [0.5, 1, 0.5] } : { scaleY: 0.5 }}
-          transition={{ 
-            duration: 1, 
-            repeat: isHovered ? Infinity : 0,
-            repeatType: "loop",
-            delay: 0.6
-          }}
-        />
-        <motion.div 
-          className={`sound-wave h-[60%] ${isHovered ? 'animate-[sound-wave_1s_infinite_ease-in-out_0.8s]' : ''}`}
-          animate={isHovered ? { scaleY: [0.3, 1, 0.3] } : { scaleY: 0.3 }}
-          transition={{ 
-            duration: 1, 
-            repeat: isHovered ? Infinity : 0,
-            repeatType: "loop",
-            delay: 0.8
-          }}
-        />
+      {/* Palabra PODCAST */}
+      <div className="flex items-center mt-1">
+        <div className="flex items-center gap-[1px]">
+          <span className="text-gradient-brand font-extrabold">P</span>
+          <span>O</span>
+          <span>D</span>
+          <span className="text-gradient-brand font-extrabold">C</span>
+          <span>A</span>
+          <span>S</span>
+          <span className="text-gradient-brand font-extrabold">T</span>
+        </div>
       </div>
       
-      {/* Efecto de iluminación al hacer hover */}
-      {isHovered && (
-        <motion.div 
-          className="absolute inset-0 bg-primary/10 blur-lg rounded-full opacity-60 z-[-1]"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 0.6, scale: 1.2 }}
-          exit={{ opacity: 0, scale: 0.8 }}
-          transition={{ duration: 0.5 }}
-        />
-      )}
-    </Link>
+      {/* Ondas de sonido estáticas */}
+      <div className="flex items-center gap-[2px] h-[60%] ml-1">
+        {[0, 1, 2].map((i) => (
+          <div
+            key={i}
+            className={`w-[2px] rounded-full ${
+              i === 1 ? 'bg-gradient-brand' : 'bg-secondary'
+            }`}
+            style={{
+              height: `${60 + i * 15}%`
+            }}
+          />
+        ))}
+      </div>
+    </div>
   );
-}
-
-export default Logo; 
+  
+  // Renderizar el logo con o sin enlace
+  const LogoComponent = animated ? AnimatedLogo : StaticLogo;
+  
+  if (href) {
+    return (
+      <Link href={href} className="focus:outline-none">
+        <LogoComponent />
+      </Link>
+    );
+  }
+  
+  return <LogoComponent />;
+} 

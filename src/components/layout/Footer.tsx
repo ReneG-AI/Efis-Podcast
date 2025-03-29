@@ -63,7 +63,7 @@ const SocialLink = ({ href, icon, name, color }: SocialLinkProps) => (
     href={href}
     target="_blank"
     rel="noopener noreferrer"
-    className={`flex items-center gap-2 text-foreground/70 transition-all duration-300 ${color} hover:scale-110`}
+    className={`flex items-center gap-2 text-foreground/60 transition-all duration-300 ${color} hover:translate-x-1`}
     aria-label={name}
   >
     <span className="text-lg">{icon}</span>
@@ -75,13 +75,13 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className="relative border-t border-border/60 overflow-hidden">
+    <footer className="relative border-t border-border/30 bg-card/5">
       {/* Patrón de ondas de sonido en el fondo */}
-      <div className="absolute inset-0 pointer-events-none opacity-5">
+      <div className="absolute inset-0 pointer-events-none opacity-3">
         <svg viewBox="0 0 1200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-          <path d="M0,100 C150,180 350,0 500,100 C650,180 850,0 1000,100 C1150,180 1350,0 1500,100 V200 H0 Z" className="fill-primary"></path>
-          <path d="M0,100 C150,20 350,180 500,100 C650,20 850,180 1000,100 C1150,20 1350,180 1500,100 V200 H0 Z" className="fill-primary"></path>
-          <path d="M0,100 C150,140 350,60 500,100 C650,140 850,60 1000,100 C1150,140 1350,60 1500,100 V200 H0 Z" className="fill-primary/50"></path>
+          <path d="M0,100 C150,180 350,0 500,100 C650,180 850,0 1000,100 C1150,180 1350,0 1500,100 V200 H0 Z" className="fill-primary/5"></path>
+          <path d="M0,100 C150,20 350,180 500,100 C650,20 850,180 1000,100 C1150,20 1350,180 1500,100 V200 H0 Z" className="fill-primary/5"></path>
+          <path d="M0,100 C150,140 350,60 500,100 C650,140 850,60 1000,100 C1150,140 1350,60 1500,100 V200 H0 Z" className="fill-primary/5"></path>
         </svg>
       </div>
 
@@ -103,7 +103,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link 
                     href={link.href}
-                    className="text-foreground/70 hover:text-foreground transition-colors duration-300 text-sm"
+                    className="text-foreground/60 hover:text-foreground hover:translate-x-1 transition-all duration-300 text-sm inline-block"
                   >
                     {link.label}
                   </Link>
@@ -130,10 +130,10 @@ export default function Footer() {
         </div>
 
         {/* Copyright y línea final */}
-        <div className="flex flex-col sm:flex-row justify-between items-center border-t border-border/30 mt-10 pt-6 text-sm text-muted-foreground">
+        <div className="flex flex-col sm:flex-row justify-between items-center border-t border-border/20 mt-10 pt-6 text-sm text-muted-foreground">
           <p>© {currentYear} EFIS Podcast. Todos los derechos reservados.</p>
           <p className="mt-2 sm:mt-0">
-            Diseñado con <span className="text-red-500">♥</span> por EFIS Team
+            Diseñado con <span className="text-primary">♥</span> por EFIS Team
           </p>
         </div>
       </div>

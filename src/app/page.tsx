@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { FaHeadphones, FaYoutube, FaSpotify, FaApple } from "react-icons/fa";
+import { FaHeadphones, FaYoutube, FaSpotify, FaApple, FaPlay, FaChevronDown } from "react-icons/fa";
 import Logo from "@/components/brand/Logo";
 import AudioVisualizer from "@/components/ui/AudioVisualizer";
 import dynamic from "next/dynamic";
+import { motion } from "framer-motion";
 
 // Importación dinámica para evitar conflictos de componentes
 const DynamicEpisodeCard = dynamic(() => import('@/components/episodes/EpisodeCard'), {
@@ -13,84 +14,112 @@ const DynamicEpisodeCard = dynamic(() => import('@/components/episodes/EpisodeCa
 
 export default function Home() {
   return (
-    <main className="flex flex-col items-center min-h-screen">
-      {/* Hero Section con patrón de ondas de sonido */}
-      <section className="w-full relative overflow-hidden">
-        {/* Background con ondas de sonido */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-64 bg-gradient-to-b from-primary/10 to-transparent"></div>
-          <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-primary/10 to-transparent"></div>
-          <AudioVisualizer className="opacity-10" />
-        </div>
-
-        <div className="container mx-auto px-4 py-20 md:py-32 relative z-10">
-          <div className="text-center max-w-4xl mx-auto">
-            <Logo size="xl" animated={true} className="mx-auto mb-8" />
-            
-            <h1 className="text-4xl md:text-6xl font-extrabold mb-6 text-gradient-brand">
-              EL PODCAST QUE ELEVA TU CONOCIMIENTO
-            </h1>
-            
-            <p className="text-lg md:text-xl text-foreground/80 mb-10 max-w-2xl mx-auto">
-              Descubre el mundo de la tecnología, aviación y desarrollo personal en un formato 
-              dinámico y entretenido con nuestros anfitriones.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
-              <Link 
-                href="/episodes" 
-                className="btn-gradient-brand px-8 py-3 rounded-full font-medium flex items-center justify-center gap-2 text-white"
-              >
-                <FaHeadphones />
-                <span>Escuchar Episodios</span>
-              </Link>
-              
-              <Link 
-                href="/youtube" 
-                className="border-gradient-brand px-8 py-3 rounded-full font-medium flex items-center justify-center gap-2 text-foreground hover:bg-accent/10 transition-colors"
-              >
-                <FaYoutube className="text-red-500" />
-                <span>Ver en YouTube</span>
-              </Link>
-            </div>
-          </div>
-
-          {/* Plataformas disponibles */}
-          <div className="mt-10 text-center">
-            <p className="text-sm text-muted-foreground mb-4">DISPONIBLE EN</p>
-            <div className="flex flex-wrap justify-center gap-6 md:gap-10">
-              <a 
-                href="https://open.spotify.com/show/example" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex flex-col items-center"
-              >
-                <FaSpotify className="w-8 h-8 text-[#1ED760] mb-2" />
-                <span className="text-xs text-muted-foreground">Spotify</span>
-              </a>
-              
-              <a 
-                href="https://podcasts.apple.com/podcast/example" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex flex-col items-center"
-              >
-                <FaApple className="w-8 h-8 text-[#8e44ad] mb-2" />
-                <span className="text-xs text-muted-foreground">Apple Podcasts</span>
-              </a>
-              
-              <a 
-                href="https://youtube.com/@example" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex flex-col items-center"
-              >
-                <FaYoutube className="w-8 h-8 text-[#FF0000] mb-2" />
-                <span className="text-xs text-muted-foreground">YouTube</span>
-              </a>
-            </div>
+    <main className="min-h-screen">
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Fondo con patrón de ondas sonoras */}
+        <div className="absolute inset-0 bg-background">
+          <div className="absolute inset-0 opacity-5">
+            <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+              <defs>
+                <pattern id="sound-waves" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                  <path d="M0 50 Q25 25, 50 50 T100 50" stroke="currentColor" fill="none" strokeWidth="2" />
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#sound-waves)" />
+            </svg>
           </div>
         </div>
+
+        {/* Contenido del Hero */}
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-4xl mx-auto text-center">
+            {/* Título con efecto de gradiente y animación */}
+            <motion.h1 
+              className="text-5xl md:text-7xl font-bold mb-6 text-gradient-brand"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              EFIS PODCAST
+            </motion.h1>
+
+            {/* Descripción con animación */}
+            <motion.p 
+              className="text-xl md:text-2xl text-foreground/80 mb-8 max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            >
+              Tu portal de información y entretenimiento sobre tecnología, aviación y mucho más.
+            </motion.p>
+
+            {/* Botones de acción con animación */}
+            <motion.div 
+              className="flex flex-col sm:flex-row gap-4 justify-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+            >
+              <Link 
+                href="/episodios" 
+                className="btn-gradient-brand px-8 py-4 rounded-full text-lg font-medium hover:shadow-lg hover:shadow-primary/20 transition-all duration-300"
+              >
+                <FaPlay className="inline-block mr-2" />
+                Escuchar Episodios
+              </Link>
+              <Link 
+                href="https://www.youtube.com/@efispodcast" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="btn-secondary px-8 py-4 rounded-full text-lg font-medium hover:shadow-lg hover:shadow-primary/20 transition-all duration-300"
+              >
+                <FaYoutube className="inline-block mr-2" />
+                Ver en YouTube
+              </Link>
+            </motion.div>
+
+            {/* Plataformas disponibles con animación */}
+            <motion.div 
+              className="mt-12 flex flex-wrap justify-center gap-6 items-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
+            >
+              <div className="flex items-center gap-2 text-foreground/60 hover:text-foreground transition-colors">
+                <FaSpotify className="text-2xl" />
+                <span>Spotify</span>
+              </div>
+              <div className="flex items-center gap-2 text-foreground/60 hover:text-foreground transition-colors">
+                <FaApple className="text-2xl" />
+                <span>Apple Podcasts</span>
+              </div>
+              <div className="flex items-center gap-2 text-foreground/60 hover:text-foreground transition-colors">
+                <FaYoutube className="text-2xl" />
+                <span>YouTube</span>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Visualizador de ondas sonoras animadas */}
+          <motion.div 
+            className="absolute bottom-0 left-0 right-0 h-32 opacity-30"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.3 }}
+            transition={{ duration: 1, delay: 0.8 }}
+          >
+            <AudioVisualizer barCount={40} maxHeight={40} className="w-full" />
+          </motion.div>
+        </div>
+
+        {/* Scroll indicator */}
+        <motion.div 
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        >
+          <FaChevronDown className="text-foreground/40" size={24} />
+        </motion.div>
       </section>
 
       {/* Featured Episodes Section */}

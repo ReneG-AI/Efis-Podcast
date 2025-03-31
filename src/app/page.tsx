@@ -96,6 +96,31 @@ export default function Home() {
                   keySplines="0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1"
                 />
               </motion.path>
+              
+              {/* Additional wave from main branch */}
+              <motion.path
+                d="M0,96 C180,96 320,64 500,64 C680,64 820,96 1000,96 C1180,96 1320,64 1500,64 L1500,256 L0,256 Z"
+                fill="url(#waveGradient)"
+                fillOpacity="0.15"
+                transform="translate(-100, 0)"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.15 }}
+                transition={{ duration: 1, delay: 0.7 }}
+              >
+                <animate 
+                  attributeName="d" 
+                  dur="25s" 
+                  repeatCount="indefinite" 
+                  values="
+                    M0,96 C180,96 320,64 500,64 C680,64 820,96 1000,96 C1180,96 1320,64 1500,64 L1500,800 L0,800 Z;
+                    M0,64 C180,64 320,96 500,96 C680,96 820,64 1000,64 C1180,64 1320,96 1500,96 L1500,800 L0,800 Z;
+                    M0,128 C180,128 320,96 500,96 C680,96 820,128 1000,128 C1180,128 1320,96 1500,96 L1500,800 L0,800 Z;
+                    M0,64 C180,64 320,128 500,128 C680,128 820,64 1000,64 C1180,64 1320,128 1500,128 L1500,800 L0,800 Z;
+                    M0,96 C180,96 320,64 500,64 C680,64 820,96 1000,96 C1180,96 1320,64 1500,64 L1500,800 L0,800 Z"
+                  calcMode="spline"
+                  keySplines="0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1"
+                />
+              </motion.path>
             </svg>
           </div>
         </div>
@@ -155,7 +180,7 @@ export default function Home() {
               Tu portal de información y entretenimiento sobre tecnología, aviación y mucho más.
             </motion.p>
 
-            {/* Action buttons with animation */}
+            {/* Action buttons with animation - combining styles from both branches */}
             <motion.div 
               className="flex flex-col sm:flex-row gap-6 justify-center mb-16"
               initial={{ opacity: 0, y: 20 }}
@@ -163,29 +188,31 @@ export default function Home() {
               transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
             >
               <Link 
-                href="/episodes" 
-                className="btn-primary group"
+                href="/episodes"
+                className="relative group overflow-hidden bg-gradient-primary px-8 py-4 rounded-full text-white font-medium shadow-lg shadow-primary/20 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-primary/30"
               >
-                <span className="flex items-center justify-center gap-3">
+                <span className="flex items-center justify-center gap-3 relative z-10">
                   <FaHeadphones className="text-xl group-hover:scale-110 transition-transform" />
                   <span>Escuchar Episodios</span>
                 </span>
+                <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
               </Link>
               
               <Link 
                 href="https://www.youtube.com/@efispodcast" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="btn-secondary group"
+                className="relative group overflow-hidden border-2 border-primary/30 bg-background/80 backdrop-blur-sm px-8 py-4 rounded-full text-foreground font-medium shadow-lg transition-all duration-300 transform hover:scale-105 hover:border-primary/50 hover:bg-primary/5"
               >
-                <span className="flex items-center justify-center gap-3">
+                <span className="flex items-center justify-center gap-3 relative z-10">
                   <FaYoutube className="text-xl text-red-500 group-hover:scale-110 transition-transform" />
                   <span>Ver en YouTube</span>
                 </span>
+                <span className="absolute inset-0 bg-gradient-primary opacity-0 group-hover:opacity-5 transition-opacity duration-300"></span>
               </Link>
             </motion.div>
 
-            {/* Available platforms with animation */}
+            {/* Available platforms with animation - combining styles from both branches */}
             <motion.div 
               className="flex flex-wrap justify-center gap-8 items-center"
               initial={{ opacity: 0, y: 20 }}
@@ -196,30 +223,30 @@ export default function Home() {
                 href="https://open.spotify.com/show/example" 
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glass flex items-center gap-3 px-5 py-3 rounded-full card-hover"
+                className="group glass flex items-center gap-3 px-5 py-3 rounded-full card-hover"
               >
-                <FaSpotify className="text-2xl text-[#1DB954]" />
-                <span className="text-foreground/70">Spotify</span>
+                <FaSpotify className="text-2xl text-[#1DB954] group-hover:text-[#1ED760] transition-colors" />
+                <span className="text-foreground/70 group-hover:text-foreground transition-colors">Spotify</span>
               </a>
               
               <a 
                 href="https://podcasts.apple.com/podcast/example" 
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glass flex items-center gap-3 px-5 py-3 rounded-full card-hover"
+                className="group glass flex items-center gap-3 px-5 py-3 rounded-full card-hover"
               >
-                <FaApple className="text-2xl text-[#8e44ad]" />
-                <span className="text-foreground/70">Apple Podcasts</span>
+                <FaApple className="text-2xl text-[#8e44ad] group-hover:text-[#9b59b6] transition-colors" />
+                <span className="text-foreground/70 group-hover:text-foreground transition-colors">Apple Podcasts</span>
               </a>
               
               <a 
                 href="https://youtube.com/@efispodcast" 
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glass flex items-center gap-3 px-5 py-3 rounded-full card-hover"
+                className="group glass flex items-center gap-3 px-5 py-3 rounded-full card-hover"
               >
-                <FaYoutube className="text-2xl text-[#FF0000]" />
-                <span className="text-foreground/70">YouTube</span>
+                <FaYoutube className="text-2xl text-[#FF0000] group-hover:text-[#FF3333] transition-colors" />
+                <span className="text-foreground/70 group-hover:text-foreground transition-colors">YouTube</span>
               </a>
             </motion.div>
           </div>

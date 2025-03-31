@@ -118,11 +118,7 @@ export default function Logo({
                 animate={isLoaded ? "visible" : "hidden"}
                 whileHover="hover"
                 variants={letterVariants}
-                className={
-                  letter === 'F' || letter === 'S' 
-                    ? 'text-gradient-brand font-extrabold'
-                    : ''
-                }
+                className="text-gradient-efis font-extrabold"
               >
                 {letter}
               </motion.span>
@@ -141,11 +137,7 @@ export default function Logo({
                 animate={isLoaded ? "visible" : "hidden"}
                 whileHover="hover"
                 variants={letterVariants}
-                className={
-                  letter === 'P' || letter === 'C' || letter === 'T'
-                    ? 'text-gradient-brand font-extrabold'
-                    : ''
-                }
+                className="text-gradient-podcast font-extrabold"
               >
                 {letter}
               </motion.span>
@@ -164,7 +156,7 @@ export default function Logo({
               variants={soundWaveVariants}
               whileHover="hover"
               className={`w-[2px] h-full rounded-full ${
-                i === 1 ? 'bg-gradient-brand' : 'bg-secondary/50'
+                i === 1 ? 'bg-gradient-brand' : 'bg-secondary/30'
               }`}
               style={{
                 originY: 0.5,
@@ -193,23 +185,23 @@ export default function Logo({
       {/* Letras EFIS */}
       {showEfis && (
         <div className="flex items-center gap-[1px] mr-1">
-          <span className="text-gradient-brand font-extrabold">E</span>
-          <span>F</span>
-          <span>I</span>
-          <span className="text-gradient-brand font-extrabold">S</span>
+          <span className="text-gradient-efis font-extrabold">E</span>
+          <span className="text-gradient-efis font-extrabold">F</span>
+          <span className="text-gradient-efis font-extrabold">I</span>
+          <span className="text-gradient-efis font-extrabold">S</span>
         </div>
       )}
       
       {/* Palabra PODCAST */}
       <div className="flex items-center mt-1">
         <div className="flex items-center gap-[1px]">
-          <span className="text-gradient-brand font-extrabold">P</span>
-          <span>O</span>
-          <span>D</span>
-          <span className="text-gradient-brand font-extrabold">C</span>
-          <span>A</span>
-          <span>S</span>
-          <span className="text-gradient-brand font-extrabold">T</span>
+          <span className="text-gradient-podcast font-extrabold">P</span>
+          <span className="text-gradient-podcast font-extrabold">O</span>
+          <span className="text-gradient-podcast font-extrabold">D</span>
+          <span className="text-gradient-podcast font-extrabold">C</span>
+          <span className="text-gradient-podcast font-extrabold">A</span>
+          <span className="text-gradient-podcast font-extrabold">S</span>
+          <span className="text-gradient-podcast font-extrabold">T</span>
         </div>
       </div>
       
@@ -219,7 +211,7 @@ export default function Logo({
           <div
             key={i}
             className={`w-[2px] rounded-full ${
-              i === 1 ? 'bg-gradient-brand' : 'bg-secondary/50'
+              i === 1 ? 'bg-gradient-brand' : 'bg-secondary/30'
             }`}
             style={{
               height: `${60 + i * 15}%`

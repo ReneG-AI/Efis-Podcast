@@ -13,7 +13,6 @@ import {
 } from 'react-icons/fa';
 
 import Logo from '@/components/brand/Logo';
-import ThemeToggle from '@/components/ui/ThemeToggle';
 import MenuIcon from '@/components/ui/MenuIcon';
 
 // Navigation links
@@ -55,7 +54,7 @@ export default function Header() {
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
       isScrolled 
-        ? 'py-2 glass' 
+        ? 'py-2 glass-effect border-b border-white/5' 
         : 'py-4 bg-transparent'
     }`}>
       <div className="container mx-auto px-4">
@@ -108,10 +107,10 @@ export default function Header() {
                 <Link 
                   key={link.href} 
                   href={link.href} 
-                  className={`relative px-4 py-2 rounded-full transition-all duration-300 focus-ring ${
+                  className={`relative px-4 py-2 rounded-md transition-all duration-300 focus-ring ${
                     isActive 
-                      ? 'text-white bg-gradient-primary' 
-                      : 'text-foreground/70 hover:text-foreground hover:bg-primary/5'
+                      ? 'text-white bg-gradient-brand' 
+                      : 'text-foreground/70 hover:text-foreground hover:bg-white/5'
                   }`}
                   onClick={() => setActiveLink(link.href)}
                 >
@@ -122,25 +121,19 @@ export default function Header() {
                   
                   {!isActive && (
                     <motion.span 
-                      className="absolute bottom-0 left-0 right-0 h-full bg-gradient-primary rounded-full opacity-0"
+                      className="absolute bottom-0 left-0 right-0 h-full bg-gradient-brand rounded-md opacity-0"
                       initial={false}
-                      whileHover={{ opacity: 0.05 }}
+                      whileHover={{ opacity: 0.1 }}
                       transition={{ duration: 0.3 }}
                     />
                   )}
                 </Link>
               );
             })}
-            
-            {/* Theme Toggle */}
-            <div className="ml-4">
-              <ThemeToggle />
-            </div>
           </nav>
 
           {/* Mobile Menu Button */}
           <div className="flex items-center md:hidden">
-            <ThemeToggle className="mr-2" />
             <MenuIcon isOpen={isOpen} toggleMenu={() => setIsOpen(!isOpen)} />
           </div>
         </div>
@@ -150,7 +143,7 @@ export default function Header() {
       <AnimatePresence>
         {isOpen && (
           <motion.div 
-            className="absolute top-full left-0 right-0 glass md:hidden border-t border-white/10"
+            className="absolute top-full left-0 right-0 glass-effect md:hidden border-b border-white/5"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
@@ -165,10 +158,10 @@ export default function Header() {
                     <Link 
                       key={link.href} 
                       href={link.href} 
-                      className={`flex items-center px-4 py-3 rounded-lg transition-all duration-300 ${
+                      className={`flex items-center px-4 py-3 rounded-md transition-all duration-300 ${
                         isActive 
-                          ? 'bg-gradient-primary text-white font-medium' 
-                          : 'hover:bg-primary/5 text-foreground/70 hover:text-foreground'
+                          ? 'bg-gradient-brand text-white font-medium' 
+                          : 'hover:bg-white/5 text-foreground/70 hover:text-foreground'
                       }`}
                       onClick={() => {
                         setActiveLink(link.href);
@@ -184,7 +177,7 @@ export default function Header() {
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                         >
-                          {link.href === "/" ? <FaHome className="text-white/70" /> : <FaMicrophone className="text-white/70" />}
+                          <FaMicrophone className="text-white/70" />
                         </motion.div>
                       )}
                     </Link>

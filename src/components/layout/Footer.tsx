@@ -27,7 +27,7 @@ const socialLinks = [
     name: "TikTok",
     href: "https://tiktok.com/@example",
     icon: <FaTiktok size={16} />,
-    color: "hover:text-foreground"
+    color: "hover:text-white"
   },
   {
     name: "Instagram",
@@ -82,13 +82,22 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className="relative glass-effect">
+    <footer className="relative glass-effect border-t border-white/5">
       {/* Patrón de ondas de sonido en el fondo */}
-      <div className="absolute inset-0 pointer-events-none opacity-3">
-        <svg viewBox="0 0 1200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-          <path d="M0,100 C150,180 350,0 500,100 C650,180 850,0 1000,100 C1150,180 1350,0 1500,100 V200 H0 Z" className="fill-primary/5"></path>
-          <path d="M0,100 C150,20 350,180 500,100 C650,20 850,180 1000,100 C1150,20 1350,180 1500,100 V200 H0 Z" className="fill-primary/5"></path>
-          <path d="M0,100 C150,140 350,60 500,100 C650,140 850,60 1000,100 C1150,140 1350,60 1500,100 V200 H0 Z" className="fill-primary/5"></path>
+      <div className="absolute inset-0 pointer-events-none opacity-10">
+        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+          <path 
+            fill="url(#footer-gradient)" 
+            fillOpacity="1" 
+            d="M0,192L48,202.7C96,213,192,235,288,224C384,213,480,171,576,165.3C672,160,768,192,864,197.3C960,203,1056,181,1152,176C1248,171,1344,181,1392,186.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
+          </path>
+          <defs>
+            <linearGradient id="footer-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="hsl(var(--primary))" />
+              <stop offset="50%" stopColor="hsl(var(--secondary))" />
+              <stop offset="100%" stopColor="hsl(var(--accent))" />
+            </linearGradient>
+          </defs>
         </svg>
       </div>
 
@@ -104,13 +113,13 @@ export default function Footer() {
 
           {/* Links rápidos */}
           <div>
-            <h3 className="font-bold text-foreground mb-4">Enlaces rápidos</h3>
+            <h3 className="font-bold text-foreground mb-4 text-gradient-brand">Enlaces rápidos</h3>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.href}>
                   <Link 
                     href={link.href}
-                    className="text-foreground/60 hover:text-foreground hover:translate-x-1 transition-all duration-300 text-sm inline-block hover-glow"
+                    className="text-foreground/60 hover:text-secondary hover:translate-x-1 transition-all duration-300 text-sm inline-block hover-glow"
                   >
                     {link.label}
                   </Link>
@@ -118,7 +127,7 @@ export default function Footer() {
               ))}
             </ul>
             <div className="mt-6">
-              <h3 className="font-bold text-foreground mb-4">Próximamente</h3>
+              <h3 className="font-bold text-foreground mb-4 text-gradient-brand">Próximamente</h3>
               <ul className="space-y-3">
                 {comingSoonLinks.map((link, idx) => (
                   <li key={idx}>
@@ -133,7 +142,7 @@ export default function Footer() {
 
           {/* Redes sociales */}
           <div>
-            <h3 className="font-bold text-foreground mb-4">Síguenos</h3>
+            <h3 className="font-bold text-foreground mb-4 text-gradient-brand">Síguenos</h3>
             <div className="flex flex-col space-y-3">
               {socialLinks.map((link) => (
                 <SocialLink
@@ -149,19 +158,19 @@ export default function Footer() {
         </div>
 
         {/* Newsletter */}
-        <div className="border-t border-border/20 mt-10 pt-10">
+        <div className="border-t border-white/5 mt-10 pt-10">
           <div className="max-w-xl mx-auto text-center">
-            <h3 className="font-bold text-foreground mb-2">¿Quieres estar al día?</h3>
+            <h3 className="font-bold text-foreground mb-2 text-gradient-brand">¿Quieres estar al día?</h3>
             <p className="text-muted-foreground text-sm mb-4">Suscríbete a nuestro newsletter y recibe notificaciones de nuevos episodios.</p>
             <form className="flex flex-col sm:flex-row gap-2">
               <input 
                 type="email" 
                 placeholder="Tu correo electrónico" 
-                className="flex-1 px-4 py-2 rounded-lg bg-card border border-border focus:border-primary outline-none"
+                className="flex-1 px-4 py-2 rounded-md bg-white/5 border border-white/10 focus:border-secondary outline-none"
               />
               <button 
                 type="submit"
-                className="bg-primary text-white font-medium px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors"
+                className="bg-gradient-brand text-white font-medium px-6 py-2 rounded-md hover:opacity-90 transition-colors"
               >
                 Suscribirse
               </button>
@@ -170,10 +179,10 @@ export default function Footer() {
         </div>
 
         {/* Copyright y línea final */}
-        <div className="flex flex-col sm:flex-row justify-between items-center border-t border-border/20 mt-10 pt-6 text-sm text-muted-foreground">
+        <div className="flex flex-col sm:flex-row justify-between items-center border-t border-white/5 mt-10 pt-6 text-sm text-muted-foreground">
           <p>© {currentYear} EFIS Podcast. Todos los derechos reservados.</p>
           <p className="mt-2 sm:mt-0">
-            Diseñado con <span className="text-primary">♥</span> por EFIS Team
+            Diseñado con <span className="text-accent">♥</span> por EFIS Team
           </p>
         </div>
       </div>

@@ -5,55 +5,39 @@ import { motion } from 'framer-motion';
 interface MenuIconProps {
   isOpen: boolean;
   toggleMenu: () => void;
-  className?: string;
 }
 
-export default function MenuIcon({ isOpen, toggleMenu, className = '' }: MenuIconProps) {
-  const transition = { duration: 0.3 };
-  
-  // Variantes para las líneas del icono
-  const variants = {
-    top: {
-      closed: { rotate: 0, y: 0 },
-      open: { rotate: 45, y: 8 }
-    },
-    middle: {
-      closed: { opacity: 1 },
-      open: { opacity: 0 }
-    },
-    bottom: {
-      closed: { rotate: 0, y: 0 },
-      open: { rotate: -45, y: -8 }
-    }
-  };
-
+export default function MenuIcon({ isOpen, toggleMenu }: MenuIconProps) {
   return (
     <button 
       onClick={toggleMenu}
-      className={`relative flex items-center justify-center w-10 h-10 rounded-md hover:bg-accent/10 transition-colors ${className}`}
+      className="relative z-50 flex items-center justify-center w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 transition-colors focus:outline-none"
       aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
     >
-      <div className="relative w-6 h-6">
-        <motion.span
-          className="absolute left-0 top-0 w-full h-[2px] rounded-full bg-foreground"
-          initial="closed"
-          animate={isOpen ? "open" : "closed"}
-          variants={variants.top}
-          transition={transition}
+      <div className="w-5 h-5 flex flex-col justify-center items-center">
+        <motion.span 
+          className="block h-0.5 w-5 bg-gradient-brand rounded-full"
+          animate={{ 
+            rotateZ: isOpen ? 45 : 0,
+            y: isOpen ? 3 : 0
+          }}
+          transition={{ duration: 0.3 }}
         />
-        <motion.span
-          className="absolute left-0 top-[7px] w-full h-[2px] rounded-full bg-foreground"
-          initial="closed"
-          animate={isOpen ? "open" : "closed"}
-          variants={variants.middle}
-          transition={transition}
+        <motion.span 
+          className="block h-0.5 w-5 mt-1 bg-gradient-brand rounded-full"
+          animate={{ 
+            width: isOpen ? 0 : 20,
+            opacity: isOpen ? 0 : 1
+          }}
+          transition={{ duration: 0.3 }}
         />
-        <motion.span
-          className="absolute left-0 top-[14px] w-full h-[2px] rounded-full bg-foreground"
-          initial="closed"
-          animate={isOpen ? "open" : "closed"}
-          variants={variants.bottom}
-          transition={transition}
+        <motion.span 
+          className="block h-0.5 w-5 mt-1 bg-gradient-brand rounded-full"
+          animate={{ 
+            rotateZ: isOpen ? -45 : 0,
+            y: isOpen ? -4 : 0
+          }}
+          transition={{ duration: 0.3 }}
         />
       </div>
     </button>

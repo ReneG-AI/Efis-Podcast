@@ -52,14 +52,14 @@ export default function Logo({
   const letterVariants = {
     hidden: {
       opacity: 0,
-      y: 20
+      y: 10
     },
     visible: (i: number) => ({
       opacity: 1,
       y: 0,
       transition: {
-        delay: i * 0.1,
-        duration: 0.5,
+        delay: i * 0.05,
+        duration: 0.4,
         ease: [0.22, 1, 0.36, 1]
       }
     }),
@@ -71,37 +71,10 @@ export default function Logo({
     }
   };
   
-  // Variantes de animación para las ondas de sonido
-  const soundWaveVariants = {
-    hidden: {
-      opacity: 0,
-      scaleY: 0
-    },
-    visible: (i: number) => ({
-      opacity: 0.7,
-      scaleY: 1,
-      transition: {
-        delay: 0.5 + (i * 0.05),
-        duration: 0.4,
-        ease: "easeOut"
-      }
-    }),
-    hover: {
-      scaleY: [1, 1.5, 1],
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        repeat: Infinity,
-        repeatType: "reverse" as const,
-        ease: "easeInOut"
-      }
-    }
-  };
-  
   // Componente Logo Animado
   const AnimatedLogo = () => (
     <div
-      className={`flex items-center gap-1 ${sizes[size]} font-bold ${colors[variant]} ${className} hover-glow`}
+      className={`flex items-center ${sizes[size]} ${colors[variant]} ${className}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -109,7 +82,7 @@ export default function Logo({
       <div className="relative flex items-center">
         {/* Letras EFIS */}
         {showEfis && (
-          <div className="flex items-center gap-[1px] mr-1">
+          <div className="flex items-center mr-1">
             {['E', 'F', 'I', 'S'].map((letter, i) => (
               <motion.span
                 key={letter}
@@ -118,7 +91,7 @@ export default function Logo({
                 animate={isLoaded ? "visible" : "hidden"}
                 whileHover="hover"
                 variants={letterVariants}
-                className="text-secondary font-extrabold"
+                className="text-primary font-medium tracking-tight"
               >
                 {letter}
               </motion.span>
@@ -127,8 +100,8 @@ export default function Logo({
         )}
         
         {/* Palabra PODCAST */}
-        <div className="flex items-center mt-1">
-          <div className="flex items-center gap-[1px]">
+        <div className="flex items-center">
+          <div className="flex items-center">
             {['P', 'O', 'D', 'C', 'A', 'S', 'T'].map((letter, i) => (
               <motion.span
                 key={letter}
@@ -137,7 +110,7 @@ export default function Logo({
                 animate={isLoaded ? "visible" : "hidden"}
                 whileHover="hover"
                 variants={letterVariants}
-                className="text-primary font-extrabold"
+                className="text-muted-foreground font-light tracking-tight"
               >
                 {letter}
               </motion.span>
@@ -145,32 +118,11 @@ export default function Logo({
           </div>
         </div>
         
-        {/* Ondas de sonido animadas */}
-        <div className="absolute -right-3 top-1/2 -translate-y-1/2 flex items-center gap-[2px] h-[60%]">
-          {[0, 1, 2].map((i) => (
-            <motion.div
-              key={i}
-              custom={i}
-              initial="hidden"
-              animate={isLoaded ? "visible" : "hidden"}
-              variants={soundWaveVariants}
-              whileHover="hover"
-              className={`w-[2px] h-full rounded-full ${
-                i === 0 ? 'bg-secondary' : i === 1 ? 'bg-primary' : 'bg-accent'
-              }`}
-              style={{
-                originY: 0.5,
-                height: `${60 + i * 15}%`
-              }}
-            />
-          ))}
-        </div>
-        
         {/* Efecto de desenfoque al hacer hover */}
         {isHovered && (
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.15 }}
+            animate={{ opacity: 0.1 }}
             exit={{ opacity: 0 }}
             className="absolute -inset-4 bg-primary/10 rounded-full blur-xl"
           />
@@ -181,43 +133,28 @@ export default function Logo({
   
   // Componente Logo Estático
   const StaticLogo = () => (
-    <div className={`flex items-center gap-1 ${sizes[size]} font-bold ${colors[variant]} ${className} hover-glow`}>
+    <div className={`flex items-center ${sizes[size]} ${colors[variant]} ${className}`}>
       {/* Letras EFIS */}
       {showEfis && (
-        <div className="flex items-center gap-[1px] mr-1">
-          <span className="text-secondary font-extrabold">E</span>
-          <span className="text-secondary font-extrabold">F</span>
-          <span className="text-secondary font-extrabold">I</span>
-          <span className="text-secondary font-extrabold">S</span>
+        <div className="flex items-center mr-1">
+          <span className="text-primary font-medium tracking-tight">E</span>
+          <span className="text-primary font-medium tracking-tight">F</span>
+          <span className="text-primary font-medium tracking-tight">I</span>
+          <span className="text-primary font-medium tracking-tight">S</span>
         </div>
       )}
       
       {/* Palabra PODCAST */}
-      <div className="flex items-center mt-1">
-        <div className="flex items-center gap-[1px]">
-          <span className="text-primary font-extrabold">P</span>
-          <span className="text-primary font-extrabold">O</span>
-          <span className="text-primary font-extrabold">D</span>
-          <span className="text-primary font-extrabold">C</span>
-          <span className="text-primary font-extrabold">A</span>
-          <span className="text-primary font-extrabold">S</span>
-          <span className="text-primary font-extrabold">T</span>
+      <div className="flex items-center">
+        <div className="flex items-center">
+          <span className="text-muted-foreground font-light tracking-tight">P</span>
+          <span className="text-muted-foreground font-light tracking-tight">O</span>
+          <span className="text-muted-foreground font-light tracking-tight">D</span>
+          <span className="text-muted-foreground font-light tracking-tight">C</span>
+          <span className="text-muted-foreground font-light tracking-tight">A</span>
+          <span className="text-muted-foreground font-light tracking-tight">S</span>
+          <span className="text-muted-foreground font-light tracking-tight">T</span>
         </div>
-      </div>
-      
-      {/* Ondas de sonido estáticas */}
-      <div className="flex items-center gap-[2px] h-[60%] ml-1">
-        {[0, 1, 2].map((i) => (
-          <div
-            key={i}
-            className={`w-[2px] rounded-full ${
-              i === 0 ? 'bg-secondary' : i === 1 ? 'bg-primary' : 'bg-accent'
-            }`}
-            style={{
-              height: `${60 + i * 15}%`
-            }}
-          />
-        ))}
       </div>
     </div>
   );

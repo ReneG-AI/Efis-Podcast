@@ -8,37 +8,37 @@ const socialLinks = [
   {
     name: "Spotify",
     href: "https://open.spotify.com/show/example",
-    icon: <FaSpotify size={18} />,
+    icon: <FaSpotify size={16} />,
     color: "hover:text-[#1ED760]"
   },
   {
     name: "Apple Podcasts",
     href: "https://podcasts.apple.com/podcast/example",
-    icon: <FaItunes size={18} />,
+    icon: <FaItunes size={16} />,
     color: "hover:text-[#8e44ad]"
   },
   {
     name: "YouTube",
     href: "https://youtube.com/@EFISPODCAST",
-    icon: <FaYoutube size={18} />,
+    icon: <FaYoutube size={16} />,
     color: "hover:text-[#FF0000]"
   },
   {
     name: "TikTok",
     href: "https://tiktok.com/@example",
-    icon: <FaTiktok size={16} />,
+    icon: <FaTiktok size={14} />,
     color: "hover:text-white"
   },
   {
     name: "Instagram",
-    href: "https://instagram.com/example",
-    icon: <FaInstagram size={18} />,
+    href: "https://instagram.com/@example",
+    icon: <FaInstagram size={16} />,
     color: "hover:text-[#E1306C]"
   },
   {
     name: "Twitter",
     href: "https://twitter.com/example",
-    icon: <FaTwitter size={18} />,
+    icon: <FaTwitter size={16} />,
     color: "hover:text-[#1DA1F2]"
   }
 ];
@@ -74,7 +74,7 @@ const SocialLink = ({ href, icon, name, color }: SocialLinkProps) => (
     aria-label={name}
   >
     <span className="text-lg">{icon}</span>
-    <span className="text-sm">{name}</span>
+    <span className="text-sm font-light">{name}</span>
   </a>
 );
 
@@ -101,37 +101,39 @@ export default function Footer() {
         </svg>
       </div>
 
-      <div className="container mx-auto py-12 px-4 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="container mx-auto py-16 px-6 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Logo y descripción */}
-          <div className="flex flex-col space-y-3">
+          <div className="flex flex-col space-y-4">
             <Logo size="md" />
-            <p className="text-muted-foreground text-sm mt-2 max-w-xs">
+            <p className="text-muted-foreground text-sm mt-2 max-w-xs font-light leading-relaxed">
               EFIS Podcast tiene el objetivo de hacer la vida más fácil a las personas a través de nuestro contenido. Entendemos que cada persona tiene una historia detrás.
             </p>
           </div>
 
           {/* Links rápidos */}
-          <div>
-            <h3 className="font-bold text-foreground mb-4 text-gradient-brand">Enlaces rápidos</h3>
-            <ul className="space-y-3">
-              {quickLinks.map((link) => (
-                <li key={link.href}>
-                  <Link 
-                    href={link.href}
-                    className="text-foreground/60 hover:text-secondary hover:translate-x-1 transition-all duration-300 text-sm inline-block hover-glow"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-6">
-              <h3 className="font-bold text-foreground mb-4 text-gradient-brand">Próximamente</h3>
+          <div className="space-y-8">
+            <div>
+              <h3 className="font-medium text-foreground mb-5 text-sm tracking-wider uppercase">Enlaces</h3>
+              <ul className="space-y-3">
+                {quickLinks.map((link) => (
+                  <li key={link.href}>
+                    <Link 
+                      href={link.href}
+                      className="text-foreground/60 hover:text-primary transition-all duration-300 text-sm font-light inline-block"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-medium text-foreground mb-5 text-sm tracking-wider uppercase">Próximamente</h3>
               <ul className="space-y-3">
                 {comingSoonLinks.map((link, idx) => (
                   <li key={idx}>
-                    <span className="text-foreground/40 text-sm inline-block">
+                    <span className="text-foreground/40 text-sm font-light inline-block">
                       {link.label}
                     </span>
                   </li>
@@ -142,7 +144,7 @@ export default function Footer() {
 
           {/* Redes sociales */}
           <div>
-            <h3 className="font-bold text-foreground mb-4 text-gradient-brand">Síguenos</h3>
+            <h3 className="font-medium text-foreground mb-5 text-sm tracking-wider uppercase">Síguenos</h3>
             <div className="flex flex-col space-y-3">
               {socialLinks.map((link) => (
                 <SocialLink
@@ -158,19 +160,19 @@ export default function Footer() {
         </div>
 
         {/* Newsletter */}
-        <div className="border-t border-white/5 mt-10 pt-10">
+        <div className="border-t border-white/5 mt-14 pt-14">
           <div className="max-w-xl mx-auto text-center">
-            <h3 className="font-bold text-foreground mb-2 text-gradient-brand">¿Quieres estar al día?</h3>
-            <p className="text-muted-foreground text-sm mb-4">Suscríbete a nuestro newsletter y recibe notificaciones de nuevos episodios.</p>
-            <form className="flex flex-col sm:flex-row gap-2">
+            <h3 className="font-medium text-foreground mb-3 text-lg">Suscríbete a nuestro newsletter</h3>
+            <p className="text-muted-foreground text-sm mb-6 font-light">Recibe notificaciones de nuevos episodios y contenido exclusivo.</p>
+            <form className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
               <input 
                 type="email" 
                 placeholder="Tu correo electrónico" 
-                className="flex-1 px-4 py-2 rounded-md bg-white/5 border border-white/10 focus:border-secondary outline-none"
+                className="flex-1 px-4 py-3 rounded-full bg-white/5 border border-white/10 focus:border-primary focus:outline-none text-sm"
               />
               <button 
                 type="submit"
-                className="bg-gradient-brand text-white font-medium px-6 py-2 rounded-md hover:opacity-90 transition-colors"
+                className="bg-primary text-white font-medium px-6 py-3 rounded-full hover:bg-primary/90 transition-colors text-sm"
               >
                 Suscribirse
               </button>
@@ -179,7 +181,7 @@ export default function Footer() {
         </div>
 
         {/* Copyright y línea final */}
-        <div className="flex flex-col sm:flex-row justify-between items-center border-t border-white/5 mt-10 pt-6 text-sm text-muted-foreground">
+        <div className="flex flex-col sm:flex-row justify-between items-center border-t border-white/5 mt-14 pt-8 text-xs text-muted-foreground font-light">
           <p>© {currentYear} EFIS Podcast. Todos los derechos reservados.</p>
           <p className="mt-2 sm:mt-0">
             Diseñado con <span className="text-accent">♥</span> por EFIS Team

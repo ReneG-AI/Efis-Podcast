@@ -147,10 +147,10 @@ export default function AudioPlayer({
   // Variante Mini
   if (variant === 'mini') {
     return (
-      <div className={`flex items-center gap-2 p-2 rounded-lg bg-card/60 backdrop-blur-sm border border-border/20 ${className}`}>
+      <div className={`flex items-center gap-2 p-2 rounded-lg glass-effect ${className}`}>
         <button 
           onClick={togglePlay}
-          className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+          className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors hover-glow"
           aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
         >
           {isPlaying ? <FaPause size={10} /> : <FaPlay size={10} className="ml-0.5" />}
@@ -161,11 +161,11 @@ export default function AudioPlayer({
             <div className="text-xs font-medium line-clamp-1 text-foreground/80">{title}</div>
           )}
           <div 
-            className="w-full h-1 bg-secondary rounded-full overflow-hidden cursor-pointer"
+            className="w-full h-1 bg-secondary/20 rounded-full overflow-hidden cursor-pointer"
             onClick={handleProgressBarClick}
           >
             <motion.div 
-              className="h-full bg-primary"
+              className="h-full bg-gradient-brand"
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.1 }}
             />
@@ -182,7 +182,7 @@ export default function AudioPlayer({
   // Variante Default
   if (variant === 'default') {
     return (
-      <div className={`p-4 rounded-lg border border-border/40 bg-card/80 backdrop-blur-sm ${className}`}>
+      <div className={`p-4 rounded-lg glass-effect ${className}`}>
         <div className="flex flex-col gap-3">
           {title && (
             <div className="text-sm font-medium text-foreground/80">{title}</div>
@@ -190,11 +190,11 @@ export default function AudioPlayer({
           
           <div className="relative">
             <div 
-              className="w-full h-2 bg-secondary rounded-full overflow-hidden cursor-pointer"
+              className="w-full h-2 bg-secondary/20 rounded-full overflow-hidden cursor-pointer"
               onClick={handleProgressBarClick}
             >
               <motion.div 
-                className="h-full bg-primary"
+                className="h-full bg-gradient-brand"
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 0.1 }}
               />
@@ -216,7 +216,7 @@ export default function AudioPlayer({
             <div className="flex items-center gap-3">
               <button
                 onClick={togglePlay}
-                className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors hover-glow"
                 aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
               >
                 {isPlaying ? <FaPause size={12} /> : <FaPlay size={12} className="ml-0.5" />}
@@ -237,9 +237,9 @@ export default function AudioPlayer({
               </button>
               
               <div className="relative w-16 h-2">
-                <div className="w-full h-1 bg-secondary rounded-full overflow-hidden mt-0.5">
+                <div className="w-full h-1 bg-secondary/20 rounded-full overflow-hidden mt-0.5">
                   <motion.div 
-                    className="h-full bg-primary"
+                    className="h-full bg-gradient-brand"
                     animate={{ width: `${volume * 100}%` }}
                     transition={{ duration: 0.1 }}
                   />
@@ -272,7 +272,7 @@ export default function AudioPlayer({
   
   // Variante Full
   return (
-    <div className={`p-4 rounded-xl border border-border/40 bg-card/90 backdrop-blur-sm shadow-sm ${className}`}>
+    <div className={`p-4 rounded-xl glass-effect ${className}`}>
       {title && (
         <h3 className="font-medium text-base mb-4 text-center text-foreground/90">{title}</h3>
       )}
@@ -280,7 +280,7 @@ export default function AudioPlayer({
       <div className="flex justify-center mb-5">
         <button
           onClick={togglePlay}
-          className="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-brand shadow-md text-white hover:opacity-90 transition-all"
+          className="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-brand shadow-md text-white hover:opacity-90 transition-all hover-glow"
           aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
         >
           {isPlaying ? <FaPause size={18} /> : <FaPlay size={18} className="ml-1" />}
@@ -303,7 +303,7 @@ export default function AudioPlayer({
       
       <div className="flex flex-col gap-2 mb-4">
         <div 
-          className="w-full h-2 bg-secondary rounded-full overflow-hidden cursor-pointer"
+          className="w-full h-2 bg-secondary/20 rounded-full overflow-hidden cursor-pointer"
           onClick={handleProgressBarClick}
         >
           <motion.div 
@@ -329,9 +329,9 @@ export default function AudioPlayer({
         </button>
         
         <div className="relative w-20 h-2">
-          <div className="w-full h-1 bg-secondary rounded-full overflow-hidden mt-0.5">
+          <div className="w-full h-1 bg-secondary/20 rounded-full overflow-hidden mt-0.5">
             <motion.div 
-              className="h-full bg-primary"
+              className="h-full bg-gradient-brand"
               animate={{ width: `${volume * 100}%` }}
               transition={{ duration: 0.1 }}
             />

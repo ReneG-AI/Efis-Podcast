@@ -101,7 +101,7 @@ export default function Logo({
   // Componente Logo Animado
   const AnimatedLogo = () => (
     <div
-      className={`flex items-center gap-1 ${sizes[size]} font-bold ${colors[variant]} ${className}`}
+      className={`flex items-center gap-1 ${sizes[size]} font-bold ${colors[variant]} ${className} hover-glow`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -164,7 +164,7 @@ export default function Logo({
               variants={soundWaveVariants}
               whileHover="hover"
               className={`w-[2px] h-full rounded-full ${
-                i === 1 ? 'bg-gradient-brand' : 'bg-secondary'
+                i === 1 ? 'bg-gradient-brand' : 'bg-secondary/50'
               }`}
               style={{
                 originY: 0.5,
@@ -189,7 +189,7 @@ export default function Logo({
   
   // Componente Logo Estático
   const StaticLogo = () => (
-    <div className={`flex items-center gap-1 ${sizes[size]} font-bold ${colors[variant]} ${className}`}>
+    <div className={`flex items-center gap-1 ${sizes[size]} font-bold ${colors[variant]} ${className} hover-glow`}>
       {/* Letras EFIS */}
       {showEfis && (
         <div className="flex items-center gap-[1px] mr-1">
@@ -219,7 +219,7 @@ export default function Logo({
           <div
             key={i}
             className={`w-[2px] rounded-full ${
-              i === 1 ? 'bg-gradient-brand' : 'bg-secondary'
+              i === 1 ? 'bg-gradient-brand' : 'bg-secondary/50'
             }`}
             style={{
               height: `${60 + i * 15}%`

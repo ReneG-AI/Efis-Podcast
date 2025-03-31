@@ -4,60 +4,60 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Nuevo esquema de colores profesional y moderno */
+/* Nuevo esquema de colores minimalista y futurista */
 :root {
   /* Colores principales */
-  --primary: 240 76% 51%; /* Azul vibrante (#2D4EF5) */
-  --primary-dark: 240 75% 45%; /* Azul oscuro (#2541D1) */
-  --secondary: 190 95% 50%; /* Turquesa brillante (#05D8F5) */
-  --secondary-dark: 190 85% 45%; /* Turquesa oscuro (#09B5CD) */
-  --accent: 280 85% 60%; /* Púrpura (#A329EB) */
+  --primary: 220 100% 50%; /* Azul eléctrico (#0066FF) */
+  --primary-dark: 220 100% 45%; /* Azul oscuro (#0052CC) */
+  --secondary: 200 100% 50%; /* Cian brillante (#00CCFF) */
+  --secondary-dark: 200 100% 45%; /* Cian oscuro (#0099CC) */
+  --accent: 280 100% 60%; /* Púrpura eléctrico (#9933FF) */
 
   /* Fondo y superficie */
-  --background: 220 25% 97%; /* Casi blanco con tono azulado (#F5F7FC) */
-  --foreground: 225 25% 20%; /* Gris oscuro con tono azulado (#262D3D) */
+  --background: 0 0% 100%; /* Blanco puro (#FFFFFF) */
+  --foreground: 220 25% 15%; /* Negro suave (#1A1F2E) */
   --card: 0 0% 100%; /* Blanco puro (#FFFFFF) */
-  --card-foreground: 225 25% 20%; /* Gris oscuro (#262D3D) */
+  --card-foreground: 220 25% 15%; /* Negro suave (#1A1F2E) */
 
   /* Interface */
-  --muted: 220 15% 94%; /* Gris claro (#ECF0F7) */
-  --muted-foreground: 225 15% 45%; /* Gris medio (#636B81) */
-  --border: 220 15% 90%; /* Borde suave (#DEE4F0) */
-  --input: 220 15% 90%; /* Bordes de input (#DEE4F0) */
+  --muted: 220 25% 97%; /* Gris muy claro (#F5F7FA) */
+  --muted-foreground: 220 25% 45%; /* Gris medio (#6B7280) */
+  --border: 220 25% 90%; /* Borde suave (#E5E7EB) */
+  --input: 220 25% 90%; /* Bordes de input (#E5E7EB) */
 
   /* Acento y feedback */
-  --ring: 240 76% 51%; /* Mismo que primary */
+  --ring: 220 100% 50%; /* Mismo que primary */
   --success: 142 72% 50%; /* Verde (#1EDB71) */
   --warning: 38 95% 55%; /* Amarillo (#FFB414) */
   --error: 0 95% 65%; /* Rojo suave (#FF5757) */
 
   /* Radios */
-  --radius: 0.5rem;
+  --radius: 0.75rem;
 }
 
-/* Modo oscuro de alto contraste para mejorar la legibilidad */
+/* Modo oscuro minimalista y futurista */
 .dark-mode-enabled {
   /* Colores principales */
-  --primary: 238 85% 65%; /* Azul más saturado (#5C7CFF) */
-  --primary-dark: 240 85% 55%; /* Azul oscuro */
-  --secondary: 186 100% 60%; /* Turquesa brillante (#14EEFF) */
-  --secondary-dark: 188 90% 50%; /* Turquesa oscuro */
-  --accent: 280 85% 70%; /* Púrpura claro */
+  --primary: 220 100% 60%; /* Azul eléctrico más brillante (#3399FF) */
+  --primary-dark: 220 100% 55%; /* Azul oscuro más brillante (#1A85FF) */
+  --secondary: 200 100% 60%; /* Cian brillante más intenso (#33CCFF) */
+  --secondary-dark: 200 100% 55%; /* Cian oscuro más intenso (#1AB3FF) */
+  --accent: 280 100% 70%; /* Púrpura eléctrico más brillante (#B366FF) */
 
   /* Fondo y superficie */
-  --background: 225 25% 10%; /* Negro azulado (#14182B) */
-  --foreground: 220 30% 95%; /* Blanco ligeramente azulado */
-  --card: 225 25% 15%; /* Gris muy oscuro (#1C2138) */
-  --card-foreground: 220 30% 95%; /* Blanco */
+  --background: 220 25% 8%; /* Negro profundo (#0A0D14) */
+  --foreground: 220 25% 95%; /* Blanco suave (#F5F7FA) */
+  --card: 220 25% 12%; /* Negro más claro (#141A26) */
+  --card-foreground: 220 25% 95%; /* Blanco suave (#F5F7FA) */
 
   /* Interface */
-  --muted: 225 25% 25%; /* Gris oscuro */
-  --muted-foreground: 225 20% 70%; /* Gris claro */
-  --border: 225 25% 25%; /* Bordes oscuros */
-  --input: 225 25% 25%; /* Input oscuro */
+  --muted: 220 25% 15%; /* Gris oscuro (#1A1F2E) */
+  --muted-foreground: 220 25% 70%; /* Gris claro (#A1A5B0) */
+  --border: 220 25% 20%; /* Bordes oscuros (#262D3D) */
+  --input: 220 25% 20%; /* Input oscuro (#262D3D) */
 
   /* Acento y feedback - más brillantes para mejor contraste */
-  --ring: 238 85% 65%; /* Mismo que primary */
+  --ring: 220 100% 60%; /* Mismo que primary */
   --success: 142 85% 60%; /* Verde más brillante */
   --warning: 38 100% 65%; /* Amarillo más brillante */
   --error: 0 100% 70%; /* Rojo más brillante */
@@ -65,14 +65,14 @@
 
 /* Gradientes y efectos de marca */
 .text-gradient-brand {
-  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 80%, hsl(var(--accent)) 100%);
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .bg-gradient-brand {
-  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 80%, hsl(var(--accent)) 100%);
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%);
 }
 
 .bg-gradient-brand-vertical {
@@ -96,65 +96,41 @@
   pointer-events: none;
 }
 
-/* Animaciones para elementos de audio */
-@keyframes sound-wave {
-  0% {
-    transform: scaleY(0.15);
+/* Efectos de glassmorfismo mejorados */
+.glass-effect {
+  @apply bg-background/80 backdrop-blur-xl border border-white/10;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode-enabled .glass-effect {
+  @apply bg-background/40 backdrop-blur-xl border border-white/5;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Efectos de hover mejorados */
+.hover-glow {
+  transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(var(--primary), 0.3);
+}
+
+/* Animaciones suaves */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
   }
   50% {
-    transform: scaleY(1);
-  }
-  100% {
-    transform: scaleY(0.15);
+    transform: translateY(-10px);
   }
 }
 
-.sound-wave {
-  @apply bg-primary;
-  display: inline-block;
-  width: 3px;
-  margin-right: 2px;
-  border-radius: 2px;
-  animation: sound-wave 1.2s infinite ease-in-out;
-  opacity: 0.8;
+.float-animation {
+  animation: float 6s ease-in-out infinite;
 }
 
-.sound-wave:nth-child(2) {
-  animation-delay: 0.2s;
-  height: 85%;
-}
-.sound-wave:nth-child(3) {
-  animation-delay: 0.4s;
-  height: 95%;
-}
-.sound-wave:nth-child(4) {
-  animation-delay: 0.6s;
-  height: 75%;
-}
-.sound-wave:nth-child(5) {
-  animation-delay: 0.8s;
-  height: 85%;
-}
-
-/* Sound wave pattern para fondos */
-.sound-waves-pattern {
-  background-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='smallGrid' width='30' height='40' patternUnits='userSpaceOnUse'%3E%3Cpath d='M 0 10 L 30 10 M 0 20 L 30 20 M 0 30 L 30 30' stroke='%23FFFFFF' stroke-width='1' fill='none' stroke-opacity='0.15'/%3E%3C/pattern%3E%3Cpattern id='grid' width='150' height='150' patternUnits='userSpaceOnUse'%3E%3Crect width='150' height='150' fill='url(%23smallGrid)'/%3E%3Cpath d='M 0 75 L 150 75 M 75 0 L 75 150' stroke='%23FFFFFF' stroke-width='1' fill='none' stroke-opacity='0.2'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23grid)'/%3E%3C/svg%3E");
-  @apply absolute inset-0 opacity-10;
-}
-
-/* Efectos de scroll */
-.scroll-fade-in {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-.scroll-fade-in.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Estilos para episodios y cards con efecto neomorfismo */
+/* Estilos para cards con efecto neumorfismo mejorado */
 .episode-card {
   @apply bg-card rounded-xl overflow-hidden transition-all duration-300 relative;
   box-shadow: 
@@ -171,23 +147,7 @@
 .episode-card:hover {
   @apply shadow-lg border-primary/20;
   transform: translateY(-5px);
-}
-
-.episode-card .play-button {
-  @apply bg-primary/90 rounded-full flex items-center justify-center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  width: 50px;
-  height: 50px;
-  opacity: 0;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.episode-card:hover .play-button {
-  transform: translate(-50%, -50%) scale(1);
-  opacity: 1;
+  box-shadow: 0 10px 30px rgba(var(--primary), 0.1);
 }
 
 /* Glasmorfismo para tarjetas y elementos flotantes */

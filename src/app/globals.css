@@ -4,63 +4,264 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Nuevo esquema de colores profesional y moderno */
+/* Modern Futuristic Color Scheme - Professional Edition */
 :root {
-  /* Colores principales */
-  --primary: 222 47% 31%; /* Azul oscuro profesional (#2C3E50) */
-  --primary-dark: 222 47% 25%; /* Azul más oscuro (#243342) */
-  --secondary: 199 89% 48%; /* Azul claro vibrante (#3498DB) */
-  --secondary-dark: 199 89% 42%; /* Azul claro más oscuro (#2980B9) */
-  --accent: 168 75% 42%; /* Turquesa elegante (#2ECC71) */
-
-  /* Fondo y superficie */
-  --background: 0 0% 100%; /* Blanco puro (#FFFFFF) */
-  --foreground: 222 47% 11%; /* Negro suave (#1A1F2E) */
-  --card: 0 0% 100%; /* Blanco puro (#FFFFFF) */
-  --card-foreground: 222 47% 11%; /* Negro suave (#1A1F2E) */
-
-  /* Interface */
-  --muted: 222 47% 97%; /* Gris muy claro (#F5F7FA) */
-  --muted-foreground: 222 47% 45%; /* Gris medio (#6B7280) */
-  --border: 222 47% 90%; /* Borde suave (#E5E7EB) */
-  --input: 222 47% 90%; /* Bordes de input (#E5E7EB) */
-
-  /* Acento y feedback */
-  --ring: 222 47% 31%; /* Mismo que primary */
-  --success: 142 72% 50%; /* Verde (#1EDB71) */
-  --warning: 38 95% 55%; /* Amarillo (#FFB414) */
-  --error: 0 95% 65%; /* Rojo suave (#FF5757) */
-
-  /* Radios */
+  /* Primary Colors */
+  --primary: 231 48% 48%; /* Rich blue (#3F51B5) */
+  --primary-foreground: 0 0% 100%;
+  
+  /* Secondary Colors */
+  --secondary: 262 52% 46%; /* Deep purple (#673AB7) */
+  --secondary-foreground: 0 0% 100%;
+  
+  /* Accent Color */
+  --accent: 180 100% 37%; /* Turquoise (#00B8D4) */
+  --accent-foreground: 0 0% 100%;
+  
+  /* Background Colors */
+  --background: 0 0% 100%; /* Pure white */
+  --foreground: 240 10% 4%; /* Near black text */
+  
+  /* Card Elements */
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 4%;
+  
+  /* UI Elements */
+  --muted: 240 5% 96%;
+  --muted-foreground: 240 4% 46%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 4%;
+  
+  /* Border and Input */
+  --border: 240 6% 90%;
+  --input: 240 6% 90%;
+  
+  /* Visual Feedback */
+  --ring: 231 48% 48%;
   --radius: 0.75rem;
+  
+  /* Semantic Colors */
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 142 70% 45%;
+  --success-foreground: 0 0% 100%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 0 0% 98%;
+  --info: 199 89% 48%;
+  --info-foreground: 0 0% 98%;
 }
 
-/* Modo oscuro profesional y moderno */
+/* Dark Mode */
 .dark-mode-enabled {
-  /* Colores principales */
-  --primary: 222 47% 85%; /* Azul claro (#B8C6D9) */
-  --primary-dark: 222 47% 75%; /* Azul más claro (#8FA3BC) */
-  --secondary: 199 89% 58%; /* Azul brillante (#5DADE2) */
-  --secondary-dark: 199 89% 52%; /* Azul más oscuro (#3498DB) */
-  --accent: 168 75% 52%; /* Turquesa más brillante (#2ECC71) */
+  /* Primary Colors */
+  --primary: 231 48% 58%; /* Brighter blue (#5C6BC0) */
+  --primary-foreground: 0 0% 100%;
+  
+  /* Secondary Colors */
+  --secondary: 262 52% 56%; /* Brighter purple (#8359C1) */
+  --secondary-foreground: 0 0% 100%;
+  
+  /* Accent Color */
+  --accent: 180 100% 45%; /* Brighter turquoise (#00D8F5) */
+  --accent-foreground: 0 0% 100%;
+  
+  /* Background Colors */
+  --background: 240 10% 4%; /* Near black background */
+  --foreground: 0 0% 98%; /* Near white text */
+  
+  /* Card Elements */
+  --card: 240 10% 8%; /* Dark card */
+  --card-foreground: 0 0% 98%;
+  
+  /* UI Elements */
+  --muted: 240 8% 12%;
+  --muted-foreground: 240 5% 64%;
+  --popover: 240 10% 8%;
+  --popover-foreground: 0 0% 98%;
+  
+  /* Border and Input */
+  --border: 240 8% 16%;
+  --input: 240 8% 16%;
+  
+  /* Semantic Colors */
+  --destructive: 0 84% 65%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 142 70% 50%;
+  --success-foreground: 0 0% 100%;
+  --warning: 38 92% 55%;
+  --warning-foreground: 0 0% 98%;
+  --info: 199 89% 53%;
+  --info-foreground: 0 0% 98%;
+}
 
-  /* Fondo y superficie */
-  --background: 222 47% 8%; /* Negro profundo (#0A0D14) */
-  --foreground: 222 47% 95%; /* Blanco suave (#F5F7FA) */
-  --card: 222 47% 12%; /* Negro más claro (#141A26) */
-  --card-foreground: 222 47% 95%; /* Blanco suave (#F5F7FA) */
+/* Gradients and Effects */
+.text-gradient-primary {
+  background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--secondary)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
-  /* Interface */
-  --muted: 222 47% 15%; /* Gris oscuro (#1A1F2E) */
-  --muted-foreground: 222 47% 70%; /* Gris claro (#A1A5B0) */
-  --border: 222 47% 20%; /* Bordes oscuros (#262D3D) */
-  --input: 222 47% 20%; /* Input oscuro (#262D3D) */
+.text-gradient-secondary {
+  background: linear-gradient(to right, hsl(var(--secondary)), hsl(var(--accent)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
-  /* Acento y feedback - más brillantes para mejor contraste */
-  --ring: 222 47% 85%; /* Mismo que primary */
-  --success: 142 85% 60%; /* Verde más brillante */
-  --warning: 38 100% 65%; /* Amarillo más brillante */
-  --error: 0 100% 70%; /* Rojo más brillante */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+}
+
+.bg-gradient-primary-to-accent {
+  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+}
+
+.bg-gradient-secondary {
+  background: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--accent)));
+}
+
+.border-gradient {
+  position: relative;
+  border: double 1px transparent;
+  background-image: linear-gradient(white, white), 
+                    linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+.dark-mode-enabled .border-gradient {
+  background-image: linear-gradient(hsl(var(--card)), hsl(var(--card))), 
+                    linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+}
+
+/* Glassmorphism */
+.glass {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode-enabled .glass {
+  background: rgba(15, 15, 20, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Neomorphism */
+.neo {
+  border-radius: var(--radius);
+  background: hsl(var(--background));
+  box-shadow: 
+    8px 8px 16px rgba(0, 0, 0, 0.05),
+    -8px -8px 16px rgba(255, 255, 255, 0.8);
+}
+
+.dark-mode-enabled .neo {
+  background: hsl(var(--background));
+  box-shadow: 
+    8px 8px 16px rgba(0, 0, 0, 0.4),
+    -8px -8px 16px rgba(255, 255, 255, 0.03);
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.float {
+  animation: float 5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.pulse {
+  animation: pulse 3s ease-in-out infinite;
+}
+
+/* Audio Visualization */
+@keyframes audio-wave {
+  0% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+  100% { transform: scaleY(0.3); }
+}
+
+.audio-bar {
+  display: inline-block;
+  width: 3px;
+  border-radius: 2px;
+  background: hsl(var(--primary));
+  animation: audio-wave 1.5s ease-in-out infinite;
+}
+
+.audio-bar:nth-child(2n) {
+  background: hsl(var(--secondary));
+  animation-delay: 0.2s;
+}
+
+.audio-bar:nth-child(3n) {
+  background: hsl(var(--accent));
+  animation-delay: 0.4s;
+}
+
+/* Buttons */
+.btn-primary {
+  @apply bg-gradient-primary text-white font-medium py-2 px-4 rounded-full 
+         shadow-md hover:shadow-lg transition-all duration-300 transform 
+         hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50;
+}
+
+.btn-secondary {
+  @apply bg-transparent border border-primary/30 text-primary 
+         font-medium py-2 px-4 rounded-full hover:bg-primary/5 
+         transition-all duration-300 transform hover:scale-105 
+         focus:outline-none focus:ring-2 focus:ring-primary/50;
+}
+
+.btn-accent {
+  @apply bg-gradient-secondary text-white font-medium py-2 px-4 
+         rounded-full shadow-md hover:shadow-lg transition-all duration-300 
+         transform hover:scale-105 focus:outline-none focus:ring-2 
+         focus:ring-accent/50;
+}
+
+/* Card styles */
+.card-hover {
+  @apply transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1;
+}
+
+/* Modern Container */
+.container-modern {
+  @apply container mx-auto px-4 md:px-6 py-8 md:py-12;
+}
+
+/* Loading/Skeleton */
+.skeleton {
+  @apply animate-pulse bg-muted rounded;
+}
+
+/* Dark mode toggle transitions */
+.theme-transition {
+  @apply transition-colors duration-300;
+}
+
+/* Focus styles for accessibility */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2;
+}
+
+/* Default font settings */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Gradientes y efectos de marca */
@@ -195,19 +396,6 @@
 
 .font-body {
   font-family: 'Inter', sans-serif;
-}
-
-/* Estilos para botones de acción */
-.btn-primary {
-  @apply bg-gradient-brand text-white px-5 py-3 rounded-lg font-medium 
-  hover:opacity-90 transition-all shadow-md 
-  active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary/50;
-}
-
-.btn-secondary {
-  @apply bg-background text-foreground border border-border px-5 py-3 rounded-lg font-medium 
-  hover:bg-muted transition-all 
-  active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary/50;
 }
 
 /* Media queries */

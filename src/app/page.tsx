@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { 
@@ -31,506 +32,410 @@ const DynamicEpisodeCard = dynamic(() => import('@/components/episodes/EpisodeCa
 
 import YouTubeEpisodes from '@/components/episodes/YouTubeEpisodes';
 
+// Componente SectionTitle
+const SectionTitle = ({ 
+  subtitle, 
+  title, 
+  align = "center" 
+}: { 
+  subtitle: string; 
+  title: string; 
+  align?: "left" | "center" | "right" 
+}) => {
+  const alignClass = 
+    align === "left" 
+      ? "text-left" 
+      : align === "right" 
+        ? "text-right" 
+        : "text-center mx-auto";
+  
+  return (
+    <div className={`max-w-2xl ${alignClass}`}>
+      <h3 className="text-sm font-medium tracking-wider text-primary uppercase mb-2">
+        {subtitle}
+      </h3>
+      <h2 className="text-3xl md:text-4xl font-bold">
+        {title}
+      </h2>
+    </div>
+  );
+};
+
+// Animaciones para fade in
+const fadeIn = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      duration: 0.5
+    }
+  }
+};
+
+// Animaciones para contenido que aparece secuencialmente
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2
+    }
+  }
+};
+
 export default function Home() {
   return (
-    <main className="flex flex-col min-h-screen">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-primary py-20 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5" opacity="0.3" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid-pattern)" />
-          </svg>
-        </div>
+    <main className="relative min-h-screen">
+      {/* Video de fondo */}
+      <div className="video-background">
+        <video 
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+          poster="/images/podcast-poster.jpg" // Asegúrate de tener esta imagen como fallback
+        >
+          <source src="/videos/podcast-background.mp4" type="video/mp4" />
+          {/* Asegúrate de incluir múltiples formatos para compatibilidad */}
+          <source src="/videos/podcast-background.webm" type="video/webm" />
+        </video>
+      </div>
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="flex flex-col items-center text-center">
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center text-center px-4">
+        <div className="container max-w-5xl z-10">
+          <motion.div 
+            initial="hidden"
+            animate="visible"
+            variants={staggerContainer}
+            className="space-y-8"
+          >
+            {/* Título principal */}
             <motion.h1 
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              variants={fadeIn}
+              className="text-4xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight leading-none"
             >
-              EFIS PODCAST
+              <span className="block text-white">Tu dinero,</span>
+              <span className="text-gradient-brand mt-2">tus reglas.</span>
             </motion.h1>
             
+            {/* Descripción */}
             <motion.p 
-              className="text-xl md:text-2xl text-white/80 mb-8 max-w-2xl"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
+              variants={fadeIn}
+              className="max-w-2xl mx-auto text-lg md:text-xl text-white/80 font-light leading-relaxed"
             >
-              <span className="font-bold text-white">Tu dinero, tus reglas.</span> Aprende de las experiencias de empresarios y expertos financieros.
+              Un podcast que te enseña a tomar el control de tus finanzas con estrategias prácticas y consejos reales que puedes aplicar hoy mismo.
             </motion.p>
             
+            {/* Call to action */}
             <motion.div 
-              className="flex flex-col sm:flex-row gap-4 mb-12"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              variants={fadeIn}
+              className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
             >
-              <Link href="/episodes" className="btn-primary">
-                <div className="flex items-center">
-                  <FaHeadphones className="mr-2" />
-                  <span>Escuchar episodios</span>
-                </div>
+              <Link 
+                href="/episodes" 
+                className="btn-gradient-brand flex items-center gap-2 min-w-[180px] justify-center"
+              >
+                <FaHeadphones />
+                <span>Escuchar ahora</span>
               </Link>
-              
-              <Link href="/youtube" className="btn-secondary">
-                <div className="flex items-center">
-                  <FaYoutube className="mr-2" />
-                  <span>Ver en YouTube</span>
-                </div>
+              <Link 
+                href="/about" 
+                className="btn-secondary flex items-center gap-2 min-w-[180px] justify-center"
+              >
+                <span>Conoce más</span>
+                <FaArrowRight className="text-sm" />
               </Link>
             </motion.div>
             
+            {/* Plataformas */}
             <motion.div 
-              className="flex items-center justify-center gap-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 0.4 }}
+              variants={fadeIn}
+              className="pt-12 flex flex-col items-center"
             >
-              <a href="https://open.spotify.com/show/example" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors">
-                <FaSpotify size={24} />
-              </a>
-              <a href="https://podcasts.apple.com/podcast/example" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors">
-                <FaApple size={24} />
-              </a>
-              <a href="https://youtube.com/@EFISPODCAST" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors">
-                <FaYoutube size={24} />
-              </a>
+              <p className="text-white/60 text-sm uppercase tracking-wider mb-6 font-medium">
+                Disponible en
+              </p>
+              <div className="flex flex-wrap justify-center gap-6 md:gap-10">
+                <a 
+                  href="https://open.spotify.com/show/example" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-white hover:text-[#1ED760] transition-colors"
+                >
+                  <FaSpotify className="text-3xl" />
+                  <span className="font-medium">Spotify</span>
+                </a>
+                <a 
+                  href="https://podcasts.apple.com/podcast/example" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-white hover:text-[#8e44ad] transition-colors"
+                >
+                  <FaApple className="text-3xl" />
+                  <span className="font-medium">Apple Podcasts</span>
+                </a>
+                <a 
+                  href="https://youtube.com/@example" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-white hover:text-[#FF0000] transition-colors"
+                >
+                  <FaYoutube className="text-3xl" />
+                  <span className="font-medium">YouTube</span>
+                </a>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+        
+        {/* Scroll indicator */}
+        <motion.div 
+          initial={{ opacity: 0, y: 0 }}
+          animate={{ opacity: 1, y: [0, 10, 0] }}
+          transition={{ 
+            delay: 2,
+            duration: 2,
+            repeat: Infinity,
+            repeatType: "loop"
+          }}
+          className="absolute bottom-10 left-0 right-0 flex justify-center"
+        >
+          <div className="flex flex-col items-center text-white/60">
+            <span className="text-xs font-light mb-2">Desliza hacia abajo</span>
+            <svg 
+              width="24" 
+              height="24" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              xmlns="http://www.w3.org/2000/svg"
+              className="animate-bounce opacity-60"
+            >
+              <path d="M12 5L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M19 12L12 19L5 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Características Section */}
+      <section className="py-20 bg-background">
+        <div className="container mx-auto px-4">
+          <SectionTitle 
+            subtitle="POR QUÉ ESCUCHARNOS"
+            title="Enfoque práctico para tus finanzas"
+            align="center"
+          />
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+            {/* Feature 1 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="bg-card rounded-lg p-6 border border-white/5 hover:border-white/10 hover:bg-card/60 transition-all card-hover"
+            >
+              <div className="w-12 h-12 rounded-lg bg-gradient-brand flex items-center justify-center mb-4">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 10V20M8 10L4 9.99998V20L8 20M8 10L12 12L16 10M16 10L20 10V20L16 20M16 10L16 20M8 20L12 22L16 20" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M12 7C13.1046 7 14 6.10457 14 5C14 3.89543 13.1046 3 12 3C10.8954 3 10 3.89543 10 5C10 6.10457 10.8954 7 12 7Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Educación Financiera</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Explicamos conceptos financieros complejos de forma sencilla para que puedas entender y aplicar en tu día a día.
+              </p>
+            </motion.div>
+            
+            {/* Feature 2 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="bg-card rounded-lg p-6 border border-white/5 hover:border-white/10 hover:bg-card/60 transition-all card-hover"
+            >
+              <div className="w-12 h-12 rounded-lg bg-gradient-brand flex items-center justify-center mb-4">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 17V17.0111" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M12 13.5V7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Consejos Reales</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                No teoría, sino estrategias prácticas que puedes implementar hoy mismo para mejorar tu salud financiera.
+              </p>
+            </motion.div>
+            
+            {/* Feature 3 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="bg-card rounded-lg p-6 border border-white/5 hover:border-white/10 hover:bg-card/60 transition-all card-hover"
+            >
+              <div className="w-12 h-12 rounded-lg bg-gradient-brand flex items-center justify-center mb-4">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15 10L11 14L9 12M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Casos de éxito</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Compartimos historias reales de personas que han logrado transformar sus finanzas y cómo lo hicieron.
+              </p>
             </motion.div>
           </div>
         </div>
       </section>
-      
-      {/* Sección de Episodios Destacados */}
-      <section className="py-20 bg-background">
+
+      {/* Últimos episodios */}
+      <section className="py-20 bg-card">
         <div className="container mx-auto px-4">
-          <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <h2 className="text-3xl font-bold mb-4">Episodios destacados</h2>
-            <p className="text-foreground/70 max-w-2xl mx-auto">
-              Entrevistas con empresarios consolidados, gestores de patrimonio, expertos inmobiliarios y mucho más.
-            </p>
-          </motion.div>
+          <div className="flex justify-between items-end mb-12">
+            <SectionTitle 
+              subtitle="ESCUCHA AHORA"
+              title="Últimos episodios"
+              align="left"
+            />
+            <Link href="/episodes" className="text-primary hover:text-primary/90 flex items-center gap-1 font-medium">
+              Ver todos
+              <FaArrowRight className="text-sm" />
+            </Link>
+          </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Episodio 1 */}
             <motion.div 
-              className="bg-card rounded-xl overflow-hidden shadow-sm border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg card-hover"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
+              className="episode-card overflow-hidden transition-all duration-300"
             >
-              <div className="relative aspect-video">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 z-10"></div>
-                <Image 
-                  src="https://via.placeholder.com/640x360/0066FF/FFFFFF?text=Empresario+Exitoso" 
-                  alt="Empresario compartiendo su historia" 
-                  fill
-                  className="object-cover"
+              <div className="relative h-48 overflow-hidden">
+                <img 
+                  src="/images/episode1.jpg" 
+                  alt="Episodio 1" 
+                  className="w-full h-full object-cover transform transition-transform duration-500 hover:scale-105"
                 />
-                <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2 text-white">
-                  <FaPlay className="text-primary" />
-                  <span className="text-sm">32:15</span>
+                <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/90 to-transparent">
+                  <span className="text-xs font-medium text-white/80">Ep. 52 • 45 min</span>
                 </div>
               </div>
-              <div className="p-6">
-                <span className="inline-block px-2 py-1 text-xs rounded-full bg-primary/10 text-primary font-medium mb-2">
-                  Emprendimiento
-                </span>
-                <h3 className="text-xl font-bold mb-2 line-clamp-2">Cómo construí mi empresa desde cero</h3>
-                <p className="text-foreground/70 mb-4 line-clamp-3">
-                  Un empresario exitoso comparte su trayectoria, desde los primeros pasos hasta consolidar su negocio.
+              <div className="p-4">
+                <h3 className="text-lg font-bold mb-2 line-clamp-2">Invierte en la bolsa sin morir en el intento</h3>
+                <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
+                  Descubre las estrategias básicas para empezar a invertir en la bolsa de manera segura y sin correr riesgos innecesarios.
                 </p>
-                <Link 
-                  href="/episodes/1" 
-                  className="text-primary font-medium flex items-center justify-between"
-                >
+                <Link href="/episodes/1" className="flex items-center gap-2 text-primary font-medium text-sm hover:text-primary/90 transition-colors">
+                  <FaHeadphones />
                   <span>Escuchar episodio</span>
-                  <FaArrowRight className="text-sm" />
                 </Link>
               </div>
             </motion.div>
             
             {/* Episodio 2 */}
             <motion.div 
-              className="bg-card rounded-xl overflow-hidden shadow-sm border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg card-hover"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
+              className="episode-card overflow-hidden transition-all duration-300"
             >
-              <div className="relative aspect-video">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 z-10"></div>
-                <Image 
-                  src="https://via.placeholder.com/640x360/0066FF/FFFFFF?text=Gestor+Patrimonio" 
-                  alt="Gestor de patrimonio" 
-                  fill
-                  className="object-cover"
+              <div className="relative h-48 overflow-hidden">
+                <img 
+                  src="/images/episode2.jpg" 
+                  alt="Episodio 2" 
+                  className="w-full h-full object-cover transform transition-transform duration-500 hover:scale-105"
                 />
-                <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2 text-white">
-                  <FaPlay className="text-primary" />
-                  <span className="text-sm">45:30</span>
+                <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/90 to-transparent">
+                  <span className="text-xs font-medium text-white/80">Ep. 51 • 38 min</span>
                 </div>
               </div>
-              <div className="p-6">
-                <span className="inline-block px-2 py-1 text-xs rounded-full bg-primary/10 text-primary font-medium mb-2">
-                  Inversiones
-                </span>
-                <h3 className="text-xl font-bold mb-2 line-clamp-2">Estrategias de gestión de patrimonio a largo plazo</h3>
-                <p className="text-foreground/70 mb-4 line-clamp-3">
-                  Un gestor de patrimonio profesional revela sus mejores consejos para construir riqueza a largo plazo.
+              <div className="p-4">
+                <h3 className="text-lg font-bold mb-2 line-clamp-2">5 hábitos financieros que cambiarán tu vida</h3>
+                <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
+                  Analizamos los hábitos financieros más importantes que puedes incorporar a tu rutina para mejorar drásticamente tu economía.
                 </p>
-                <Link 
-                  href="/episodes/2" 
-                  className="text-primary font-medium flex items-center justify-between"
-                >
+                <Link href="/episodes/2" className="flex items-center gap-2 text-primary font-medium text-sm hover:text-primary/90 transition-colors">
+                  <FaHeadphones />
                   <span>Escuchar episodio</span>
-                  <FaArrowRight className="text-sm" />
                 </Link>
               </div>
             </motion.div>
             
             {/* Episodio 3 */}
             <motion.div 
-              className="bg-card rounded-xl overflow-hidden shadow-sm border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg card-hover"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
+              className="episode-card overflow-hidden transition-all duration-300"
             >
-              <div className="relative aspect-video">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 z-10"></div>
-                <Image 
-                  src="https://via.placeholder.com/640x360/0066FF/FFFFFF?text=Real+Estate" 
-                  alt="Experto inmobiliario" 
-                  fill
-                  className="object-cover"
+              <div className="relative h-48 overflow-hidden">
+                <img 
+                  src="/images/episode3.jpg" 
+                  alt="Episodio 3" 
+                  className="w-full h-full object-cover transform transition-transform duration-500 hover:scale-105"
                 />
-                <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2 text-white">
-                  <FaPlay className="text-primary" />
-                  <span className="text-sm">38:45</span>
+                <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/90 to-transparent">
+                  <span className="text-xs font-medium text-white/80">Ep. 50 • 42 min</span>
                 </div>
               </div>
-              <div className="p-6">
-                <span className="inline-block px-2 py-1 text-xs rounded-full bg-primary/10 text-primary font-medium mb-2">
-                  Inmobiliario
-                </span>
-                <h3 className="text-xl font-bold mb-2 line-clamp-2">El mercado de propiedades de lujo en 2024</h3>
-                <p className="text-foreground/70 mb-4 line-clamp-3">
-                  Una gestora de alquileres turísticos comparte las tendencias actuales y oportunidades en el mercado inmobiliario premium.
+              <div className="p-4">
+                <h3 className="text-lg font-bold mb-2 line-clamp-2">Cómo salir de deudas en tiempo récord</h3>
+                <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
+                  Te compartimos métodos probados para eliminar tus deudas más rápido y liberarte de la carga financiera que te impide avanzar.
                 </p>
-                <Link 
-                  href="/episodes/3" 
-                  className="text-primary font-medium flex items-center justify-between"
-                >
+                <Link href="/episodes/3" className="flex items-center gap-2 text-primary font-medium text-sm hover:text-primary/90 transition-colors">
+                  <FaHeadphones />
                   <span>Escuchar episodio</span>
-                  <FaArrowRight className="text-sm" />
                 </Link>
               </div>
             </motion.div>
           </div>
-          
-          <div className="text-center mt-12">
-            <Link href="/episodes" className="btn-secondary inline-flex items-center gap-2">
-              <span>Ver todos los episodios</span>
-              <FaArrowRight />
-            </Link>
-          </div>
         </div>
       </section>
-      
-      {/* About EFIS */}
-      <section className="py-20 bg-card">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <motion.div 
-              className="flex flex-col justify-center"
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              <h2 className="text-3xl font-bold mb-6">EFIS es un estilo de vida</h2>
-              <p className="text-foreground/80 mb-4">
-                En EFIS Podcast, entendemos que cada persona tiene una historia detrás. Nuestro objetivo es hacer la vida más fácil a las personas a través de nuestro contenido.
-              </p>
-              <p className="text-foreground/80 mb-6">
-                A través de conversaciones con empresarios, inversores, expertos en bienes raíces y muchos otros profesionales, ofrecemos perspectivas únicas que inspiran y educan.
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                <div className="flex flex-col items-center p-4 bg-background rounded-lg">
-                  <FaLightbulb className="text-2xl text-primary mb-3" />
-                  <h3 className="font-bold text-center">Inspiración</h3>
-                  <p className="text-sm text-center text-foreground/70">Historias que motivan</p>
-                </div>
-                <div className="flex flex-col items-center p-4 bg-background rounded-lg">
-                  <FaChartLine className="text-2xl text-primary mb-3" />
-                  <h3 className="font-bold text-center">Crecimiento</h3>
-                  <p className="text-sm text-center text-foreground/70">Desarrollo personal</p>
-                </div>
-                <div className="flex flex-col items-center p-4 bg-background rounded-lg">
-                  <FaUsers className="text-2xl text-primary mb-3" />
-                  <h3 className="font-bold text-center">Comunidad</h3>
-                  <p className="text-sm text-center text-foreground/70">Compartir experiencias</p>
-                </div>
-              </div>
-            </motion.div>
-            <motion.div 
-              className="relative"
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              <div className="absolute inset-0 bg-gradient-primary blur-3xl opacity-30 -z-10 rounded-full transform -translate-x-1/4 translate-y-1/4"></div>
-              <div className="relative bg-card overflow-hidden rounded-2xl border border-border/50 shadow-xl">
-                <Image 
-                  src="https://via.placeholder.com/800x600/0066FF/FFFFFF?text=EFIS+PODCAST" 
-                  alt="EFIS Podcast Studio" 
-                  width={800}
-                  height={600}
-                  className="w-full h-auto"
-                />
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-      
-      {/* YouTube Channel Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
+
+      {/* Call To Action */}
+      <section className="py-20 bg-background relative overflow-hidden">
+        {/* Fondo con efecto */}
+        <div className="absolute inset-0 opacity-20 bg-gradient-brand" />
+        
+        <div className="container mx-auto px-4 relative z-10">
           <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.5 }}
+            className="max-w-3xl mx-auto text-center"
           >
-            <h2 className="text-3xl font-bold mb-4">Nuestro canal de YouTube</h2>
-            <p className="text-foreground/70 max-w-2xl mx-auto">
-              Contenido exclusivo, entrevistas y momentos destacados de nuestros episodios.
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              Toma el control de tus finanzas <span className="text-gradient-brand">hoy mismo</span>
+            </h2>
+            <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
+              Aprende, implementa y transforma tu relación con el dinero. Únete a nuestra comunidad de oyentes que están cambiando su futuro financiero.
             </p>
-          </motion.div>
-          
-          <YouTubeEpisodes />
-        </div>
-      </section>
-      
-      {/* Próximamente: Comunidad y Recursos */}
-      <section className="py-20 bg-gradient-primary text-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <motion.h2 
-              className="text-3xl font-bold mb-4"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              Próximamente
-            </motion.h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            {/* Comunidad - Próximamente */}
-            <motion.div 
-              className="bg-white/10 backdrop-blur-md p-8 rounded-xl border border-white/20"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="flex items-center gap-4 mb-6">
-                <div className="h-12 w-12 rounded-full bg-white/20 flex items-center justify-center text-white">
-                  <FaUsers size={24} />
-                </div>
-                <h3 className="text-2xl font-bold">Comunidad EFIS</h3>
-              </div>
-              <p className="mb-6">
-                Estamos trabajando en crear una comunidad donde podrás conectar con otros oyentes, compartir experiencias y aprender juntos.
-              </p>
-              <div className="bg-white/5 p-4 rounded-lg">
-                <p className="text-sm text-white/80">
-                  <strong>Características próximamente:</strong>
-                </p>
-                <ul className="mt-2 text-sm space-y-1">
-                  <li className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/70"></span>
-                    <span>Grupos de Telegram y Discord</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/70"></span>
-                    <span>Eventos virtuales con invitados especiales</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/70"></span>
-                    <span>Acceso a contenido exclusivo</span>
-                  </li>
-                </ul>
-              </div>
-            </motion.div>
-            
-            {/* Recursos - Próximamente */}
-            <motion.div 
-              className="bg-white/10 backdrop-blur-md p-8 rounded-xl border border-white/20"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              <div className="flex items-center gap-4 mb-6">
-                <div className="h-12 w-12 rounded-full bg-white/20 flex items-center justify-center text-white">
-                  <FaChartLine size={24} />
-                </div>
-                <h3 className="text-2xl font-bold">Recursos Financieros</h3>
-              </div>
-              <p className="mb-6">
-                Pronto ofreceremos herramientas y guías para ayudarte a mejorar tu relación con el dinero y alcanzar tus metas financieras.
-              </p>
-              <div className="bg-white/5 p-4 rounded-lg">
-                <p className="text-sm text-white/80">
-                  <strong>Recursos en desarrollo:</strong>
-                </p>
-                <ul className="mt-2 text-sm space-y-1">
-                  <li className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/70"></span>
-                    <span>Guías de inversión para principiantes</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/70"></span>
-                    <span>Plantillas de presupuesto personalizables</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/70"></span>
-                    <span>Calculadoras financieras interactivas</span>
-                  </li>
-                </ul>
-              </div>
-            </motion.div>
-          </div>
-          
-          <div className="text-center mt-12">
-            <p className="text-lg text-white/80">
-              Mantente atento a nuestras novedades para ser el primero en acceder.
-            </p>
-          </div>
-        </div>
-      </section>
-      
-      {/* Testimonios */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <motion.h2 
-              className="text-3xl font-bold mb-4"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              Lo que dicen nuestros oyentes
-            </motion.h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            <motion.div
-              className="glass p-8 rounded-xl"
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="flex items-center gap-4 mb-4">
-                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-                  MS
-                </div>
-                <div>
-                  <h4 className="font-bold">María Sánchez</h4>
-                  <p className="text-sm text-foreground/70">Emprendedora, 32 años</p>
-                </div>
-              </div>
-              <p className="text-foreground/80 italic">"Gracias a Efis Podcast, finalmente entendí cómo funciona la inversión. Las entrevistas con expertos son muy claras y me han ayudado a tomar mejores decisiones financieras."</p>
-            </motion.div>
-
-            <motion.div
-              className="glass p-8 rounded-xl"
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              <div className="flex items-center gap-4 mb-4">
-                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-                  JL
-                </div>
-                <div>
-                  <h4 className="font-bold">Jorge López</h4>
-                  <p className="text-sm text-foreground/70">Consultor, 45 años</p>
-                </div>
-              </div>
-              <p className="text-foreground/80 italic">"Las entrevistas con empresarios consolidados me han inspirado a dar el salto y comenzar mi propio negocio. El contenido es de gran calidad y los invitados comparten información realmente valiosa."</p>
-            </motion.div>
-          </div>
-
-          <div className="text-center mt-10">
-            <button className="btn-secondary inline-flex items-center gap-2">
-              <span>Más testimonios</span>
-              <FaArrowRight />
-            </button>
-          </div>
-        </div>
-      </section>
-      
-      {/* CTA Final */}
-      <section className="py-16 bg-gradient-primary">
-        <div className="container mx-auto px-4 text-center">
-          <motion.h2 
-            className="text-3xl text-white font-bold mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            EFIS es un estilo de vida. Únete a nosotros.
-          </motion.h2>
-          
-          <motion.div 
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-          >
-            <a 
-              href="https://youtube.com/@EFISPODCAST" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="bg-white text-primary font-medium px-6 py-3 rounded-lg hover:bg-white/90 transition-colors flex items-center justify-center gap-2"
-            >
-              <FaYoutube size={20} />
-              <span>Ver en YouTube</span>
-            </a>
-            
-            <Link 
-              href="/episodes" 
-              className="border-2 border-white text-white font-medium px-6 py-3 rounded-lg hover:bg-white/10 transition-colors"
-            >
-              Explorar episodios
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link 
+                href="/episodes" 
+                className="btn-gradient-brand flex items-center gap-2 justify-center"
+              >
+                <FaHeadphones />
+                <span>Comenzar a escuchar</span>
+              </Link>
+              <Link 
+                href="/community" 
+                className="btn-secondary flex items-center gap-2 justify-center"
+              >
+                <span>Unirme a la comunidad</span>
+                <FaArrowRight className="text-sm" />
+              </Link>
+            </div>
           </motion.div>
         </div>
       </section>

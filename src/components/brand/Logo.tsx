@@ -91,7 +91,7 @@ export default function Logo({
                 animate={isLoaded ? "visible" : "hidden"}
                 whileHover="hover"
                 variants={letterVariants}
-                className="text-gradient-primary font-medium tracking-tight"
+                className="text-gradient-efis font-semibold tracking-tight"
               >
                 {letter}
               </motion.span>
@@ -110,7 +110,7 @@ export default function Logo({
                 animate={isLoaded ? "visible" : "hidden"}
                 whileHover="hover"
                 variants={letterVariants}
-                className="text-gradient-secondary font-light tracking-tight"
+                className="text-gradient-podcast font-light tracking-tight"
               >
                 {letter}
               </motion.span>
@@ -137,23 +137,23 @@ export default function Logo({
       {/* Letras EFIS */}
       {showEfis && (
         <div className="flex items-center mr-1">
-          <span className="text-gradient-primary font-medium tracking-tight">E</span>
-          <span className="text-gradient-primary font-medium tracking-tight">F</span>
-          <span className="text-gradient-primary font-medium tracking-tight">I</span>
-          <span className="text-gradient-primary font-medium tracking-tight">S</span>
+          <span className="text-gradient-efis font-semibold tracking-tight">E</span>
+          <span className="text-gradient-efis font-semibold tracking-tight">F</span>
+          <span className="text-gradient-efis font-semibold tracking-tight">I</span>
+          <span className="text-gradient-efis font-semibold tracking-tight">S</span>
         </div>
       )}
       
       {/* Palabra PODCAST */}
       <div className="flex items-center">
         <div className="flex items-center">
-          <span className="text-gradient-secondary font-light tracking-tight">P</span>
-          <span className="text-gradient-secondary font-light tracking-tight">O</span>
-          <span className="text-gradient-secondary font-light tracking-tight">D</span>
-          <span className="text-gradient-secondary font-light tracking-tight">C</span>
-          <span className="text-gradient-secondary font-light tracking-tight">A</span>
-          <span className="text-gradient-secondary font-light tracking-tight">S</span>
-          <span className="text-gradient-secondary font-light tracking-tight">T</span>
+          <span className="text-gradient-podcast font-light tracking-tight">P</span>
+          <span className="text-gradient-podcast font-light tracking-tight">O</span>
+          <span className="text-gradient-podcast font-light tracking-tight">D</span>
+          <span className="text-gradient-podcast font-light tracking-tight">C</span>
+          <span className="text-gradient-podcast font-light tracking-tight">A</span>
+          <span className="text-gradient-podcast font-light tracking-tight">S</span>
+          <span className="text-gradient-podcast font-light tracking-tight">T</span>
         </div>
       </div>
     </div>

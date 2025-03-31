@@ -112,7 +112,7 @@
 
 /* Efectos de glassmorfismo mejorados */
 .glass-effect {
-  @apply bg-background/80 backdrop-blur-xl border border-white/10;
+  @apply bg-background/95 backdrop-blur-xl border border-border/20;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
@@ -409,4 +409,40 @@
 .btn-gradient-brand:hover {
   box-shadow: 0 4px 15px rgba(59, 89, 152, 0.4);
   transform: translateY(-2px);
+}
+
+/* Estilos para el Header */
+header.glass-effect {
+  @apply bg-background/95 backdrop-blur-xl border-b border-border/20;
+}
+
+.dark-mode-enabled header.glass-effect {
+  @apply bg-background/40 backdrop-blur-xl border-b border-white/5;
+}
+
+/* Estilos para el Footer */
+footer.glass-effect {
+  @apply bg-background/95 backdrop-blur-xl border-t border-border/20;
+}
+
+.dark-mode-enabled footer.glass-effect {
+  @apply bg-background/40 backdrop-blur-xl border-t border-white/5;
+}
+
+/* Estilos para enlaces y texto en el Footer */
+footer a {
+  @apply text-foreground/80 hover:text-foreground transition-colors;
+}
+
+footer h3 {
+  @apply text-foreground font-bold;
+}
+
+footer .text-muted-foreground {
+  @apply text-foreground/60;
+}
+
+/* Estilos para el Header */
+header a {
+  @apply text-foreground/80 hover:text-foreground transition-colors;
 } 

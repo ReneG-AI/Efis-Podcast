@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FaSpotify, FaYoutube, FaPodcast, FaItunes, FaTiktok, FaInstagram, FaTwitter, FaMoneyBillWave } from "react-icons/fa";
+import { FaSpotify, FaYoutube, FaPodcast, FaItunes, FaTiktok, FaInstagram, FaTwitter } from "react-icons/fa";
 import Logo from "@/components/brand/Logo";
 
 const socialLinks = [
@@ -19,7 +19,7 @@ const socialLinks = [
   },
   {
     name: "YouTube",
-    href: "https://youtube.com/@example",
+    href: "https://youtube.com/@EFISPODCAST",
     icon: <FaYoutube size={18} />,
     color: "hover:text-[#FF0000]"
   },
@@ -45,18 +45,17 @@ const socialLinks = [
 
 // Links rápidos para el footer
 const quickLinks = [
+  { label: "Inicio", href: "/" },
   { label: "Episodios", href: "/episodes" },
-  { label: "Comunidad", href: "/community" },
-  { label: "Recursos", href: "/resources" },
-  { label: "Sobre nosotros", href: "/about" }
+  { label: "YouTube", href: "/youtube" },
+  { label: "Sobre nosotros", href: "/about" },
+  { label: "Contacto", href: "/contact" }
 ];
 
-// Links a recursos financieros
-const resourceLinks = [
-  { label: "Guías de inversión", href: "/resources/investment-guides" },
-  { label: "Plantillas de presupuesto", href: "/resources/budget-templates" },
-  { label: "Mini cursos financieros", href: "/resources/mini-courses" },
-  { label: "Calculadoras financieras", href: "/resources/calculators" }
+// Enlaces próximamente
+const comingSoonLinks = [
+  { label: "Comunidad (Próximamente)", href: "#" },
+  { label: "Recursos financieros (Próximamente)", href: "#" }
 ];
 
 interface SocialLinkProps {
@@ -94,17 +93,13 @@ export default function Footer() {
       </div>
 
       <div className="container mx-auto py-12 px-4 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Logo y descripción */}
           <div className="flex flex-col space-y-3">
             <Logo size="md" />
             <p className="text-muted-foreground text-sm mt-2 max-w-xs">
-              <span className="font-bold text-primary">Tu dinero, tus reglas.</span> EFIS Podcast te enseña a manejar tus finanzas de forma fácil y sin estrés.
+              EFIS Podcast tiene el objetivo de hacer la vida más fácil a las personas a través de nuestro contenido. Entendemos que cada persona tiene una historia detrás.
             </p>
-            <div className="flex items-center gap-2 mt-2">
-              <FaMoneyBillWave className="text-primary" />
-              <span className="text-sm font-medium">Educación financiera accesible</span>
-            </div>
           </div>
 
           {/* Links rápidos */}
@@ -122,23 +117,18 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
-
-          {/* Recursos financieros */}
-          <div>
-            <h3 className="font-bold text-foreground mb-4">Recursos financieros</h3>
-            <ul className="space-y-3">
-              {resourceLinks.map((link) => (
-                <li key={link.href}>
-                  <Link 
-                    href={link.href}
-                    className="text-foreground/60 hover:text-foreground hover:translate-x-1 transition-all duration-300 text-sm inline-block hover-glow"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <div className="mt-6">
+              <h3 className="font-bold text-foreground mb-4">Próximamente</h3>
+              <ul className="space-y-3">
+                {comingSoonLinks.map((link, idx) => (
+                  <li key={idx}>
+                    <span className="text-foreground/40 text-sm inline-block">
+                      {link.label}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           {/* Redes sociales */}
@@ -161,8 +151,8 @@ export default function Footer() {
         {/* Newsletter */}
         <div className="border-t border-border/20 mt-10 pt-10">
           <div className="max-w-xl mx-auto text-center">
-            <h3 className="font-bold text-foreground mb-2">¿Quieres recibir tips financieros?</h3>
-            <p className="text-muted-foreground text-sm mb-4">Suscríbete a nuestro newsletter y recibe consejos financieros directamente en tu bandeja de entrada.</p>
+            <h3 className="font-bold text-foreground mb-2">¿Quieres estar al día?</h3>
+            <p className="text-muted-foreground text-sm mb-4">Suscríbete a nuestro newsletter y recibe notificaciones de nuevos episodios.</p>
             <form className="flex flex-col sm:flex-row gap-2">
               <input 
                 type="email" 

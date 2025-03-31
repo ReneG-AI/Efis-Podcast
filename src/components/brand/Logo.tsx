@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { FaMoneyBillWave } from 'react-icons/fa';
 
 interface LogoProps {
   variant?: 'default' | 'light' | 'dark';
@@ -98,31 +97,6 @@ export default function Logo({
       }
     }
   };
-
-  // Variantes para el icono de dinero
-  const moneyIconVariants = {
-    hidden: {
-      opacity: 0,
-      scale: 0.5
-    },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        delay: 0.8,
-        duration: 0.5,
-        ease: "easeOut"
-      }
-    },
-    hover: {
-      rotate: [0, 10, 0, -10, 0],
-      transition: {
-        duration: 1.2,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }
-    }
-  };
   
   // Componente Logo Animado
   const AnimatedLogo = () => (
@@ -133,19 +107,6 @@ export default function Logo({
     >
       {/* Contenedor del Logo */}
       <div className="relative flex items-center">
-        {/* Icono de dinero */}
-        {showEfis && (
-          <motion.div
-            className="absolute -left-6 top-1/2 -translate-y-1/2 text-primary/90"
-            variants={moneyIconVariants}
-            initial="hidden"
-            animate={isLoaded ? "visible" : "hidden"}
-            whileHover="hover"
-          >
-            <FaMoneyBillWave className="text-lg" />
-          </motion.div>
-        )}
-        
         {/* Letras EFIS */}
         {showEfis && (
           <div className="flex items-center gap-[1px] mr-1">
@@ -157,7 +118,7 @@ export default function Logo({
                 animate={isLoaded ? "visible" : "hidden"}
                 whileHover="hover"
                 variants={letterVariants}
-                className="text-gradient-efis font-extrabold"
+                className="text-primary font-extrabold"
               >
                 {letter}
               </motion.span>
@@ -176,7 +137,7 @@ export default function Logo({
                 animate={isLoaded ? "visible" : "hidden"}
                 whileHover="hover"
                 variants={letterVariants}
-                className="text-gradient-podcast font-extrabold"
+                className="text-white font-extrabold"
               >
                 {letter}
               </motion.span>
@@ -221,33 +182,26 @@ export default function Logo({
   // Componente Logo Estático
   const StaticLogo = () => (
     <div className={`flex items-center gap-1 ${sizes[size]} font-bold ${colors[variant]} ${className} hover-glow`}>
-      {/* Icono de dinero */}
-      {showEfis && (
-        <div className="relative -left-4 text-primary/90">
-          <FaMoneyBillWave className="text-lg" />
-        </div>
-      )}
-      
       {/* Letras EFIS */}
       {showEfis && (
         <div className="flex items-center gap-[1px] mr-1">
-          <span className="text-gradient-efis font-extrabold">E</span>
-          <span className="text-gradient-efis font-extrabold">F</span>
-          <span className="text-gradient-efis font-extrabold">I</span>
-          <span className="text-gradient-efis font-extrabold">S</span>
+          <span className="text-primary font-extrabold">E</span>
+          <span className="text-primary font-extrabold">F</span>
+          <span className="text-primary font-extrabold">I</span>
+          <span className="text-primary font-extrabold">S</span>
         </div>
       )}
       
       {/* Palabra PODCAST */}
       <div className="flex items-center mt-1">
         <div className="flex items-center gap-[1px]">
-          <span className="text-gradient-podcast font-extrabold">P</span>
-          <span className="text-gradient-podcast font-extrabold">O</span>
-          <span className="text-gradient-podcast font-extrabold">D</span>
-          <span className="text-gradient-podcast font-extrabold">C</span>
-          <span className="text-gradient-podcast font-extrabold">A</span>
-          <span className="text-gradient-podcast font-extrabold">S</span>
-          <span className="text-gradient-podcast font-extrabold">T</span>
+          <span className="text-white font-extrabold">P</span>
+          <span className="text-white font-extrabold">O</span>
+          <span className="text-white font-extrabold">D</span>
+          <span className="text-white font-extrabold">C</span>
+          <span className="text-white font-extrabold">A</span>
+          <span className="text-white font-extrabold">S</span>
+          <span className="text-white font-extrabold">T</span>
         </div>
       </div>
       

@@ -262,123 +262,49 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* Retro Gaming Scroll Indicator */}
-        <div className="fixed bottom-8 inset-x-0 z-40 pointer-events-none flex justify-center items-center">
+        {/* Modern Minimal Scroll Indicator */}
+        <div className="fixed bottom-10 inset-x-0 z-40 pointer-events-none flex justify-center items-center">
           <motion.div 
-            className="relative flex items-center justify-center"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
+            className="flex flex-col items-center gap-3"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 0.8, y: 0 }}
             transition={{ duration: 0.6, delay: 1.4 }}
           >
-            {/* Arcade cabinet style frame */}
-            <div className="relative w-24 h-24 flex flex-col items-center justify-center">
-              {/* Pixelated border */}
-              <div className="absolute inset-0 border-4 border-primary shadow-[0_0_10px_rgba(var(--primary),0.6),inset_0_0_8px_rgba(var(--primary),0.4)] rounded-lg overflow-hidden" style={{ 
-                boxShadow: '0 0 10px hsl(var(--primary) / 0.6), inset 0 0 8px hsl(var(--primary) / 0.4)'
-              }}>
-                {/* Scanlines effect */}
-                <div className="absolute inset-0 bg-background/70 backdrop-blur-sm overflow-hidden">
-                  <div className="absolute inset-0 z-10 opacity-10" style={{
-                    backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 1px, hsl(var(--primary) / 0.2) 1px, hsl(var(--primary) / 0.2) 2px)',
-                    backgroundSize: '100% 4px'
-                  }}></div>
-                  <div className="absolute inset-0 z-10 opacity-10" style={{
-                    backgroundImage: 'radial-gradient(hsl(var(--secondary) / 0.3) 15%, transparent 16%), radial-gradient(hsl(var(--secondary) / 0.3) 15%, transparent 16%)',
-                    backgroundSize: '8px 8px',
-                    backgroundPosition: '0 0, 4px 4px'
-                  }}></div>
-                </div>
-              </div>
-
-              {/* Screen content - Animated pixelated audio waves */}
-              <div className="w-16 h-16 relative flex items-center justify-center z-10">
-                <div className="absolute inset-2 bg-background/30 flex items-end justify-center gap-[2px] overflow-hidden">
-                  {/* Pixelated audio columns */}
-                  {[...Array(7)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="w-[3px] bg-primary rounded-sm"
-                      style={{ height: '4px' }}
-                      animate={{
-                        height: [
-                          '4px',
-                          `${6 + Math.sin((i + 1) * 0.7) * 14}px`,
-                          '4px'
-                        ]
-                      }}
-                      transition={{
-                        duration: 0.9 + (i * 0.05),
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                        repeatType: 'reverse'
-                      }}
-                    />
-                  ))}
-                </div>
-                
-                {/* Game character animation */}
-                <div className="absolute bottom-1 flex items-center justify-center">
-                  <motion.div
-                    className="relative w-6 h-6 bg-primary rounded-sm overflow-hidden"
-                    animate={{ 
-                      y: [0, -2, 0],
-                      rotate: [0, 5, 0, -5, 0]
-                    }}
-                    transition={{ 
-                      duration: 0.8, 
-                      repeat: Infinity,
-                      ease: "steps(2)" 
-                    }}
-                  >
-                    {/* Stylized headphone icon - pixelated */}
-                    <div className="absolute inset-0 opacity-80">
-                      <div className="absolute w-[2px] h-[4px] left-1 top-0 bg-background"></div>
-                      <div className="absolute w-[2px] h-[4px] right-1 top-0 bg-background"></div>
-                      <div className="absolute w-[6px] h-[2px] left-0 top-[4px] bg-background"></div>
-                      <div className="absolute w-[6px] h-[2px] right-0 top-[4px] bg-background"></div>
-                      <div className="absolute w-[4px] h-[4px] left-1 bottom-1 bg-background rounded-full"></div>
-                      <div className="absolute w-[4px] h-[4px] right-1 bottom-1 bg-background rounded-full"></div>
-                    </div>
-                  </motion.div>
-                </div>
-              </div>
+            {/* Elegant animated indicator */}
+            <motion.div 
+              className="relative h-14 w-6 border border-primary/40 rounded-full flex justify-center overflow-hidden backdrop-blur-sm"
+              whileHover={{ opacity: 1 }}
+            >
+              {/* Shine effect */}
+              <motion.div 
+                className="absolute inset-0 bg-gradient-to-t from-primary/10 via-secondary/5 to-transparent opacity-30"
+                animate={{ y: [20, 0, 20] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              />
               
-              {/* Down arrow pixel animation */}
-              <div className="absolute -bottom-6 flex flex-col items-center">
-                <motion.div 
-                  className="w-6 h-6 text-primary opacity-80 pixel-arrow-down"
-                  animate={{ y: [0, 4, 0] }}
-                  transition={{ 
-                    duration: 1.2, 
-                    repeat: Infinity, 
-                    ease: "steps(3)" 
-                  }}
-                  style={{
-                    boxShadow: `
-                      2px 0 0 0 currentColor,
-                      4px 0 0 0 currentColor,
-                      6px 0 0 0 currentColor,
-                      8px 0 0 0 currentColor,
-                      10px 0 0 0 currentColor,
-                      0 2px 0 0 currentColor,
-                      12px 2px 0 0 currentColor,
-                      2px 4px 0 0 currentColor,
-                      10px 4px 0 0 currentColor,
-                      4px 6px 0 0 currentColor,
-                      8px 6px 0 0 currentColor,
-                      6px 8px 0 0 currentColor
-                    `
-                  }}
-                />
-              </div>
-              
-              {/* Arcade cabinet buttons */}
-              <div className="absolute -left-2 top-4 w-2 h-2 rounded-full bg-red-500 shadow-lg shadow-red-500/50"></div>
-              <div className="absolute -right-2 top-4 w-2 h-2 rounded-full bg-blue-500 shadow-lg shadow-blue-500/50"></div>
-              
-              {/* Game score display */}
-              <div className="absolute -top-5 left-1/2 -translate-x-1/2 text-xs font-mono text-primary tracking-wide opacity-80 uppercase pixelated">scroll</div>
-            </div>
+              {/* Animated dot */}
+              <motion.div 
+                className="absolute w-2 h-2 rounded-full bg-primary/90"
+                animate={{ 
+                  y: [0, 28, 0],
+                  opacity: [0.5, 1, 0.5]
+                }}
+                transition={{ 
+                  duration: 2, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+              />
+            </motion.div>
+            
+            {/* Simple text label */}
+            <motion.span 
+              className="text-xs uppercase tracking-widest text-primary/60 font-light"
+              animate={{ opacity: [0.4, 0.7, 0.4] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              Scroll
+            </motion.span>
           </motion.div>
         </div>
       </section>

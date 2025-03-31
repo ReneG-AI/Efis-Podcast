@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { FaPlay, FaPause, FaFilter, FaSearch, FaTimes } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaPlay, FaPause, FaFilter, FaSearch, FaTimes, FaHeadphones, FaInfoCircle, FaCalendarAlt, FaPlayCircle } from 'react-icons/fa';
 
 import Section from '@/components/ui/Section';
 import ScrollAnimation from '@/components/ui/ScrollAnimation';
 import EpisodeCard from '@/components/episodes/EpisodeCard';
 import AudioPlayer from '@/components/ui/AudioPlayer';
+import AudioVisualizer from '@/components/ui/AudioVisualizer';
 
 // Datos de ejemplo - En una aplicación real vendrían de una API
 const episodes = [
@@ -18,7 +19,7 @@ const episodes = [
     duration: '45:30',
     date: '15 Mar 2023',
     listens: '2.5K',
-    image: '/images/placeholder-episode.jpg',
+    image: 'https://via.placeholder.com/800x450/3F51B5/FFFFFF?text=Crecimiento+Personal',
     audioUrl: 'https://example.com/audio1.mp3',
     href: '/episodes/1',
     category: 'Desarrollo Personal'
@@ -30,7 +31,7 @@ const episodes = [
     duration: '38:15',
     date: '22 Feb 2023',
     listens: '1.8K',
-    image: '/images/placeholder-episode.jpg',
+    image: 'https://via.placeholder.com/800x450/673AB7/FFFFFF?text=Productividad',
     audioUrl: 'https://example.com/audio2.mp3',
     href: '/episodes/2',
     category: 'Productividad'
@@ -42,7 +43,7 @@ const episodes = [
     duration: '42:50',
     date: '8 Feb 2023',
     listens: '3.2K',
-    image: '/images/placeholder-episode.jpg',
+    image: 'https://via.placeholder.com/800x450/00B8D4/FFFFFF?text=Inteligencia+Emocional',
     audioUrl: 'https://example.com/audio3.mp3',
     href: '/episodes/3',
     category: 'Desarrollo Profesional'
@@ -54,7 +55,7 @@ const episodes = [
     duration: '35:20',
     date: '1 Feb 2023',
     listens: '5.1K',
-    image: '/images/placeholder-episode.jpg',
+    image: 'https://via.placeholder.com/800x450/4CAF50/FFFFFF?text=Mindfulness',
     audioUrl: 'https://example.com/audio4.mp3',
     href: '/episodes/4',
     category: 'Bienestar'
@@ -66,7 +67,7 @@ const episodes = [
     duration: '51:45',
     date: '25 Ene 2023',
     listens: '1.9K',
-    image: '/images/placeholder-episode.jpg',
+    image: 'https://via.placeholder.com/800x450/FF9800/FFFFFF?text=Liderazgo',
     audioUrl: 'https://example.com/audio5.mp3',
     href: '/episodes/5',
     category: 'Liderazgo'
@@ -78,7 +79,7 @@ const episodes = [
     duration: '49:10',
     date: '18 Ene 2023',
     listens: '4.7K',
-    image: '/images/placeholder-episode.jpg',
+    image: 'https://via.placeholder.com/800x450/2196F3/FFFFFF?text=Finanzas',
     audioUrl: 'https://example.com/audio6.mp3',
     href: '/episodes/6',
     category: 'Finanzas'
@@ -90,7 +91,7 @@ const episodes = [
     duration: '37:25',
     date: '11 Ene 2023',
     listens: '2.3K',
-    image: '/images/placeholder-episode.jpg',
+    image: 'https://via.placeholder.com/800x450/009688/FFFFFF?text=Habitos+Saludables',
     audioUrl: 'https://example.com/audio7.mp3',
     href: '/episodes/7',
     category: 'Bienestar'
@@ -102,7 +103,7 @@ const episodes = [
     duration: '44:30',
     date: '4 Ene 2023',
     listens: '1.6K',
-    image: '/images/placeholder-episode.jpg',
+    image: 'https://via.placeholder.com/800x450/E91E63/FFFFFF?text=Comunicacion',
     audioUrl: 'https://example.com/audio8.mp3',
     href: '/episodes/8',
     category: 'Comunicación'
@@ -118,6 +119,7 @@ export default function EpisodesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
+  const [hoveredEpisode, setHoveredEpisode] = useState<string | null>(null);
 
   // Filtrar episodios por búsqueda y categoría
   const filteredEpisodes = episodes.filter(episode => {
@@ -142,221 +144,272 @@ export default function EpisodesPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-hidden">
+      {/* Wave background */}
+      <div className="fixed inset-0 -z-10 opacity-5 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-secondary opacity-10 blur-[120px] rounded-full transform -translate-y-1/3 translate-x-1/3"></div>
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-primary opacity-10 blur-[100px] rounded-full transform translate-y-1/3 -translate-x-1/3"></div>
+      </div>
+    
       {/* Encabezado con buscador y filtros */}
       <Section
         title="EPISODIOS"
-        subtitle="Explora nuestra biblioteca completa de episodios sobre desarrollo personal y profesional."
-        background="waves"
+        subtitle="Explora nuestra biblioteca completa de episodios sobre tecnología, aviación y desarrollo personal."
         titleAlignment="center"
+        className="relative z-10"
       >
-        <div className="flex flex-col md:flex-row gap-4 mb-10">
-          {/* Buscador */}
-          <div className="relative flex-grow">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <FaSearch className="text-foreground/50" />
-            </div>
-            <input
-              type="text"
-              placeholder="Buscar episodios..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="block w-full pl-10 pr-10 py-3 rounded-lg bg-card border border-border focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center"
-              >
-                <FaTimes className="text-foreground/50 hover:text-foreground" />
-              </button>
-            )}
-          </div>
-          
-          {/* Filtro por categoría - Versión móvil */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)}
-              className="w-full py-3 px-4 bg-card border border-border rounded-lg flex items-center justify-between"
-            >
-              <span className="flex items-center">
-                <FaFilter className="mr-2" />
-                {selectedCategory || 'Todas las categorías'}
-              </span>
-              <span>{isFilterMenuOpen ? '▲' : '▼'}</span>
-            </button>
-            
-            {isFilterMenuOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="absolute z-20 mt-1 w-full bg-card border border-border rounded-lg shadow-lg overflow-hidden"
-              >
+        <div className="relative -mt-10 mb-20 h-12 opacity-10 pointer-events-none">
+          <AudioVisualizer barCount={80} maxHeight={40} className="w-full" />
+        </div>
+      
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row gap-4 mb-10">
+            {/* Buscador */}
+            <div className="relative flex-grow">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <FaSearch className="text-foreground/50" />
+              </div>
+              <input
+                type="text"
+                placeholder="Buscar episodios..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="block w-full pl-10 pr-10 py-3 rounded-full glass focus-ring"
+              />
+              {searchQuery && (
                 <button
-                  onClick={() => {
-                    setSelectedCategory(null);
-                    setIsFilterMenuOpen(false);
-                  }}
-                  className={`block w-full text-left px-4 py-2 hover:bg-primary/10 ${!selectedCategory ? 'bg-primary/20 text-primary' : ''}`}
+                  onClick={() => setSearchQuery('')}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center"
                 >
-                  Todas las categorías
+                  <FaTimes className="text-foreground/50 hover:text-foreground" />
                 </button>
-                {categories.map(category => (
-                  <button
-                    key={category}
-                    onClick={() => {
-                      setSelectedCategory(category);
-                      setIsFilterMenuOpen(false);
-                    }}
-                    className={`block w-full text-left px-4 py-2 hover:bg-primary/10 ${selectedCategory === category ? 'bg-primary/20 text-primary' : ''}`}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </motion.div>
-            )}
-          </div>
-          
-          {/* Filtro por categoría - Versión desktop */}
-          <div className="hidden md:flex space-x-2 overflow-x-auto pb-2">
-            <button
-              onClick={() => setSelectedCategory(null)}
-              className={`px-4 py-2 rounded-lg whitespace-nowrap ${
-                !selectedCategory 
-                  ? 'bg-primary text-white' 
-                  : 'bg-card border border-border hover:bg-primary/10 transition-colors'
-              }`}
-            >
-              Todos
-            </button>
+              )}
+            </div>
             
-            {categories.map(category => (
+            {/* Filtro por categoría - Versión móvil */}
+            <div className="md:hidden">
               <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-lg whitespace-nowrap ${
-                  selectedCategory === category 
-                    ? 'bg-primary text-white' 
-                    : 'bg-card border border-border hover:bg-primary/10 transition-colors'
+                onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)}
+                className="w-full py-3 px-4 glass rounded-full flex items-center justify-between focus-ring"
+              >
+                <span className="flex items-center">
+                  <FaFilter className="mr-2 text-foreground/70" />
+                  {selectedCategory || 'Todas las categorías'}
+                </span>
+                <span className="text-foreground/70">{isFilterMenuOpen ? '▲' : '▼'}</span>
+              </button>
+              
+              <AnimatePresence>
+                {isFilterMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute z-20 mt-2 w-full bg-card/90 backdrop-blur-md border border-border/30 rounded-xl shadow-lg overflow-hidden"
+                  >
+                    <button
+                      onClick={() => {
+                        setSelectedCategory(null);
+                        setIsFilterMenuOpen(false);
+                      }}
+                      className={`block w-full text-left px-4 py-3 hover:bg-primary/10 ${!selectedCategory ? 'bg-primary/20 text-primary' : ''}`}
+                    >
+                      Todas las categorías
+                    </button>
+                    {categories.map(category => (
+                      <button
+                        key={category}
+                        onClick={() => {
+                          setSelectedCategory(category);
+                          setIsFilterMenuOpen(false);
+                        }}
+                        className={`block w-full text-left px-4 py-3 hover:bg-primary/10 ${selectedCategory === category ? 'bg-primary/20 text-primary' : ''}`}
+                      >
+                        {category}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            
+            {/* Filtro por categoría - Versión desktop */}
+            <div className="hidden md:flex flex-wrap gap-2">
+              <button
+                onClick={() => setSelectedCategory(null)}
+                className={`px-5 py-2 rounded-full transition-all ${
+                  !selectedCategory 
+                    ? 'btn-primary' 
+                    : 'glass hover:bg-primary/10'
                 }`}
               >
-                {category}
+                Todos
               </button>
-            ))}
-          </div>
-          
-          {/* Botón para limpiar filtros */}
-          {(searchQuery || selectedCategory) && (
-            <button
-              onClick={clearFilters}
-              className="md:w-auto flex-shrink-0 px-4 py-3 bg-card border border-border rounded-lg hover:bg-primary/10 transition-colors"
-            >
-              Limpiar filtros
-            </button>
-          )}
-        </div>
-
-        {/* Visualización de episodios */}
-        {filteredEpisodes.length === 0 ? (
-          <div className="text-center py-20">
-            <ScrollAnimation variant="fade">
-              <div className="text-6xl mb-4">🔍</div>
-              <h3 className="text-xl font-semibold mb-2">No se encontraron episodios</h3>
-              <p className="text-foreground/70 mb-6">Intenta con otra búsqueda o elimina los filtros</p>
+              
+              {categories.map(category => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-5 py-2 rounded-full transition-all ${
+                    selectedCategory === category 
+                      ? 'btn-primary' 
+                      : 'glass hover:bg-primary/10'
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+            
+            {/* Botón para limpiar filtros */}
+            {(searchQuery || selectedCategory) && (
               <button
                 onClick={clearFilters}
-                className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                className="md:w-auto flex-shrink-0 px-5 py-3 glass rounded-full hover:bg-primary/10 transition-all"
+              >
+                Limpiar filtros
+              </button>
+            )}
+          </div>
+
+          {/* Visualización de episodios */}
+          {filteredEpisodes.length === 0 ? (
+            <motion.div 
+              className="text-center py-20"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="glass inline-flex p-8 rounded-full mb-6">
+                <FaSearch className="text-5xl text-foreground/30" />
+              </div>
+              <h3 className="text-2xl font-semibold mb-2">No se encontraron episodios</h3>
+              <p className="text-foreground/70 mb-6 max-w-md mx-auto">Intenta con otra búsqueda o elimina los filtros para ver todos los episodios disponibles</p>
+              <button
+                onClick={clearFilters}
+                className="btn-primary"
               >
                 Mostrar todos los episodios
               </button>
-            </ScrollAnimation>
-          </div>
-        ) : (
-          <>
-            {/* Mostrar resultados */}
-            <p className="text-sm text-foreground/70 mb-6">
-              {filteredEpisodes.length} {filteredEpisodes.length === 1 ? 'episodio encontrado' : 'episodios encontrados'}
-              {selectedCategory && ` en ${selectedCategory}`}
-              {searchQuery && ` para "${searchQuery}"`}
-            </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-              {filteredEpisodes.map((episode, index) => (
-                <ScrollAnimation 
-                  key={episode.id} 
-                  variant="slide-up" 
-                  delay={0.05 * index}
-                >
-                  <div className="relative group">
-                    <EpisodeCard 
-                      {...episode}
-                      variant="default"
-                    />
+            </motion.div>
+          ) : (
+            <>
+              {/* Mostrar resultados */}
+              <div className="glass px-4 py-2 rounded-full inline-flex items-center mb-8 text-sm text-foreground/70">
+                <FaInfoCircle className="mr-2 text-primary" />
+                {filteredEpisodes.length} {filteredEpisodes.length === 1 ? 'episodio encontrado' : 'episodios encontrados'}
+                {selectedCategory && ` en ${selectedCategory}`}
+                {searchQuery && ` para "${searchQuery}"`}
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
+                {filteredEpisodes.map((episode, index) => (
+                  <motion.div
+                    key={episode.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ 
+                      duration: 0.5, 
+                      delay: 0.05 * Math.min(index, 5) 
+                    }}
+                    onMouseEnter={() => setHoveredEpisode(episode.id)}
+                    onMouseLeave={() => setHoveredEpisode(null)}
+                    className="relative group"
+                  >
+                    <div className="card-hover">
+                      <EpisodeCard 
+                        {...episode}
+                        variant="default"
+                      />
+                    </div>
                     
-                    <motion.button
-                      onClick={() => handleEpisodePlay(episode)}
-                      className="absolute top-4 right-4 bg-primary rounded-full p-2 text-white shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      <FaPlay className="w-3 h-3" />
-                    </motion.button>
-                  </div>
-                </ScrollAnimation>
-              ))}
-            </div>
-          </>
-        )}
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="absolute inset-0 bg-gradient-primary/30 backdrop-blur-sm rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      
+                      <motion.button
+                        onClick={() => handleEpisodePlay(episode)}
+                        className="relative z-10 glass p-6 rounded-full"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <FaPlayCircle className="w-10 h-10 text-primary" />
+                      </motion.button>
+                    </div>
+                    
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <div className="flex items-center gap-3 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="glass rounded-full px-3 py-1 flex items-center">
+                          <FaHeadphones className="mr-2 text-primary" />
+                          <span>{episode.listens}</span>
+                        </div>
+                        <div className="glass rounded-full px-3 py-1 flex items-center">
+                          <FaCalendarAlt className="mr-2 text-secondary" />
+                          <span>{episode.date}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </>
+          )}
 
-        {/* Paginación (simulada) */}
-        {filteredEpisodes.length > 0 && (
-          <div className="flex justify-center mt-8">
-            <div className="flex space-x-2">
-              <button className="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-white">1</button>
-              <button className="w-10 h-10 flex items-center justify-center rounded-lg bg-card hover:bg-primary/10 transition-colors">2</button>
-              <button className="w-10 h-10 flex items-center justify-center rounded-lg bg-card hover:bg-primary/10 transition-colors">3</button>
-              <span className="w-10 h-10 flex items-center justify-center">...</span>
-              <button className="w-10 h-10 flex items-center justify-center rounded-lg bg-card hover:bg-primary/10 transition-colors">8</button>
-            </div>
-          </div>
-        )}
+          {/* Paginación (simulada) */}
+          {filteredEpisodes.length > 0 && (
+            <motion.div 
+              className="flex justify-center mt-12 mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <div className="glass p-1 rounded-full flex space-x-1">
+                <button className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white">1</button>
+                <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-primary/10 transition-colors">2</button>
+                <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-primary/10 transition-colors">3</button>
+                <span className="w-10 h-10 flex items-center justify-center text-foreground/50">...</span>
+                <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-primary/10 transition-colors">8</button>
+              </div>
+            </motion.div>
+          )}
+        </div>
       </Section>
 
       {/* Reproductor de audio flotante */}
-      {selectedEpisode && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center">
+      <AnimatePresence>
+        {selectedEpisode && (
           <motion.div 
-            className="w-full max-w-2xl mx-4 mb-4"
+            className="fixed bottom-0 left-0 right-0 z-50 flex justify-center pointer-events-none"
             initial={{ y: 100, opacity: 0 }}
             animate={{ 
               y: isAudioPlayerVisible ? 0 : 100, 
               opacity: isAudioPlayerVisible ? 1 : 0 
             }}
+            exit={{ y: 100, opacity: 0 }}
             transition={{ 
               type: "spring", 
               stiffness: 300, 
               damping: 30 
             }}
           >
-            <div className="relative">
-              <AudioPlayer 
-                src={selectedEpisode.audioUrl} 
-                title={selectedEpisode.title}
-                variant="default"
-                className="shadow-xl"
-              />
-              <button 
-                onClick={() => setIsAudioPlayerVisible(false)}
-                className="absolute -top-2 -right-2 bg-foreground text-background rounded-full w-6 h-6 flex items-center justify-center text-xs"
-                aria-label="Cerrar reproductor"
-              >
-                &times;
-              </button>
+            <div className="w-full max-w-2xl mx-4 mb-4 pointer-events-auto">
+              <div className="neo p-1 rounded-2xl relative">
+                <AudioPlayer 
+                  src={selectedEpisode.audioUrl} 
+                  title={selectedEpisode.title}
+                  variant="default"
+                />
+                <button 
+                  onClick={() => setIsAudioPlayerVisible(false)}
+                  className="absolute -top-3 -right-3 bg-foreground text-background rounded-full w-7 h-7 flex items-center justify-center text-xs shadow-lg neo-inset"
+                  aria-label="Cerrar reproductor"
+                >
+                  &times;
+                </button>
+              </div>
             </div>
           </motion.div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 } 

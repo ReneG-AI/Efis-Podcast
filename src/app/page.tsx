@@ -262,21 +262,100 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* Scroll indicator */}
-        <motion.div 
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <span className="text-foreground/40 text-xs uppercase tracking-widest">Scroll</span>
-          <div className="relative w-6 h-10 border-2 border-foreground/20 rounded-full flex justify-center">
-            <motion.div 
-              className="absolute top-1.5 w-1.5 h-1.5 bg-primary rounded-full"
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.15 }}
+        {/* Modern Scroll Indicator - Elegant design with pulse animation */}
+        <div className="fixed bottom-12 inset-x-0 z-40 pointer-events-none flex justify-center items-center">
+          <motion.div 
+            className="relative flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 1] }}
+            transition={{ duration: 1.5, delay: 1.6 }}
+          >
+            {/* Pulsing outer ring */}
+            <motion.div
+              className="absolute rounded-full border border-primary/30 backdrop-blur-sm"
+              initial={{ width: 50, height: 50 }}
+              animate={{ 
+                width: [50, 60, 50],
+                height: [50, 60, 50],
+                opacity: [0.3, 0.6, 0.3]
+              }}
+              transition={{ 
+                duration: 2.5, 
+                repeat: Infinity, 
+                ease: "easeInOut" 
+              }}
             />
-          </div>
-        </motion.div>
+            
+            {/* Main circle background */}
+            <motion.div 
+              className="relative glass w-12 h-12 rounded-full flex items-center justify-center shadow-lg overflow-hidden"
+            >
+              {/* Shimmer effect */}
+              <motion.div 
+                className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-secondary/10 to-transparent"
+                animate={{ 
+                  rotate: [0, 360]
+                }}
+                transition={{ 
+                  duration: 8, 
+                  repeat: Infinity, 
+                  ease: "linear" 
+                }}
+              />
+              
+              {/* Arrow container with floating animation */}
+              <motion.div
+                className="relative z-10 flex flex-col items-center justify-center gap-[2px]"
+                animate={{ y: [0, -2, 0, 2, 0] }}
+                transition={{ 
+                  duration: 2.5, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+              >
+                {/* Three animated arrows */}
+                {[0, 1, 2].map(index => (
+                  <motion.div
+                    key={index}
+                    className="w-4 h-4 flex items-center justify-center"
+                    initial={{ opacity: 0.3 }}
+                    animate={{ 
+                      opacity: [
+                        0.3, 
+                        index === 0 ? 1 : 0.3, 
+                        index === 1 ? 1 : 0.3, 
+                        index === 2 ? 1 : 0.3, 
+                        0.3
+                      ],
+                      y: [0, index === 0 ? 2 : 0, index === 1 ? 2 : 0, index === 2 ? 2 : 0, 0]
+                    }}
+                    transition={{
+                      duration: 1.8,
+                      repeat: Infinity,
+                      delay: index * 0.2,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      width="16" 
+                      height="16" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="2" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      className="text-primary"
+                    >
+                      <path d="M12 19V5M5 12l7-7 7 7" />
+                    </svg>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        </div>
       </section>
 
       {/* Featured Episodes Section */}

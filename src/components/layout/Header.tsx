@@ -74,8 +74,8 @@ export default function Header() {
                   href={link.href} 
                   className={`relative px-4 py-2 rounded-full transition-all duration-300 focus-ring ${
                     isActive 
-                      ? 'text-white bg-primary font-medium' 
-                      : 'text-foreground/80 hover:text-foreground hover:bg-white/5'
+                      ? 'text-white bg-gradient-brand' 
+                      : 'text-foreground/80 hover:text-white hover:bg-white/5'
                   }`}
                   onClick={() => setActiveLink(link.href)}
                 >
@@ -116,8 +116,8 @@ export default function Header() {
                       href={link.href} 
                       className={`flex items-center px-4 py-3 rounded-full transition-all duration-300 ${
                         isActive 
-                          ? 'bg-primary text-white font-medium' 
-                          : 'hover:bg-white/5 text-foreground/80 hover:text-foreground'
+                          ? 'bg-gradient-brand text-white font-medium' 
+                          : 'hover:bg-white/5 text-foreground/80 hover:text-white'
                       }`}
                       onClick={() => {
                         setActiveLink(link.href);

@@ -120,7 +120,7 @@ export default function Footer() {
                   <li key={link.href}>
                     <Link 
                       href={link.href}
-                      className="text-foreground/60 hover:text-primary transition-all duration-300 text-sm font-light inline-block"
+                      className="text-foreground/60 hover:text-gradient-brand transition-all duration-300 text-sm font-light inline-block"
                     >
                       {link.label}
                     </Link>
@@ -162,7 +162,7 @@ export default function Footer() {
         {/* Newsletter */}
         <div className="border-t border-white/5 mt-14 pt-14">
           <div className="max-w-xl mx-auto text-center">
-            <h3 className="font-medium text-foreground mb-3 text-lg">Suscríbete a nuestro newsletter</h3>
+            <h3 className="font-medium text-gradient-brand inline-block mb-3 text-lg">Suscríbete a nuestro newsletter</h3>
             <p className="text-muted-foreground text-sm mb-6 font-light">Recibe notificaciones de nuevos episodios y contenido exclusivo.</p>
             <form className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
               <input 
@@ -172,7 +172,7 @@ export default function Footer() {
               />
               <button 
                 type="submit"
-                className="bg-primary text-white font-medium px-6 py-3 rounded-full hover:bg-primary/90 transition-colors text-sm"
+                className="btn-gradient-brand text-white font-medium px-6 py-3 rounded-full transition-colors text-sm"
               >
                 Suscribirse
               </button>
@@ -184,7 +184,7 @@ export default function Footer() {
         <div className="flex flex-col sm:flex-row justify-between items-center border-t border-white/5 mt-14 pt-8 text-xs text-muted-foreground font-light">
           <p>© {currentYear} EFIS Podcast. Todos los derechos reservados.</p>
           <p className="mt-2 sm:mt-0">
-            Diseñado con <span className="text-accent">♥</span> por EFIS Team
+            Diseñado con <span className="text-gradient-brand inline-block">♥</span> por EFIS Team
           </p>
         </div>
       </div>

@@ -4,50 +4,50 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Apple-inspired Modern Color Scheme - EFIS Podcast Rebranding */
+/* Modern Refined Color Scheme - EFIS Podcast Professional Edition */
 :root {
   /* Primary Colors */
-  --primary: 210 100% 50%; /* Azul Apple (#007AFF) */
+  --primary: 210 90% 40%; /* Azul profesional más oscuro (#0A5DC2) */
   --primary-foreground: 0 0% 100%;
   
   /* Secondary Colors */
-  --secondary: 270 70% 60%; /* Violeta suave (#8466E2) */
+  --secondary: 212 50% 35%; /* Azul complementario (#2F4E75) */
   --secondary-foreground: 0 0% 100%;
   
   /* Accent Color */
-  --accent: 350 85% 60%; /* Rosa Apple (#FF2D55) */
+  --accent: 240 30% 40%; /* Acento azul-púrpura sutil (#4F4980) */
   --accent-foreground: 0 0% 100%;
   
   /* Background Colors */
-  --background: 220 20% 10%; /* Negro con toque azulado (#10141C) */
-  --foreground: 0 0% 100%; /* Texto blanco */
+  --background: 0 0% 0%; /* Negro puro (#000000) */
+  --foreground: 0 0% 100%; /* Texto blanco puro */
   
   /* Card Elements */
-  --card: 220 20% 13%; /* Negro con toque azulado, ligeramente más claro (#161C26) */
+  --card: 220 10% 8%; /* Negro con toque azulado sutil (#12141A) */
   --card-foreground: 0 0% 100%;
   
   /* UI Elements */
-  --muted: 220 15% 16%;
-  --muted-foreground: 220 10% 75%;
-  --popover: 220 20% 13%;
+  --muted: 220 10% 12%;
+  --muted-foreground: 220 5% 85%;
+  --popover: 220 10% 8%;
   --popover-foreground: 0 0% 100%;
   
   /* Border and Input */
-  --border: 220 20% 18%;
-  --input: 220 20% 18%;
+  --border: 220 10% 15%;
+  --input: 220 10% 15%;
   
   /* Visual Feedback */
-  --ring: 210 100% 50%;
+  --ring: 210 90% 40%;
   --radius: 0.8rem;
   
   /* Semantic Colors */
-  --destructive: 0 85% 60%;
+  --destructive: 0 75% 50%;
   --destructive-foreground: 0 0% 100%;
-  --success: 160 100% 40%;
+  --success: 160 80% 40%;
   --success-foreground: 0 0% 100%;
-  --warning: 35 100% 55%;
+  --warning: 35 80% 55%;
   --warning-foreground: 0 0% 100%;
-  --info: 200 100% 50%;
+  --info: 200 80% 50%;
   --info-foreground: 0 0% 100%;
 }
 
@@ -87,28 +87,28 @@
   background-clip: padding-box, border-box;
 }
 
-/* Glassmorphism al estilo Apple */
+/* Glassmorphism elegante y sutil */
 .glass {
-  background: rgba(16, 20, 28, 0.6);
+  background: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
   border: 1px solid rgba(255, 255, 255, 0.03);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
-/* Neomorphism suave */
+/* Neomorphism refinado */
 .neo {
   border-radius: var(--radius);
   background: hsl(var(--background));
   box-shadow: 
-    8px 8px 16px rgba(0, 0, 0, 0.4),
-    -8px -8px 16px rgba(255, 255, 255, 0.02);
+    8px 8px 16px rgba(0, 0, 0, 0.5),
+    -8px -8px 16px rgba(255, 255, 255, 0.015);
 }
 
 /* Animations */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  50% { transform: translateY(-6px); }
 }
 
 .float {
@@ -117,7 +117,7 @@
 
 @keyframes pulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
+  50% { opacity: 0.7; }
 }
 
 .pulse {
@@ -173,7 +173,7 @@
 /* Card styles */
 .card-hover {
   @apply transition-all duration-300 hover:shadow-lg hover:translate-y-[-4px];
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 /* Modern Container */
@@ -201,7 +201,7 @@ body {
 
 /* Branded text gradient para el logo */
 .text-gradient-brand {
-  background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--accent)));
+  background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--secondary)));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -256,11 +256,11 @@ body {
 
 /* Efecto vidrio para componentes */
 .glass-effect {
-  background: rgba(22, 28, 38, 0.7);
+  background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
 }
 
 /* Efecto glow al hacer hover */
@@ -269,7 +269,7 @@ body {
 }
 
 .hover-glow:hover {
-  filter: drop-shadow(0 0 8px rgba(var(--primary), 0.5));
+  filter: drop-shadow(0 0 8px rgba(var(--primary), 0.3));
   transform: translateY(-2px);
 }
 
@@ -279,7 +279,7 @@ body {
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-8px);
+    transform: translateY(-6px);
   }
   100% {
     transform: translateY(0px);
@@ -292,7 +292,7 @@ body {
 
 /* Tarjeta de episodios */
 .episode-card {
-  background: rgba(22, 28, 38, 0.4);
+  background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
   border: 1px solid rgba(255, 255, 255, 0.03);
@@ -301,7 +301,7 @@ body {
 
 .episode-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -395,7 +395,7 @@ body {
 
 /* Efecto de vidrio para componentes específicos */
 .glass-effect {
-  background: rgba(22, 28, 38, 0.7);
+  background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
 }
@@ -463,18 +463,18 @@ body {
 .btn-gradient-brand:hover {
   background-position: 100% 0;
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* Estilos específicos para header y footer */
 header.glass-effect {
-  background: rgba(16, 20, 28, 0.8);
+  background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
 }
 
 footer.glass-effect {
-  background: rgba(16, 20, 28, 0.9);
+  background: rgba(0, 0, 0, 0.9);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }

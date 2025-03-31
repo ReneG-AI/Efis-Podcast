@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FaSpotify, FaYoutube, FaPodcast, FaItunes, FaTiktok, FaInstagram, FaTwitter } from "react-icons/fa";
+import { FaSpotify, FaYoutube, FaPodcast, FaItunes, FaTiktok, FaInstagram, FaTwitter, FaMoneyBillWave } from "react-icons/fa";
 import Logo from "@/components/brand/Logo";
 
 const socialLinks = [
@@ -46,9 +46,17 @@ const socialLinks = [
 // Links rápidos para el footer
 const quickLinks = [
   { label: "Episodios", href: "/episodes" },
-  { label: "YouTube", href: "/youtube" },
-  { label: "Sobre nosotros", href: "/about" },
-  { label: "Política de privacidad", href: "/privacy" }
+  { label: "Comunidad", href: "/community" },
+  { label: "Recursos", href: "/resources" },
+  { label: "Sobre nosotros", href: "/about" }
+];
+
+// Links a recursos financieros
+const resourceLinks = [
+  { label: "Guías de inversión", href: "/resources/investment-guides" },
+  { label: "Plantillas de presupuesto", href: "/resources/budget-templates" },
+  { label: "Mini cursos financieros", href: "/resources/mini-courses" },
+  { label: "Calculadoras financieras", href: "/resources/calculators" }
 ];
 
 interface SocialLinkProps {
@@ -86,13 +94,17 @@ export default function Footer() {
       </div>
 
       <div className="container mx-auto py-12 px-4 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo y descripción */}
           <div className="flex flex-col space-y-3">
             <Logo size="md" />
             <p className="text-muted-foreground text-sm mt-2 max-w-xs">
-              EFIS Podcast es tu portal de información y entretenimiento sobre tecnología, aviación y mucho más.
+              <span className="font-bold text-primary">Tu dinero, tus reglas.</span> EFIS Podcast te enseña a manejar tus finanzas de forma fácil y sin estrés.
             </p>
+            <div className="flex items-center gap-2 mt-2">
+              <FaMoneyBillWave className="text-primary" />
+              <span className="text-sm font-medium">Educación financiera accesible</span>
+            </div>
           </div>
 
           {/* Links rápidos */}
@@ -100,6 +112,23 @@ export default function Footer() {
             <h3 className="font-bold text-foreground mb-4">Enlaces rápidos</h3>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
+                <li key={link.href}>
+                  <Link 
+                    href={link.href}
+                    className="text-foreground/60 hover:text-foreground hover:translate-x-1 transition-all duration-300 text-sm inline-block hover-glow"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Recursos financieros */}
+          <div>
+            <h3 className="font-bold text-foreground mb-4">Recursos financieros</h3>
+            <ul className="space-y-3">
+              {resourceLinks.map((link) => (
                 <li key={link.href}>
                   <Link 
                     href={link.href}
@@ -126,6 +155,27 @@ export default function Footer() {
                 />
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* Newsletter */}
+        <div className="border-t border-border/20 mt-10 pt-10">
+          <div className="max-w-xl mx-auto text-center">
+            <h3 className="font-bold text-foreground mb-2">¿Quieres recibir tips financieros?</h3>
+            <p className="text-muted-foreground text-sm mb-4">Suscríbete a nuestro newsletter y recibe consejos financieros directamente en tu bandeja de entrada.</p>
+            <form className="flex flex-col sm:flex-row gap-2">
+              <input 
+                type="email" 
+                placeholder="Tu correo electrónico" 
+                className="flex-1 px-4 py-2 rounded-lg bg-card border border-border focus:border-primary outline-none"
+              />
+              <button 
+                type="submit"
+                className="bg-primary text-white font-medium px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors"
+              >
+                Suscribirse
+              </button>
+            </form>
           </div>
         </div>
 

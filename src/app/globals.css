@@ -4,40 +4,40 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Modern Futuristic Color Scheme - Professional Edition */
+/* Modern Financial Color Scheme - EFIS Podcast Rebranding */
 :root {
   /* Primary Colors */
-  --primary: 231 48% 48%; /* Rich blue (#3F51B5) */
+  --primary: 216 100% 50%; /* Azul eléctrico (#0066FF) */
   --primary-foreground: 0 0% 100%;
   
   /* Secondary Colors */
-  --secondary: 262 52% 46%; /* Deep purple (#673AB7) */
+  --secondary: 222 89% 33%; /* Azul intenso (#0A2C86) */
   --secondary-foreground: 0 0% 100%;
   
   /* Accent Color */
-  --accent: 180 100% 37%; /* Turquoise (#00B8D4) */
-  --accent-foreground: 0 0% 100%;
+  --accent: 211 100% 78%; /* Azul claro (#80C9FF) */
+  --accent-foreground: 0 0% 10%;
   
   /* Background Colors */
   --background: 0 0% 100%; /* Pure white */
-  --foreground: 240 10% 4%; /* Near black text */
+  --foreground: 220 20% 10%; /* Near black text */
   
   /* Card Elements */
   --card: 0 0% 100%;
-  --card-foreground: 240 10% 4%;
+  --card-foreground: 220 20% 10%;
   
   /* UI Elements */
-  --muted: 240 5% 96%;
-  --muted-foreground: 240 4% 46%;
+  --muted: 220 20% 96%;
+  --muted-foreground: 220 20% 46%;
   --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 4%;
+  --popover-foreground: 220 20% 10%;
   
   /* Border and Input */
-  --border: 240 6% 90%;
-  --input: 240 6% 90%;
+  --border: 220 20% 90%;
+  --input: 220 20% 90%;
   
   /* Visual Feedback */
-  --ring: 231 48% 48%;
+  --ring: 216 100% 50%;
   --radius: 0.75rem;
   
   /* Semantic Colors */
@@ -54,34 +54,34 @@
 /* Dark Mode */
 .dark-mode-enabled {
   /* Primary Colors */
-  --primary: 231 48% 58%; /* Brighter blue (#5C6BC0) */
+  --primary: 216 100% 50%; /* Azul eléctrico (#0066FF) */
   --primary-foreground: 0 0% 100%;
   
   /* Secondary Colors */
-  --secondary: 262 52% 56%; /* Brighter purple (#8359C1) */
+  --secondary: 222 89% 45%; /* Azul intenso más claro (#1243B0) */
   --secondary-foreground: 0 0% 100%;
   
   /* Accent Color */
-  --accent: 180 100% 45%; /* Brighter turquoise (#00D8F5) */
-  --accent-foreground: 0 0% 100%;
+  --accent: 211 100% 65%; /* Azul claro (#4DA9FF) */
+  --accent-foreground: 0 0% 10%;
   
   /* Background Colors */
-  --background: 240 10% 4%; /* Near black background */
+  --background: 220 18% 8%; /* Negro profundo (#0E1218) */
   --foreground: 0 0% 98%; /* Near white text */
   
   /* Card Elements */
-  --card: 240 10% 8%; /* Dark card */
+  --card: 220 18% 12%; /* Dark card (#151C25) */
   --card-foreground: 0 0% 98%;
   
   /* UI Elements */
-  --muted: 240 8% 12%;
-  --muted-foreground: 240 5% 64%;
-  --popover: 240 10% 8%;
+  --muted: 220 18% 16%;
+  --muted-foreground: 220 18% 70%;
+  --popover: 220 18% 12%;
   --popover-foreground: 0 0% 98%;
   
   /* Border and Input */
-  --border: 240 8% 16%;
-  --input: 240 8% 16%;
+  --border: 220 18% 20%;
+  --input: 220 18% 20%;
   
   /* Semantic Colors */
   --destructive: 0 84% 65%;

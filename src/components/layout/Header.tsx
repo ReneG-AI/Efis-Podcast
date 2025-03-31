@@ -3,7 +3,16 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaYoutube, FaHeadphones, FaHome, FaInfoCircle, FaMicrophone } from 'react-icons/fa';
+import { 
+  FaHeadphones, 
+  FaHome, 
+  FaInfoCircle, 
+  FaMicrophone,
+  FaMoneyBillWave,
+  FaChartLine,
+  FaUsers,
+  FaFileAlt
+} from 'react-icons/fa';
 
 import Logo from '@/components/brand/Logo';
 import ThemeToggle from '@/components/ui/ThemeToggle';
@@ -13,7 +22,8 @@ import MenuIcon from '@/components/ui/MenuIcon';
 const links = [
   { name: "Inicio", href: "/", icon: <FaHome className="mr-2" /> },
   { name: "Episodios", href: "/episodes", icon: <FaHeadphones className="mr-2" /> },
-  { name: "YouTube", href: "/youtube", icon: <FaYoutube className="mr-2" /> },
+  { name: "Comunidad", href: "/community", icon: <FaUsers className="mr-2" /> },
+  { name: "Recursos", href: "/resources", icon: <FaFileAlt className="mr-2" /> },
   { name: "Sobre nosotros", href: "/about", icon: <FaInfoCircle className="mr-2" /> },
 ];
 
@@ -176,7 +186,7 @@ export default function Header() {
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                         >
-                          <FaMicrophone className="text-white/70" />
+                          {link.href === "/" ? <FaMoneyBillWave className="text-white/70" /> : <FaMicrophone className="text-white/70" />}
                         </motion.div>
                       )}
                     </Link>

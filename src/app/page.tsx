@@ -295,108 +295,113 @@ export default function Home() {
       {/* Últimos episodios */}
       <section className="section-padding bg-card">
         <div className="container-modern content-width">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 gap-4">
-            <SectionTitle 
-              subtitle="ESCUCHA AHORA"
-              title="Últimos episodios"
-              align="left"
-            />
-            <Link href="/episodes" className="text-primary hover:text-primary/90 flex items-center gap-1 font-medium">
-              Ver todos
-              <FaArrowRight className="text-sm" />
-            </Link>
-          </div>
-          
-          <div className="grid-responsive">
-            {/* Episode cards with consistent structure */}
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="episode-card overflow-hidden transition-all duration-300"
-            >
-              <div className="relative h-48 overflow-hidden">
-                <img 
-                  src="/images/episode1.jpg" 
-                  alt="Episodio 1" 
-                  className="w-full h-full object-cover transform transition-transform duration-500 hover:scale-105"
-                />
-                <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/90 to-transparent">
-                  <span className="text-xs font-medium text-white/80">Ep. 52 • 45 min</span>
-                </div>
-              </div>
-              <div className="p-4">
-                <h3 className="text-lg font-bold mb-2 line-clamp-2">Invierte en la bolsa sin morir en el intento</h3>
-                <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
-                  Descubre las estrategias básicas para empezar a invertir en la bolsa de manera segura y sin correr riesgos innecesarios.
-                </p>
-                <Link href="/episodes/1" className="flex items-center gap-2 text-primary font-medium text-sm hover:text-primary/90 transition-colors">
-                  <FaHeadphones />
-                  <span>Escuchar episodio</span>
-                </Link>
-              </div>
-            </motion.div>
+          <div className="episodes-section">
+            <div className="episodes-header">
+              <SectionTitle 
+                subtitle="ESCUCHA AHORA"
+                title="Últimos episodios"
+                align="left"
+              />
+              <Link href="/episodes" className="text-primary hover:text-primary/90 flex items-center gap-1 font-medium">
+                Ver todos
+                <FaArrowRight className="text-sm" />
+              </Link>
+            </div>
             
-            {/* Episodio 2 */}
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="episode-card overflow-hidden transition-all duration-300"
-            >
-              <div className="relative h-48 overflow-hidden">
-                <img 
-                  src="/images/episode2.jpg" 
-                  alt="Episodio 2" 
-                  className="w-full h-full object-cover transform transition-transform duration-500 hover:scale-105"
-                />
-                <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/90 to-transparent">
-                  <span className="text-xs font-medium text-white/80">Ep. 51 • 38 min</span>
+            <div className="episodes-grid">
+              {/* Episodio 1 */}
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="episode-card"
+              >
+                <div className="relative">
+                  <Image
+                    src="/episode1.jpg"
+                    alt="Episodio 1"
+                    width={400}
+                    height={225}
+                    className="episode-image"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 </div>
-              </div>
-              <div className="p-4">
-                <h3 className="text-lg font-bold mb-2 line-clamp-2">5 hábitos financieros que cambiarán tu vida</h3>
-                <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
-                  Analizamos los hábitos financieros más importantes que puedes incorporar a tu rutina para mejorar drásticamente tu economía.
-                </p>
-                <Link href="/episodes/2" className="flex items-center gap-2 text-primary font-medium text-sm hover:text-primary/90 transition-colors">
-                  <FaHeadphones />
-                  <span>Escuchar episodio</span>
-                </Link>
-              </div>
-            </motion.div>
-            
-            {/* Episodio 3 */}
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="episode-card overflow-hidden transition-all duration-300"
-            >
-              <div className="relative h-48 overflow-hidden">
-                <img 
-                  src="/images/episode3.jpg" 
-                  alt="Episodio 3" 
-                  className="w-full h-full object-cover transform transition-transform duration-500 hover:scale-105"
-                />
-                <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/90 to-transparent">
-                  <span className="text-xs font-medium text-white/80">Ep. 50 • 42 min</span>
+                <div className="episode-content">
+                  <h3 className="episode-title">Inversiones para principiantes</h3>
+                  <p className="episode-description">
+                    Aprende los conceptos básicos de inversión y cómo comenzar tu viaje financiero con confianza.
+                  </p>
+                  <div className="episode-meta">
+                    <span>Episodio 1</span>
+                    <span>•</span>
+                    <span>45 min</span>
+                  </div>
                 </div>
-              </div>
-              <div className="p-4">
-                <h3 className="text-lg font-bold mb-2 line-clamp-2">Cómo salir de deudas en tiempo récord</h3>
-                <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
-                  Te compartimos métodos probados para eliminar tus deudas más rápido y liberarte de la carga financiera que te impide avanzar.
-                </p>
-                <Link href="/episodes/3" className="flex items-center gap-2 text-primary font-medium text-sm hover:text-primary/90 transition-colors">
-                  <FaHeadphones />
-                  <span>Escuchar episodio</span>
-                </Link>
-              </div>
-            </motion.div>
+              </motion.div>
+
+              {/* Episodio 2 */}
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="episode-card"
+              >
+                <div className="relative">
+                  <Image
+                    src="/episode2.jpg"
+                    alt="Episodio 2"
+                    width={400}
+                    height={225}
+                    className="episode-image"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                </div>
+                <div className="episode-content">
+                  <h3 className="episode-title">Presupuesto inteligente</h3>
+                  <p className="episode-description">
+                    Descubre cómo crear y mantener un presupuesto efectivo que te ayude a alcanzar tus metas financieras.
+                  </p>
+                  <div className="episode-meta">
+                    <span>Episodio 2</span>
+                    <span>•</span>
+                    <span>38 min</span>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Episodio 3 */}
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="episode-card"
+              >
+                <div className="relative">
+                  <Image
+                    src="/episode3.jpg"
+                    alt="Episodio 3"
+                    width={400}
+                    height={225}
+                    className="episode-image"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                </div>
+                <div className="episode-content">
+                  <h3 className="episode-title">Deuda inteligente</h3>
+                  <p className="episode-description">
+                    Aprende a manejar la deuda de manera efectiva y cómo usarla a tu favor.
+                  </p>
+                  <div className="episode-meta">
+                    <span>Episodio 3</span>
+                    <span>•</span>
+                    <span>42 min</span>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>

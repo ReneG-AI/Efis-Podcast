@@ -103,52 +103,52 @@ export default function Home() {
       </div>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center text-center px-4">
-        <div className="container max-w-5xl z-10">
-          <motion.div 
+      <section className="relative min-h-screen flex items-center justify-center text-center">
+        <div className="container-modern content-width">
+          <motion.div
             initial="hidden"
             animate="visible"
             variants={staggerContainer}
-            className="space-y-8"
+            className="text-spacing max-w-4xl mx-auto"
           >
             {/* Título principal */}
             <motion.h1 
               variants={fadeIn}
-              className="text-4xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight leading-none"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight leading-tight"
             >
               <span className="block text-white">Tu dinero,</span>
               <span className="text-gradient-brand mt-2">tus reglas.</span>
             </motion.h1>
-            
+
             {/* Descripción */}
             <motion.p 
               variants={fadeIn}
-              className="max-w-2xl mx-auto text-lg md:text-xl text-white/80 font-light leading-relaxed"
+              className="text-lg sm:text-xl text-white/80 font-light leading-relaxed max-w-2xl mx-auto"
             >
               Un podcast que te enseña a tomar el control de tus finanzas con estrategias prácticas y consejos reales que puedes aplicar hoy mismo.
             </motion.p>
-            
+
             {/* Call to action */}
             <motion.div 
               variants={fadeIn}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
+              className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8"
             >
               <Link 
-                href="/episodes" 
-                className="btn-gradient-brand flex items-center gap-2 min-w-[180px] justify-center"
+                href="/episodes"
+                className="btn-gradient-brand button-padding flex items-center gap-2 min-w-[200px] justify-center"
               >
                 <FaHeadphones />
                 <span>Escuchar ahora</span>
               </Link>
               <Link 
                 href="/about" 
-                className="btn-secondary flex items-center gap-2 min-w-[180px] justify-center"
+                className="btn-secondary button-padding flex items-center gap-2 min-w-[200px] justify-center"
               >
                 <span>Conoce más</span>
                 <FaArrowRight className="text-sm" />
               </Link>
             </motion.div>
-            
+
             {/* Plataformas */}
             <motion.div 
               variants={fadeIn}
@@ -158,46 +158,46 @@ export default function Home() {
                 Disponible en
               </p>
               <div className="flex flex-wrap justify-center gap-6 md:gap-10">
-                <a 
-                  href="https://open.spotify.com/show/example" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
+              <a 
+                href="https://open.spotify.com/show/example" 
+                target="_blank"
+                rel="noopener noreferrer"
                   className="flex items-center gap-2 text-white hover:text-[#1ED760] transition-colors"
-                >
+              >
                   <FaSpotify className="text-3xl" />
                   <span className="font-medium">Spotify</span>
-                </a>
-                <a 
-                  href="https://podcasts.apple.com/podcast/example" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
+              </a>
+              <a 
+                href="https://podcasts.apple.com/podcast/example" 
+                target="_blank"
+                rel="noopener noreferrer"
                   className="flex items-center gap-2 text-white hover:text-[#8e44ad] transition-colors"
-                >
+              >
                   <FaApple className="text-3xl" />
                   <span className="font-medium">Apple Podcasts</span>
-                </a>
-                <a 
+              </a>
+              <a 
                   href="https://youtube.com/@example" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
+                target="_blank"
+                rel="noopener noreferrer"
                   className="flex items-center gap-2 text-white hover:text-[#FF0000] transition-colors"
-                >
+              >
                   <FaYoutube className="text-3xl" />
                   <span className="font-medium">YouTube</span>
-                </a>
+              </a>
               </div>
             </motion.div>
           </motion.div>
         </div>
-        
+
         {/* Scroll indicator */}
-        <motion.div 
+          <motion.div 
           initial={{ opacity: 0, y: 0 }}
           animate={{ opacity: 1, y: [0, 10, 0] }}
-          transition={{ 
+                transition={{ 
             delay: 2,
-            duration: 2,
-            repeat: Infinity,
+                  duration: 2, 
+                  repeat: Infinity, 
             repeatType: "loop"
           }}
           className="absolute bottom-10 left-0 right-0 flex justify-center"
@@ -216,26 +216,26 @@ export default function Home() {
               <path d="M19 12L12 19L5 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
-        </motion.div>
+          </motion.div>
       </section>
 
       {/* Características Section */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
+      <section className="section-padding bg-background">
+        <div className="container-modern content-width">
           <SectionTitle 
             subtitle="POR QUÉ ESCUCHARNOS"
             title="Enfoque práctico para tus finanzas"
             align="center"
           />
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-            {/* Feature 1 */}
-            <motion.div 
+          <div className="grid-responsive mt-12">
+            {/* Feature cards with consistent padding */}
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="bg-card rounded-lg p-6 border border-white/5 hover:border-white/10 hover:bg-card/60 transition-all card-hover"
+              className="bg-card rounded-lg card-padding border border-white/5 hover:border-white/10 hover:bg-card/60 transition-all card-hover"
             >
               <div className="w-12 h-12 rounded-lg bg-gradient-brand flex items-center justify-center mb-4">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -248,14 +248,14 @@ export default function Home() {
                 Explicamos conceptos financieros complejos de forma sencilla para que puedas entender y aplicar en tu día a día.
               </p>
             </motion.div>
-            
+
             {/* Feature 2 */}
-            <motion.div 
+          <motion.div 
               initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="bg-card rounded-lg p-6 border border-white/5 hover:border-white/10 hover:bg-card/60 transition-all card-hover"
+              className="bg-card rounded-lg card-padding border border-white/5 hover:border-white/10 hover:bg-card/60 transition-all card-hover"
             >
               <div className="w-12 h-12 rounded-lg bg-gradient-brand flex items-center justify-center mb-4">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -263,7 +263,7 @@ export default function Home() {
                   <path d="M12 13.5V7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-              </div>
+            </div>
               <h3 className="text-xl font-semibold mb-2">Consejos Reales</h3>
               <p className="text-muted-foreground leading-relaxed">
                 No teoría, sino estrategias prácticas que puedes implementar hoy mismo para mejorar tu salud financiera.
@@ -271,12 +271,12 @@ export default function Home() {
             </motion.div>
             
             {/* Feature 3 */}
-            <motion.div 
+          <motion.div 
               initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="bg-card rounded-lg p-6 border border-white/5 hover:border-white/10 hover:bg-card/60 transition-all card-hover"
+              className="bg-card rounded-lg card-padding border border-white/5 hover:border-white/10 hover:bg-card/60 transition-all card-hover"
             >
               <div className="w-12 h-12 rounded-lg bg-gradient-brand flex items-center justify-center mb-4">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -287,15 +287,15 @@ export default function Home() {
               <p className="text-muted-foreground leading-relaxed">
                 Compartimos historias reales de personas que han logrado transformar sus finanzas y cómo lo hicieron.
               </p>
-            </motion.div>
+          </motion.div>
           </div>
         </div>
       </section>
 
       {/* Últimos episodios */}
-      <section className="py-20 bg-card">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-end mb-12">
+      <section className="section-padding bg-card">
+        <div className="container-modern content-width">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 gap-4">
             <SectionTitle 
               subtitle="ESCUCHA AHORA"
               title="Últimos episodios"
@@ -307,8 +307,8 @@ export default function Home() {
             </Link>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Episodio 1 */}
+          <div className="grid-responsive">
+            {/* Episode cards with consistent structure */}
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -402,35 +402,34 @@ export default function Home() {
       </section>
 
       {/* Call To Action */}
-      <section className="py-20 bg-background relative overflow-hidden">
-        {/* Fondo con efecto */}
+      <section className="section-padding bg-background relative overflow-hidden">
         <div className="absolute inset-0 opacity-20 bg-gradient-brand" />
         
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="container-modern content-width relative z-10">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="max-w-3xl mx-auto text-center"
+            className="max-w-3xl mx-auto text-center text-spacing"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold">
               Toma el control de tus finanzas <span className="text-gradient-brand">hoy mismo</span>
             </h2>
-            <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
+            <p className="text-muted-foreground text-lg sm:text-xl max-w-2xl mx-auto">
               Aprende, implementa y transforma tu relación con el dinero. Únete a nuestra comunidad de oyentes que están cambiando su futuro financiero.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Link 
                 href="/episodes" 
-                className="btn-gradient-brand flex items-center gap-2 justify-center"
+                className="btn-gradient-brand button-padding flex items-center gap-2 justify-center"
               >
                 <FaHeadphones />
                 <span>Comenzar a escuchar</span>
               </Link>
               <Link 
                 href="/community" 
-                className="btn-secondary flex items-center gap-2 justify-center"
+                className="btn-secondary button-padding flex items-center gap-2 justify-center"
               >
                 <span>Unirme a la comunidad</span>
                 <FaArrowRight className="text-sm" />

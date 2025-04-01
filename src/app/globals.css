@@ -200,6 +200,28 @@
          focus:ring-accent/50;
 }
 
+.btn-gradient-brand {
+  position: relative;
+  background: linear-gradient(
+    to right,
+    hsl(var(--primary)),
+    hsl(var(--secondary))
+  );
+  @apply text-white font-medium rounded-full px-6 py-3
+         shadow-sm hover:shadow-lg transition-all duration-300 
+         transform hover:translate-y-[-2px] focus:outline-none 
+         focus:ring-2 focus:ring-primary/50;
+  background-size: 200% 100%;
+  background-position: 0 0;
+  transition: background-position 0.5s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.btn-gradient-brand:hover {
+  background-position: 100% 0;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
 /* Card styles */
 .card-hover {
   @apply transition-all duration-300 hover:shadow-lg hover:translate-y-[-4px];
@@ -485,24 +507,6 @@ header.glass-effect {
     linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-}
-
-.btn-gradient-brand {
-  position: relative;
-  background: linear-gradient(
-    to right,
-    hsl(var(--primary)),
-    hsl(var(--secondary))
-  );
-  background-size: 200% 100%;
-  background-position: 0 0;
-  transition: background-position 0.5s ease-in-out, transform 0.2s ease-in-out;
-}
-
-.btn-gradient-brand:hover {
-  background-position: 100% 0;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* Estilos específicos para header y footer */

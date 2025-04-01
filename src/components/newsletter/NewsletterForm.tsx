@@ -16,11 +16,18 @@ export default function NewsletterForm() {
     setTimeout(() => {
       setStatus('success');
       setEmail('');
+      
+      // Restablecemos el estado después de unos segundos
+      setTimeout(() => {
+        setStatus('idle');
+      }, 3000);
     }, 1000);
   };
 
   return (
     <div className="newsletter-container">
+      <div className="absolute inset-0 bg-gradient-brand opacity-5 z-0" />
+      
       <div className="newsletter-content">
         <h2 className="newsletter-title">
           Suscríbete a nuestro newsletter
@@ -29,37 +36,44 @@ export default function NewsletterForm() {
           Recibe notificaciones de nuevos episodios y contenido exclusivo.
         </p>
         
-        <form onSubmit={handleSubmit} className="newsletter-form">
-          <div className="newsletter-form-group">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Tu correo electrónico"
-              required
-              className="newsletter-input"
-            />
-            <button
-              type="submit"
-              disabled={status === 'loading'}
-              className="newsletter-button"
-            >
-              {status === 'loading' ? (
-                <span className="flex items-center gap-2">
-                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                  </svg>
-                  Enviando...
-                </span>
-              ) : (
-                <span className="flex items-center gap-2">
-                  Suscribirse
-                  <FaPaperPlane className="text-sm" />
-                </span>
-              )}
-            </button>
-          </div>
+        <form onSubmit={handleSubmit} className="newsletter-form mt-8">
+          {status === 'success' ? (
+            <div className="bg-success/10 text-success rounded-full py-4 px-6 text-center">
+              ¡Gracias por suscribirte! Pronto recibirás nuestro contenido.
+            </div>
+          ) : (
+            <div className="newsletter-form-group">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Tu correo electrónico"
+                required
+                className="newsletter-input"
+                disabled={status === 'loading'}
+              />
+              <button
+                type="submit"
+                disabled={status === 'loading'}
+                className="newsletter-button"
+              >
+                {status === 'loading' ? (
+                  <span className="flex items-center gap-2">
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Enviando...
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    Suscribirse
+                    <FaPaperPlane className="text-sm" />
+                  </span>
+                )}
+              </button>
+            </div>
+          )}
         </form>
       </div>
     </div>

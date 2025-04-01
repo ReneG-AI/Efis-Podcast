@@ -24,6 +24,7 @@ import Logo from "@/components/brand/Logo";
 import AudioVisualizer from "@/components/ui/AudioVisualizer";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
+import NewsletterForm from "@/components/newsletter/NewsletterForm";
 
 // Dynamic import to avoid component conflicts
 const DynamicEpisodeCard = dynamic(() => import('@/components/episodes/EpisodeCard'), {
@@ -135,14 +136,14 @@ export default function Home() {
             >
               <Link 
                 href="/episodes"
-                className="btn-gradient-brand button-padding flex items-center gap-2 min-w-[200px] justify-center"
+                className="btn-gradient-brand button-padding flex items-center gap-2 min-w-[200px] justify-center rounded-full"
               >
                 <FaHeadphones />
                 <span>Escuchar ahora</span>
               </Link>
               <Link 
                 href="/about" 
-                className="btn-secondary button-padding flex items-center gap-2 min-w-[200px] justify-center"
+                className="btn-secondary button-padding flex items-center gap-2 min-w-[200px] justify-center rounded-full"
               >
                 <span>Conoce más</span>
                 <FaArrowRight className="text-sm" />
@@ -318,13 +319,9 @@ export default function Home() {
                 className="episode-card"
               >
                 <div className="relative">
-                  <Image
-                    src="/episode1.jpg"
-                    alt="Episodio 1"
-                    width={400}
-                    height={225}
-                    className="episode-image"
-                  />
+                  <div className="episode-image bg-gradient-brand/30 aspect-video flex items-center justify-center">
+                    <FaPodcast className="text-5xl text-white/80" />
+                  </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 </div>
                 <div className="episode-content">
@@ -349,13 +346,9 @@ export default function Home() {
                 className="episode-card"
               >
                 <div className="relative">
-                  <Image
-                    src="/episode2.jpg"
-                    alt="Episodio 2"
-                    width={400}
-                    height={225}
-                    className="episode-image"
-                  />
+                  <div className="episode-image bg-gradient-brand/30 aspect-video flex items-center justify-center">
+                    <FaPodcast className="text-5xl text-white/80" />
+                  </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 </div>
                 <div className="episode-content">
@@ -380,13 +373,9 @@ export default function Home() {
                 className="episode-card"
               >
                 <div className="relative">
-                  <Image
-                    src="/episode3.jpg"
-                    alt="Episodio 3"
-                    width={400}
-                    height={225}
-                    className="episode-image"
-                  />
+                  <div className="episode-image bg-gradient-brand/30 aspect-video flex items-center justify-center">
+                    <FaPodcast className="text-5xl text-white/80" />
+                  </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 </div>
                 <div className="episode-content">
@@ -427,20 +416,27 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Link 
                 href="/episodes" 
-                className="btn-gradient-brand button-padding flex items-center gap-2 justify-center"
+                className="btn-gradient-brand button-padding flex items-center gap-2 justify-center rounded-full"
               >
                 <FaHeadphones />
                 <span>Comenzar a escuchar</span>
               </Link>
               <Link 
                 href="/community" 
-                className="btn-secondary button-padding flex items-center gap-2 justify-center"
+                className="btn-secondary button-padding flex items-center gap-2 justify-center rounded-full"
               >
                 <span>Unirme a la comunidad</span>
                 <FaArrowRight className="text-sm" />
               </Link>
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Newsletter Section */}
+      <section className="section-padding bg-card">
+        <div className="container-modern content-width">
+          <NewsletterForm />
         </div>
       </section>
     </main>

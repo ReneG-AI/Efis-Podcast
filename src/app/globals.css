@@ -620,7 +620,9 @@ header a {
 .newsletter-container {
   @apply relative overflow-hidden rounded-2xl p-8 sm:p-12 
          border border-white/5 backdrop-blur-xl bg-black/40
-         max-w-4xl mx-auto w-full my-8;
+         max-w-4xl mx-auto w-full;
+  margin-top: -2rem;
+  margin-bottom: 2rem;
 }
 
 .newsletter-content {
@@ -704,7 +706,9 @@ header a {
 
 @media (max-width: 640px) {
   .newsletter-container {
-    @apply p-6 mx-4 my-4;
+    @apply p-6 mx-4;
+    margin-top: -1rem;
+    margin-bottom: 1rem;
   }
   
   .newsletter-title {

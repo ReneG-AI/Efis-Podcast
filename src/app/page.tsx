@@ -432,13 +432,6 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
-
-      {/* Newsletter Section */}
-      <section className="section-padding bg-card">
-        <div className="container-modern content-width">
-          <NewsletterForm />
-        </div>
-      </section>
     </main>
   );
 } 
